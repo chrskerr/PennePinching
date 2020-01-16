@@ -3,20 +3,12 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ApolloClient from 'apollo-boost';
+import "antd/dist/antd.css";
 
 export const client = new ApolloClient({
   uri: 'https://penne-server-vi2wkbooba-uc.a.run.app',
 });
 
-export const theme = {
-	global: {
-		font: {
-		family: 'Roboto',
-		size: '18px',
-		height: '20px',
-		},
-	},
-};
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

@@ -2,42 +2,46 @@
 // Packages
 import React from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { Grommet, Heading, ResponsiveContext, Box, Button, Header } from 'grommet';
-import { Add, PieChart, Cafeteria } from 'grommet-icons';
+import { Menu, Icon, Layout, Typography } from 'antd';
 import { useMachine } from '@xstate/react';
 
 // App
-import { client, theme } from './index';
+import { client } from './index';
 import { homeMachine } from './helpers/machines';
 import AddMeal from './views/AddMeal';
 import Analyse from './views/Analyse';
 
+const { Content } = Layout;
+const { Title } = Typography;
+
 const App = () => {
 	const [ current, send ] = useMachine( homeMachine );
+	const onNavClick = ( key ) => {
+		if ( key === "addmeal" ) send("ADDMEAL");
+		if ( key === "analyse" ) send("ANALYSE");
+	}
+
 	return (
 		<ApolloProvider client={ client }>
-			<Grommet theme={ theme }>
-				<ResponsiveContext.Consumer>
-					{ size => {
-						return (
-							<Box fill>
-								<Header pad="medium" justify="start" direction="row-responsive">
-									<Box direction="row" align="center" >
-										<Cafeteria size="xlarge" />
-										<Heading>Penne Pinching</Heading>
-									</Box>
-									<Button icon={ <Add /> } label="Add new meal" onClick={ () => send( "ADDMEAL" ) } />
-									<Button icon={ <PieChart /> } label="Analysis" onClick={ () => send( "ANALYSE" ) } />
-								</Header>
-								<Box>
-									{ current.value === "addmeal" && <AddMeal /> }
-									{ current.value === "analyse" && <Analyse /> }
-								</Box>
-							</Box>
-						)
-					}}
-				</ResponsiveContext.Consumer>
-			</Grommet>
+			<Title level={ 2 }>Penne Pinching</Title>
+			<Menu selectedKeys={ current.value } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
+				<Menu.Item key="addmeal">
+					<Icon type="plus" />
+					Add new meal
+				</Menu.Item>
+				<Menu.Item key="analyse">
+					<Icon type="dot-chart" />
+					Analyse
+				</Menu.Item>
+				<Menu.Item key="login">
+					<Icon type="login" />
+					Log In
+				</Menu.Item>
+			</Menu>
+			<Content style={{ padding: "0 1em" }}>
+				{ current.value === "addmeal" && <AddMeal /> }
+				{ current.value === "analyse" && <Analyse /> }
+			</Content>
 		</ApolloProvider>
 	);
 }
