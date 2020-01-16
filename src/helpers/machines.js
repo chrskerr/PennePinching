@@ -28,10 +28,11 @@ export const mealMachine = new Machine({
     states: {
         initial: {},
 		submittingInitial: {},
+		errorInitial: {},
 		secondPage: {},
 		submittingSecondPage: {},
+		errorSecondPage: {},
 		success: {},
-		failure: {},
     },
 })
 interpret( mealMachine ).start();
