@@ -11,31 +11,6 @@ import { INSERT_MEALS } from '../../helpers/apolloMutations'
 const { Title, Text } = Typography;
 const { Option } = Select
 
-const IndividualForm = ({ who, formData, setFormData }) => {
-    return (
-        <>
-            <Form.Item label="Meal Type" style={{ marginBottom: "0" }}>
-                <Select 
-                    onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], mealType: e } }) }
-                >
-                    <Option value="pizza">Pizza</Option>
-                    <Option value="pasta">Pasta</Option>
-                    <Option value="salad">Salad</Option>
-                </Select>
-            </Form.Item>
-
-            <Form.Item label={ `Menu Cost: $${ formData[ who ].menuCost }` } style={{ marginBottom: "0" }}>
-                <Slider 
-                    min={ 20 } 
-                    max={ 40 } 
-                    onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], menuCost: e } }) }
-                />
-            </Form.Item>
-        </>
-    )
-}
-
-
 
 const PageOne = ({ confirmSave }) => {
     const [ insert_meals, { loading } ] = useMutation( INSERT_MEALS );
@@ -152,3 +127,28 @@ const PageOne = ({ confirmSave }) => {
 }
 
 export default PageOne
+
+
+function IndividualForm({ who, formData, setFormData }) {
+    return (
+        <>
+            <Form.Item label="Meal Type" style={{ marginBottom: "0" }}>
+                <Select 
+                    onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], mealType: e } }) }
+                >
+                    <Option value="pizza">Pizza</Option>
+                    <Option value="pasta">Pasta</Option>
+                    <Option value="salad">Salad</Option>
+                </Select>
+            </Form.Item>
+
+            <Form.Item label={ `Menu Cost: $${ formData[ who ].menuCost }` } style={{ marginBottom: "0" }}>
+                <Slider 
+                    min={ 20 } 
+                    max={ 40 } 
+                    onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], menuCost: e } }) }
+                />
+            </Form.Item>
+        </>
+    )
+}
