@@ -2,7 +2,7 @@
 // Packages
 import React from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { Menu, Icon, Layout, Typography } from 'antd';
+import { Row, Col, Menu, Icon, Layout, Typography } from 'antd';
 import { useMachine } from '@xstate/react';
 
 // App
@@ -23,25 +23,30 @@ const App = () => {
 
 	return (
 		<ApolloProvider client={ client }>
-			<Title level={ 2 }>Penne Pinching</Title>
-			<Menu selectedKeys={ current.value } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
-				<Menu.Item key="addmeal">
-					<Icon type="plus" />
-					Add new meal
-				</Menu.Item>
-				<Menu.Item key="analyse">
-					<Icon type="dot-chart" />
-					Analyse
-				</Menu.Item>
-				<Menu.Item key="login">
-					<Icon type="login" />
-					Log In
-				</Menu.Item>
-			</Menu>
-			<Content style={{ padding: "0 1em" }}>
-				{ current.value === "addmeal" && <AddMeal /> }
-				{ current.value === "analyse" && <Analyse /> }
-			</Content>
+			<Row>
+				<Row>
+					<Title level={ 2 } style={{ padding: "1em 0 0 1em" }}>Penne Pinching</Title>
+					<Menu selectedKeys={ current.value } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
+						<Menu.Item key="addmeal">
+							<Icon type="plus" />
+							Add new meal
+						</Menu.Item>
+						<Menu.Item key="analyse">
+							<Icon type="dot-chart" />
+							Analyse
+						</Menu.Item>
+						<Menu.Item key="login">
+							<Icon type="login" />
+							Log In
+						</Menu.Item>
+					</Menu>
+				</Row>
+				
+				<Row style={{ padding: "2em" }}>
+					{ current.value === "addmeal" && <AddMeal /> }
+					{ current.value === "analyse" && <Analyse /> }
+				</Row>
+			</Row>
 		</ApolloProvider>
 	);
 }
