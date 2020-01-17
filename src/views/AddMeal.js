@@ -14,11 +14,15 @@ const { Title } = Typography;
 
 const AddMeal = () => {
     const [ current ] = useMachine( mealMachine );
+
+    console.log( current.value )
+
     return(
         <Col>
             <Title level={ 4 }>Add a New Meal</Title>
-            { ( current.value === "initial" || current.value === "submittingInitial" ) && <PageOne /> }
-            { ( current.value === "secondPage" || current.value === "submittingSecondPage" ) && <PageTwo /> }
+            { current.matches( "pageOne" ) && <PageOne /> }
+            { current.matches( "pageTwo" ) && <PageTwo /> }
+            { current.matches( "success" ) && <p>Success</p> }
         </Col>
     )
 }

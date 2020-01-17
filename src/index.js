@@ -6,7 +6,7 @@ import ApolloClient from 'apollo-boost';
 import "antd/dist/antd.css";
 
 export const client = new ApolloClient({
-  uri: 'https://penne-server-vi2wkbooba-uc.a.run.app',
+  uri: 'https://penne-server-vi2wkbooba-uc.a.run.app/v1/graphql',
 });
 
 

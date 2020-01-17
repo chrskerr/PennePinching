@@ -2,7 +2,7 @@
 // Packages
 import React from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { Row, Col, Menu, Icon, Layout, Typography } from 'antd';
+import { Row, Menu, Icon, Typography } from 'antd';
 import { useMachine } from '@xstate/react';
 
 // App
@@ -11,14 +11,13 @@ import { homeMachine } from './helpers/machines';
 import AddMeal from './views/AddMeal';
 import Analyse from './views/Analyse';
 
-const { Content } = Layout;
 const { Title } = Typography;
 
 const App = () => {
 	const [ current, send ] = useMachine( homeMachine );
 	const onNavClick = ( key ) => {
-		if ( key === "addmeal" ) send("ADDMEAL");
-		if ( key === "analyse" ) send("ANALYSE");
+		if ( key === "addmeal" ) send( "ADDMEAL" );
+		if ( key === "analyse" ) send( "ANALYSE" );
 	}
 
 	return (
@@ -43,8 +42,8 @@ const App = () => {
 				</Row>
 				
 				<Row style={{ padding: "2em" }}>
-					{ current.value === "addmeal" && <AddMeal /> }
-					{ current.value === "analyse" && <Analyse /> }
+					{ current.matches( "addmeal" ) && <AddMeal /> }
+					{ current.matches( "analyse" ) && <Analyse /> }
 				</Row>
 			</Row>
 		</ApolloProvider>

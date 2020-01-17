@@ -8,14 +8,10 @@ export const homeMachine = new Machine({
 	initial: "addmeal",
 	states: {
 		addmeal: {
-			on: {
-				ANALYSE: 'analyse',
-			},
+			on: { ANALYSE: 'analyse' },
 		},
 		analyse: {
-			on: {
-				ADDMEAL: 'addmeal'
-			},
+			on: { ADDMEAL: 'addmeal' },
 		},
 	},
 });
@@ -24,14 +20,14 @@ interpret( homeMachine ).start();
 
 export const mealMachine = new Machine({
     id: "meals",
-    initial: "initial",
+    initial: "pageOne",
     states: {
-        initial: {},
-		submittingInitial: {},
-		errorInitial: {},
-		secondPage: {},
-		submittingSecondPage: {},
-		errorSecondPage: {},
+        pageOne: {
+			on: { SUCCESS: 'pageTwo' },
+		},
+		pageTwo: {
+			on: { SUCCESS: 'success' },
+		},
 		success: {},
     },
 })
