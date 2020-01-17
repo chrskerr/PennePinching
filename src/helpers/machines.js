@@ -5,13 +5,13 @@ import { Machine, interpret } from 'xstate';
 
 export const homeMachine = new Machine({
 	id: "home",
-	initial: "addmeal",
+	initial: "analytics",
 	states: {
-		addmeal: {
-			on: { ANALYSE: 'analyse' },
+		add: {
+			on: { ANALYTICS: 'analytics' },
 		},
-		analyse: {
-			on: { ADDMEAL: 'addmeal' },
+		analytics: {
+			on: { ADD: 'add' },
 		},
 	},
 });
@@ -20,15 +20,32 @@ interpret( homeMachine ).start();
 
 export const mealMachine = new Machine({
     id: "meals",
-    initial: "pageOne",
+    initial: "pageone",
     states: {
-        pageOne: {
-			on: { SUCCESS: 'pageTwo' },
-		},
-		pageTwo: {
+        pageone: {
 			on: { SUCCESS: 'success' },
 		},
-		success: {},
+		success: {
+			on: { RESTART: 'pageone' },
+		},
+    },
+})
+interpret( mealMachine ).start();
+
+
+export const analyticsMachine = new Machine({
+    id: "meals",
+    initial: "summary",
+    states: {
+        summary: {
+			on: { PREVIOUS: 'split', NEXT: 'history' },
+		},
+		history: {
+			on: { PREVIOUS: 'summary', NEXT: 'split' },
+		},
+		split: {
+			on: { PREVIOUS: 'history', NEXT: 'summary' },
+		},
     },
 })
 interpret( mealMachine ).start();

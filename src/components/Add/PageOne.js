@@ -1,16 +1,14 @@
 
 // Packages
 import React, { useState } from 'react';
-import { useMachine } from '@xstate/react';
-import { Row, Col, Form, DatePicker, Switch, Select, InputNumber, Button } from 'antd'
+import { Row, Col, Form, DatePicker, Switch, Select, Slider, Button, Typography } from 'antd'
 import moment from 'moment';
 import { useMutation } from '@apollo/react-hooks';
 
 // App
-import { mealMachine } from '../../helpers/machines';
 import { INSERT_MEALS } from '../../helpers/apolloMutations'
 
-
+const { Title, Text } = Typography;
 const { Option } = Select
 
 const IndividualForm = ({ who, formData, setFormData }) => {
@@ -18,7 +16,6 @@ const IndividualForm = ({ who, formData, setFormData }) => {
         <>
             <Form.Item label="Meal Type" style={{ marginBottom: "0" }}>
                 <Select 
-                    defaultValue="salad"
                     onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], mealType: e } }) }
                 >
                     <Option value="pizza">Pizza</Option>
@@ -27,11 +24,10 @@ const IndividualForm = ({ who, formData, setFormData }) => {
                 </Select>
             </Form.Item>
 
-            <Form.Item label="Menu Cost" style={{ marginBottom: "0" }}>
-                <InputNumber 
-                    min={ 0 } 
-                    max={ 35 } 
-                    defaultValue={ 28 }
+            <Form.Item label={ `Menu Cost: $${ formData[ who ].menuCost }` } style={{ marginBottom: "0" }}>
+                <Slider 
+                    min={ 20 } 
+                    max={ 40 } 
                     onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], menuCost: e } }) }
                 />
             </Form.Item>
@@ -41,57 +37,75 @@ const IndividualForm = ({ who, formData, setFormData }) => {
 
 
 
-const PageOne = () => {
-    const [ , send ] = useMachine( mealMachine );
-    const [ insert_meals, { error, loading } ] = useMutation( INSERT_MEALS );
+const PageOne = ({ confirmSave }) => {
+    const [ insert_meals, { loading } ] = useMutation( INSERT_MEALS );
+    const [ error, setError ] = useState( false )
     const [ formData, setFormData ] = useState( {
         date: moment( new Date().toLocaleDateString(), "DD-MM-YYYY" )._i ,
         katie: {
             active: true,
-            mealType: 'salad',
-            menuCost: 28,
+            mealType: '',
+            menuCost: 0,
         },
         chris: {
             active: true,
-            mealType: 'salad',
-            menuCost: 28,
+            mealType: '',
+            menuCost: 0,
         },
         shared: true,
     } )
 
     const handleSubmit = async e => {
         e.preventDefault();
+        setError( false );
+
+        const { date, shared, katie, chris } = formData
         const output = [];
-        if ( formData.katie ) {
+        if ( katie.active ) {
+            if ( ( shared && !chris.active ) || !katie.mealType || !katie.menuCost ) {
+                setError( true );
+                return
+            }
             output.push({
-                meal_category: formData.katie.mealType, 
-                menu_cost: formData.katie.menuCost, 
-                shared: formData.shared, 
+                meal_category: katie.mealType, 
+                menu_cost: katie.menuCost, 
+                shared: shared, 
                 who: "Katie", 
-                date: formData.date,
+                date: date,
             })
         }
-        if ( formData.chris ) {
+        if ( chris.active ) {
+            if ( ( shared && !katie.active ) || !chris.mealType || !chris.menuCost ) {
+                setError( true );
+                return
+            }
             output.push({
-                meal_category: formData.chris.mealType, 
-                menu_cost: formData.chris.menuCost, 
-                shared: formData.shared, 
+                meal_category: chris.mealType, 
+                menu_cost: chris.menuCost, 
+                shared: shared, 
                 who: "Chris", 
-                date: formData.date,
+                date: date,
             })
         }
 
-        const res = await insert_meals({ variables: {data: output }});
-        if ( res ) {
-            send( "SUCCESS" );
+        if ( output.length ) {
+            const res = await insert_meals({ variables: {data: output }});
+            try {
+                confirmSave( res.data.insert_meals.returning );
+            }
+            catch {
+                setError( true );
+            }
         }
     }
 
     return (
         <Row>
             <Col>
-                <Form onSubmit={ handleSubmit } labelCol={{ span: 0 }} wrapperCol={{ span: 14 }}>
-                    <Form.Item label="Date" style={{ marginBottom: "0.5em" }} labelAlign="left">
+                <Title level={ 4 }>Add a New Meal</Title>
+                { error && <Text type="danger" >Something went wrong, are you missing a field or shared while alone?</Text>}
+                <Form onSubmit={ handleSubmit } labelCol={{ span: 4 }} wrapperCol={{ span: 8 }} labelAlign="left">
+                    <Form.Item label="Date" style={{ marginBottom: "0.5em" }}>
                         <DatePicker 
                             format="DD-MM-YYYY" 
                             defaultValue={ moment( new Date().toLocaleDateString(), "DD-MM-YYYY" ) } 
@@ -102,7 +116,7 @@ const PageOne = () => {
                     <Form.Item style={{ marginBottom: "0.5em" }} >
                         <Switch
                             checkedChildren="Katie"
-                            unCheckedChildren="No Katie"
+                            unCheckedChildren="Katie"
                             defaultChecked
                             onChange={ e => setFormData({ ...formData, katie: { ...formData.katie, active: e } }) }
                         />
@@ -113,7 +127,7 @@ const PageOne = () => {
                     <Form.Item style={{ marginBottom: "0.5em" }}>
                         <Switch
                             checkedChildren="Chris"
-                            unCheckedChildren="No Chris"
+                            unCheckedChildren="Chris"
                             defaultChecked
                             onChange={ e => setFormData({ ...formData, chris: { ...formData.chris, active: e } }) }
                         />
@@ -124,7 +138,7 @@ const PageOne = () => {
                     <Form.Item style={{ marginBottom: "0.5em" }}>
                         <Switch
                             checkedChildren="Shared"
-                            unCheckedChildren="Individual"
+                            unCheckedChildren="Shared"
                             defaultChecked
                             onChange={ e=> setFormData({ ...formData, shared: e }) }
                         />

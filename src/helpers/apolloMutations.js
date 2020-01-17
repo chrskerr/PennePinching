@@ -9,3 +9,13 @@ export const INSERT_MEALS = gql`
         }
     }
 `
+
+export const UPDATE_MEALS = gql`
+    mutation UpdateMeals($id: UUID!, $data: [ meals_update_input! ]! ) {
+        update_meals(where: {id: {_eq: "" }}, _set: $data ) {
+            returning {
+                id
+            }
+        }
+    }
+`
