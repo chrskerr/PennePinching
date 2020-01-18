@@ -2,6 +2,7 @@
 // Packages
 import React, { useState } from 'react';
 import { useMachine } from '@xstate/react';
+import { Spin } from 'antd';
 
 
 // App
@@ -10,7 +11,7 @@ import PageOne from '../components/Add/PageOne';
 import Success from '../components/Add/Success';
 
 
-const Add = () => {
+const Add = ({ authState }) => {
     const [ current, send ] = useMachine( mealMachine );
     const [ returnedIds, setReturnedIds ] = useState();
     const confirmSave = ( res ) => {
@@ -18,6 +19,8 @@ const Add = () => {
         setReturnedIds( res );
     }
     const restart = () => send( 'RESTART' )
+
+    if ( !authState ) return <Spin />
 
     return(
         <>

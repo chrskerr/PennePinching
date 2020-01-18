@@ -28,13 +28,14 @@ const PageOne = ({ confirmSave }) => {
             menuCost: 0,
         },
         shared: true,
+        testing: true,
     } )
 
     const handleSubmit = async e => {
         e.preventDefault();
         setError( false );
 
-        const { date, shared, katie, chris } = formData
+        const { date, shared, katie, chris, testing } = formData
         const output = [];
         if ( katie.active ) {
             if ( ( shared && !chris.active ) || !katie.mealType || !katie.menuCost ) {
@@ -47,6 +48,7 @@ const PageOne = ({ confirmSave }) => {
                 shared: shared, 
                 who: "Katie", 
                 date: date,
+                testing: testing,
             })
         }
         if ( chris.active ) {
@@ -60,6 +62,7 @@ const PageOne = ({ confirmSave }) => {
                 shared: shared, 
                 who: "Chris", 
                 date: date,
+                testing: testing,
             })
         }
 
@@ -115,7 +118,16 @@ const PageOne = ({ confirmSave }) => {
                             checkedChildren="Shared"
                             unCheckedChildren="Shared"
                             defaultChecked
-                            onChange={ e=> setFormData({ ...formData, shared: e }) }
+                            onChange={ e => setFormData({ ...formData, shared: e }) }
+                        />
+                    </Form.Item>
+
+                    <Form.Item style={{ marginBottom: "0.5em" }}>
+                        <Switch
+                            checkedChildren="Testing"
+                            unCheckedChildren="Testing"
+                            defaultChecked
+                            onChange={ e => setFormData({ ...formData, testing: e }) }
                         />
                     </Form.Item>
 

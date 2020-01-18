@@ -4,10 +4,24 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ApolloClient from 'apollo-boost';
 import "antd/dist/antd.css";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
 
 export const client = new ApolloClient({
-  uri: 'https://penne-server-vi2wkbooba-uc.a.run.app/v1/graphql',
+  	uri: 'https://penne-server-vi2wkbooba-uc.a.run.app/v1/graphql',
 });
+
+const firebaseConfig = {
+	apiKey: "",
+	authDomain: "penne-pinching.firebaseapp.com",
+	databaseURL: "https://penne-pinching.firebaseio.com",
+	projectId: "penne-pinching",
+	storageBucket: "penne-pinching.appspot.com",
+	messagingSenderId: "305728508038",
+	appId: "1:305728508038:web:ab5a360f93018d34fac107",
+};
+firebase.initializeApp( firebaseConfig );
 
 
 ReactDOM.render(<App />, document.getElementById('root'));

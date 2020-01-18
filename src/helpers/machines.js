@@ -5,7 +5,7 @@ import { Machine, interpret } from 'xstate';
 
 export const homeMachine = new Machine({
 	id: "home",
-	initial: "analytics",
+	initial: "add",
 	states: {
 		add: {
 			on: { ANALYTICS: 'analytics' },
@@ -29,7 +29,7 @@ export const mealMachine = new Machine({
 			on: { RESTART: 'pageone' },
 		},
     },
-})
+});
 interpret( mealMachine ).start();
 
 
@@ -47,5 +47,5 @@ export const analyticsMachine = new Machine({
 			on: { PREVIOUS: 'history', NEXT: 'summary' },
 		},
     },
-})
+});
 interpret( mealMachine ).start();

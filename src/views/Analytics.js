@@ -1,7 +1,7 @@
 
 // Packages
 import React from 'react';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, Typography } from 'antd';
 import { useQuery } from '@apollo/react-hooks';
 import { useMachine } from '@xstate/react';
 
@@ -11,14 +11,20 @@ import { GET_ALL_MEALS } from '../helpers/apolloQueries';
 import { analyticsMachine } from '../helpers/machines';
 import Summary from '../components/Analytics/Summary';
 
+const { Text } = Typography;
 
 const Analytics = () => {
-    const { loading, data } = useQuery( GET_ALL_MEALS );
+    const { loading, data, error } = useQuery( GET_ALL_MEALS );
     const [ current, send ] = useMachine( analyticsMachine );
 
+    if ( error ) {
+        console.error( error )
+        return (
+            <Text type="danger">Hasura error, see Console</Text>
+        )
+    }
 
-
-    if ( loading ) return null
+    if ( loading || error ) return null
     const { meals: mealsData } = data;
 
     return (

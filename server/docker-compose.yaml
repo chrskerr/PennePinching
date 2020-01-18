@@ -25,12 +25,12 @@ services:
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://hasura:@postgres:5432/postgres
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
-      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup          # http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup
       HASURA_GRAPHQL_SERVER_PORT: 8080
       HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT: 60
       HASURA_GRAPHQL_MIGRATIONS_DIR: /hasura/migrations
-      HASURA_GRAPHQL_ADMIN_SECRET: "chrisandkatiefeeding"   # not needed for dev env
-      #HASURA_GRAPHQL_JWT_SECRET: ""                     # see hasura/notes.md
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"RS512", "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"}'
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
     depends_on:
       - "postgres"
 
