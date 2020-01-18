@@ -2,18 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import ApolloClient from 'apollo-boost';
 import "antd/dist/antd.css";
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
-
-export const client = new ApolloClient({
-  	uri: 'https://penne-server-vi2wkbooba-uc.a.run.app/v1/graphql',
-});
-
 const firebaseConfig = {
-	apiKey: "",
+	apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
 	authDomain: "penne-pinching.firebaseapp.com",
 	databaseURL: "https://penne-pinching.firebaseio.com",
 	projectId: "penne-pinching",

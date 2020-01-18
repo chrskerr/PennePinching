@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { Row, Menu, Icon, Typography, Modal, Form, Input, Button } from 'antd';
+import ApolloClient from 'apollo-boost';
 import { useMachine } from '@xstate/react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
 // App
-import { client } from './index';
+// import { client } from './index';
 import { homeMachine } from './helpers/machines';
 import Add from './views/Add';
 import Analytics from './views/Analytics';
@@ -23,7 +24,14 @@ const App = () => {
 	const [ loginError, setLoginError ] = useState();
 	const [ loading, setLoading ] = useState( false );
 	const [ authState, setAuthState ] = useState( false );
-	
+
+	const client = new ApolloClient({
+		uri: 'https://penne-server-vi2wkbooba-uc.a.run.app/v1/graphql',
+		headers: authState 
+			? { Authorization: `Bearer ${ authState.token }` } 
+			: {},
+	});
+
 	useEffect( () => {
 		return firebase.auth().onAuthStateChanged( async user => {
 			if ( user ) {

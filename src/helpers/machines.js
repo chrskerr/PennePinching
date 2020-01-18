@@ -5,7 +5,7 @@ import { Machine, interpret } from 'xstate';
 
 export const homeMachine = new Machine({
 	id: "home",
-	initial: "add",
+	initial: "analytics",
 	states: {
 		add: {
 			on: { ANALYTICS: 'analytics' },
