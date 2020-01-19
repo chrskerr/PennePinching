@@ -26,7 +26,7 @@ const App = () => {
 	const [ authState, setAuthState ] = useState( false );
 
 	const client = new ApolloClient({
-		uri: 'https://penne-server-vi2wkbooba-uc.a.run.app/v1/graphql',
+		uri: 'https://penne-pinching.herokuapp.com/v1/graphql',
 		headers: authState 
 			? { Authorization: `Bearer ${ authState.token }` } 
 			: {},
