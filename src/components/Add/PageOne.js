@@ -37,7 +37,7 @@ const PageOne = ({ confirmSave }) => {
             meal_id: '',
         },
         shared: true,
-        testing: true,
+        testing: false,
     } )
 
     const handleSubmit = async e => {
@@ -172,7 +172,6 @@ const PageOne = ({ confirmSave }) => {
                         <Switch
                             checkedChildren="Testing"
                             unCheckedChildren="Testing"
-                            defaultChecked
                             onChange={ e => setFormData({ ...formData, testing: e }) }
                         />
                     </Form.Item>
