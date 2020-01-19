@@ -11,14 +11,14 @@ const { Title, Text } = Typography;
 const dataSummary = ( mode, data, who ) => {
     let output = { total: 0, pizza: 0, pasta: 0, salad: 0 };
     data.forEach( el => {
-        if ( who === 'both' || who === el.who ) {
+        if ( ( who === 'both' || who === el.who ) && el.menu ) {
             if ( mode === "count" ) {
                 output.total ++;
-                output[ el.meal_category ] ++;
+                output[ el.menu.category.toLowerCase() ] ++;
             }
             if ( mode === "sum" ) {
-                output.total += el.menu_cost;
-                output[ el.meal_category ] += el.menu_cost;
+                output.total += el.menu.cost;
+                output[ el.menu.category.toLowerCase() ] += el.menu.cost;
             }
         }
     })
@@ -34,7 +34,7 @@ const Summary = ({ mealsData }) => {
 
     return (
         <Row>
-            <Row>
+            <Row gutter={[ 0, 4 ]}>
                 <Title level={ 3 }>Summary</Title>
                 <Select defaultValue={ who } onChange={ value => setWho( value ) }>
                     <Option value='both'>Both</Option>
@@ -42,25 +42,27 @@ const Summary = ({ mealsData }) => {
                     <Option value='Chris'>Chris</Option>
                 </Select>
             </Row>
+            <br />
             <Row>
                 <Text>Total spent: $</Text><Text strong>{ spend }</Text>
             </Row>
+            <br />
             <Row>
                 <Text>Total meals: </Text><Text strong>{ counts.total }</Text>
             </Row>
+            <Row>
+                <Text>What we would've spent at home: $</Text><Text strong>{ ( counts.total ) * 10 }</Text><Text> at $10 per meal</Text>
+            </Row>
+            <Row>
+                <Text>Total menu-cost: $</Text><Text strong>{ sums.total }</Text>
+            </Row>
             <br />
             <Row>
-                <Text>Total savings (internal): $</Text><Text strong>{ ( counts.total ) * 10 }</Text><Text> at $10 per meal</Text>
-            </Row>
-            <Row>
-                <Text>Total savings (external): $</Text><Text strong>{ sums.total }</Text>
+                <Text>Savings against at home: $</Text><Text strong>{ ( counts.total ) * 10 - spend }</Text>
             </Row>
             <br />
             <Row>
-                <Text>Net position (internal): $</Text><Text strong>{ ( counts.total ) * 10 - spend }</Text>
-            </Row>
-            <Row>
-                <Text>Net position (external)): $</Text><Text strong>{ sums.total - spend }</Text>
+                <Text>Total cost to Fratelli Fresh: $</Text><Text strong>{ sums.total - spend }</Text>
             </Row>
         </Row>
     )

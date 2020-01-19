@@ -28,16 +28,21 @@ const Analytics = () => {
     const { meals: mealsData } = data;
 
     return (
-        <Row gutter={[ 8, 8 ]}>
-            <Col span={ 2 }>
-                <Button size="large" icon="left" onClick={ () => send( "PREVIOUS" ) }/>
-            </Col>
-            <Col span={ 20 }>
-                { current.matches( 'summary' ) && <Summary mealsData={ mealsData } /> }
-            </Col>
-            <Col span={ 2 }>
-                <Button size="large" icon="right" onClick={ () => send( "PREVIOUS" ) }/>
-            </Col>
+        <Row>
+            <Row justify="space-between" type="flex" style={{ marginBottom: "0.5em" }}>
+                <Col span={ 2 }>
+                    <Button size="large" icon="left" onClick={ () => send( "PREVIOUS" ) }/>
+                </Col>
+                <Col span={ 2 }>
+                    <Button size="large" icon="right" onClick={ () => send( "NEXT" ) }/>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={ 20 }>
+                    { current.matches( 'summary' ) && <Summary mealsData={ mealsData } /> }
+                </Col>
+
+            </Row>
         </Row>
     )
 }

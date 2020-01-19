@@ -1,13 +1,38 @@
 import gql from 'graphql-tag';
 
 export const GET_ALL_MEALS = gql`
-    query MyQuery {
-        meals {
+    query GetAllMeals {
+        meals(where: {test: {_eq: false}}) {
             date
-            meal_category
-            menu_cost
+            menu {
+                category
+                cost
+                name
+            }
             shared
             who
+        }
+    }
+`
+
+export const GET_MENU = gql`
+    query GetMenu {
+        menu {
+            category
+            cost
+            id
+            name
+            active
+        }
+    }
+`
+
+export const MENU_SUBSCRIPTION = gql`
+    subscription MenuSubscription {
+        menu {
+            category
+            cost
+            name
         }
     }
 `
