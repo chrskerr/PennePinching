@@ -1,19 +1,21 @@
 
 // Packages
 import React, { useState } from 'react';
-import { Row, Col, Form, DatePicker, Switch, Select, Button, Typography, Spin, Modal, Input, Icon, AutoComplete } from 'antd'
+import { Row, Col, Form, DatePicker, Switch, Select, Button, Typography, Modal, Input, AutoComplete } from 'antd'
 import moment from 'moment';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 
 // App
 import { INSERT_MEALS, INSERT_MENU_ITEM } from '../../helpers/apolloMutations'
 import { GET_MENU } from '../../helpers/apolloQueries'
+import CenteredSpin from '../../components/Shared/CenteredSpin';
+
 
 const { Title, Text } = Typography;
 const { Option, OptGroup } = Select;
 
 const PageOne = ({ confirmSave }) => {
-    const { data: initialMenuData } = useQuery( GET_MENU, { pollInterval: 1000 } );
+    const { data: initialMenuData } = useQuery( GET_MENU /*, { pollInterval: 1000 } */ );
     const [ insert_meals, { loading } ] = useMutation( INSERT_MEALS );
     const [ insert_menu, { loading: menuInsertLoading } ] = useMutation( INSERT_MENU_ITEM );
 
@@ -28,14 +30,8 @@ const PageOne = ({ confirmSave }) => {
     const [ error, setError ] = useState( false );
     const [ formData, setFormData ] = useState( {
         date: moment( new Date().toLocaleDateString(), "DD-MM-YYYY" )._i ,
-        katie: {
-            active: true,
-            meal_id: '',
-        },
-        chris: {
-            active: true,
-            meal_id: '',
-        },
+        katie: { menu_id: '' },
+        chris: { menu_id: '' },
         shared: true,
         testing: false,
     } )
@@ -44,29 +40,25 @@ const PageOne = ({ confirmSave }) => {
         e.preventDefault();
         setError( false );
 
-        const { date, shared, katie, chris, testing } = formData
+        const { date, shared, katie, chris, testing } = formData;
+        
+        let updatedShared = shared;
+        if ( ( katie.menu_id && !chris.menu_id ) || ( !katie.menu_id && chris.menu_id ) ) updatedShared = false;
+
         const output = [];
-        if ( katie.active ) {
-            if ( ( shared && !chris.active ) || !katie.menu_id ) {
-                setError( true );
-                return
-            }
+        if ( katie.menu_id ) {
             output.push({
                 menu_id: katie.menu_id,
-                shared: shared, 
+                shared: updatedShared, 
                 who: "Katie", 
                 date: date,
                 test: testing,
             })
         }
-        if ( chris.active ) {
-            if ( ( shared && !katie.active ) || !chris.menu_id ) {
-                setError( true );
-                return
-            }
+        if ( chris.menu_id ) {
             output.push({
                 menu_id: chris.menu_id,  
-                shared: shared, 
+                shared: updatedShared, 
                 who: "Chris", 
                 date: date,
                 test: testing,
@@ -94,7 +86,7 @@ const PageOne = ({ confirmSave }) => {
 			setModalError( "Fields missing" )
 		} else {
 			try {
-				await insert_menu({ variables: { data: [ modalData ] } });
+				await insert_menu({ variables: { data: [ modalData ] }, refetchQueries: [{ query: GET_MENU }], awaitRefetchQueries: true });
 				setAddMenuModal( false );
 				setModalData({
 					category: '',
@@ -109,7 +101,7 @@ const PageOne = ({ confirmSave }) => {
 		}
 	};
 
-    if ( !initialMenuData ) return <Spin />
+    if ( !initialMenuData ) return <CenteredSpin />
 
     const { menu } = initialMenuData
     const menuCategories = [ ...new Set( menu.map( menu_item => menu_item.category )) ]
@@ -118,17 +110,21 @@ const PageOne = ({ confirmSave }) => {
         <Row>
             <Col>
 				<Row justify='space-between'>
-					<Col span={ 23 }>
-                		<Title level={ 4 }>Add a New Meal</Title>
+					<Col span={ 18 }>
+                        <Row  type="flex" justify="start">
+                		    <Title level={ 4 }>Add a New Meal</Title>
+                        </Row>
 					</Col>
-					<Col span={ 1 }>
-						<Icon type="setting" onClick={ () => setAddMenuModal( true ) } label="Add to menu"/>
+					<Col span={ 6 }>
+                        <Row  type="flex" justify="end">
+						    <Button icon="plus" onClick={ () => setAddMenuModal( true ) }>Menu</Button>
+                        </Row>
 					</Col>
 				</Row>
                 
-				{ error && <Text type="danger" >Something went wrong, are you missing a field or shared while alone?</Text>}
+				{ error && <Text type="danger" >Something went wrong...</Text>}
                 
-				<Form onSubmit={ handleSubmit } labelCol={{ span: 4 }} wrapperCol={{ span: 8 }} labelAlign="left">
+				<Form onSubmit={ handleSubmit } labelAlign="left">
                     <Form.Item label="Date" style={{ marginBottom: "0.5em" }}>
                         <DatePicker 
                             format="DD-MM-YYYY" 
@@ -137,27 +133,9 @@ const PageOne = ({ confirmSave }) => {
                         />
                     </Form.Item>
 
-                    <Form.Item style={{ marginBottom: "0.5em" }} >
-                        <Switch
-                            checkedChildren="Katie"
-                            unCheckedChildren="Katie"
-                            defaultChecked
-                            onChange={ e => setFormData({ ...formData, katie: { ...formData.katie, active: e } }) }
-                        />
-                    </Form.Item>
+                    <IndividualForm who="katie" setFormData={ setFormData } formData={ formData } menu={ menu } menuCategories={ menuCategories } /> 
 
-                    { formData.katie.active && <IndividualForm who="katie" setFormData={ setFormData } formData={ formData } menu={ menu } menuCategories={ menuCategories } /> }
-
-                    <Form.Item style={{ marginBottom: "0.5em" }}>
-                        <Switch
-                            checkedChildren="Chris"
-                            unCheckedChildren="Chris"
-                            defaultChecked
-                            onChange={ e => setFormData({ ...formData, chris: { ...formData.chris, active: e } }) }
-                        />
-                    </Form.Item>
-
-                    { formData.chris.active && <IndividualForm who="chris" setFormData={ setFormData } formData={ formData }  menu={ menu } menuCategories={ menuCategories } /> }
+                    <IndividualForm who="chris" setFormData={ setFormData } formData={ formData }  menu={ menu } menuCategories={ menuCategories } />
 
                     <Form.Item style={{ marginBottom: "0.5em" }}>
                         <Switch
@@ -168,7 +146,9 @@ const PageOne = ({ confirmSave }) => {
                         />
                     </Form.Item>
 
-                    <Form.Item style={{ marginBottom: "0.5em" }}>
+                    <Button loading={ loading } icon={ loading ? "poweroff" : "right" } htmlType="submit"  style={{ marginBottom: "1em" }}>Submit</Button>
+
+                    <Form.Item>
                         <Switch
                             checkedChildren="Testing"
                             unCheckedChildren="Testing"
@@ -176,7 +156,6 @@ const PageOne = ({ confirmSave }) => {
                         />
                     </Form.Item>
 
-                    <Button loading={ loading } icon={ loading ? "poweroff" : "right" } htmlType="submit" >Submit</Button>
                 </Form>
             </Col>
 
@@ -202,6 +181,7 @@ const PageOne = ({ confirmSave }) => {
 					</Form.Item>
 					<Form.Item label="Cost">
 						<Input 
+                            type='number'
 							onChange={ e => setModalData({ ...modalData, cost: e.target.value }) }
 							value={ modalData.cost }
 						/>
@@ -223,20 +203,24 @@ export default PageOne
 function IndividualForm({ who, formData, setFormData, menu, menuCategories }) {
     return (
         <>
-            <Form.Item label="Menu Item" style={{ marginBottom: "0" }}>
+            <Form.Item label={ `What did ${ who } order?` } style={{ marginBottom: "0" }} colon={ false }>
                 <Select 
                     onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], menu_id: e } }) }
+                    defaultValue="Did not eat"
                 >
+                    <OptGroup key={ 'groupNothing' } label='Did not eat'>
+                        <Option key={ 'nothing' } value={ 0 }>Did not eat</Option>
+                    </OptGroup>
                     { menuCategories.map( category => {
                         return (
-							<OptGroup key={ category} label={ category }>
-								{ menu.map( menuItem => {
-									return (
-										menuItem.category === category && menuItem.active &&
-										<Option key={ menuItem.id } value={ menuItem.id }>{ menuItem.name } - ${ menuItem.cost }</Option>
-									)
-								})}
-							</OptGroup>
+                            <OptGroup key={ category } label={ category }>
+                                { menu.map( menuItem => {
+                                    return (
+                                        menuItem.category === category && menuItem.active &&
+                                        <Option key={ menuItem.id } value={ menuItem.id }>{ menuItem.name } - ${ menuItem.cost }</Option>
+                                    )
+                                })}
+                            </OptGroup>
 						)
                     }) }
                 </Select>
@@ -244,14 +228,3 @@ function IndividualForm({ who, formData, setFormData, menu, menuCategories }) {
         </>
     )
 }
-
-
-// mutation MyMutation {
-//   __typename
-//   insert_menu(objects: {category: "", cost: 10, name: ""}) {
-//     returning {
-//       id
-//     }
-//   }
-// }
-

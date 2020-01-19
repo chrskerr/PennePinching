@@ -9,7 +9,9 @@ import { useMachine } from '@xstate/react';
 // App
 import { GET_ALL_MEALS } from '../helpers/apolloQueries';
 import { analyticsMachine } from '../helpers/machines';
+import CenteredSpin from '../components/Shared/CenteredSpin';
 import Summary from '../components/Analytics/Summary';
+import History from '../components/Analytics/History';
 
 const { Text } = Typography;
 
@@ -24,7 +26,7 @@ const Analytics = () => {
         )
     }
 
-    if ( loading || error ) return null
+    if ( loading || error ) return <CenteredSpin />
     const { meals: mealsData } = data;
 
     return (
@@ -40,8 +42,8 @@ const Analytics = () => {
             <Row>
                 <Col span={ 20 }>
                     { current.matches( 'summary' ) && <Summary mealsData={ mealsData } /> }
+                    { current.matches( 'history' ) && <History mealsData={ mealsData } /> }
                 </Col>
-
             </Row>
         </Row>
     )

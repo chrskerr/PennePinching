@@ -15,6 +15,7 @@ import { homeMachine } from './helpers/machines';
 import Add from './views/Add';
 import Analytics from './views/Analytics';
 
+
 const { Title, Text } = Typography;
 
 const App = () => {
@@ -98,7 +99,7 @@ const App = () => {
 
 	return (
 		<ApolloProvider client={ client }>
-			<Row>
+			<Row style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
 				<Row>
 					<Title style={{ padding: "1em 0 0 1em" }}>Penne Pinching</Title>
 					<Menu selectedKeys={ current.value } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
@@ -119,7 +120,7 @@ const App = () => {
 					</Menu>
 				</Row>
 				
-				<Row style={{ padding: "2em" }}>	
+				<Row style={{ padding: "2em", flexGrow: "1", display: 'flex', flexDirection: 'column' }}>	
 					{ current.matches( "add" ) && <Add authState={ authState }/> }
 					{ current.matches( "analytics" ) && <Analytics /> }
 				</Row>

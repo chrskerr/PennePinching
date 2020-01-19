@@ -1,50 +1,57 @@
 
 // Packages
 import React, { useState } from 'react';
-import { Row, Col, Table, Select, Typography } from 'antd';
-import { useQuery } from '@apollo/react-hooks';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Row, Select, Typography } from 'antd';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import moment from 'moment';
+import _ from 'lodash';
 
 
 // App
-import { GET_ALL_MEALS } from '../helpers/apolloQueries';
 
+const { Title } = Typography;
 const { Option } = Select;
-const { Title, Text } = Typography;
 
-const dataSummary = ( mode, data, who ) => {
-    let output = { total: 0, pizza: 0, pasta: 0, salad: 0 };
-    data.forEach( el => {
-        if ( who === 'both' || who === el.who ) {
-            if ( mode === "count" ) {
-                output.total ++;
-                output[ el.meal_category ] ++;
-            }
-            if ( mode === "sum" ) {
-                output.total += el.menu_cost;
-                output[ el.meal_category ] += el.menu_cost;
+const dataProcess = ( inputData ) => {
+    const output = {
+        width: 0,
+        height: 0,
+        dataPoints: [],
+    };
+
+    inputData.forEach( el => {
+        const year = el.date.split( '/' )[ 2 ];
+        const weekNum = moment( el.date, "DD-MM-YYYY" ).isoWeek();
+        const index = _.findIndex( output.dataPoints, { weekNum, year })
+        if ( index === -1 ) {
+            output.dataPoints.push({
+                year,
+                weekNum,
+                quantity: 1,
+                sum: el.menu.cost,
+                netInternalPos: 0,
+            })
+        } else {
+            output.dataPoints[ index ] = {
+                year,
+                weekNum,
+                quantity: output.dataPoints[ index ].quantity ++,
+                sum: output.dataPoints[ index ].sum += el.menu.cost,
+                netInternalPos: 0,
             }
         }
     })
-    return output;
+    console.log( output )
+
 };
 
-const Analyse = () => {
-    const { loading, data } = useQuery( GET_ALL_MEALS );
+const History = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' )
-    const originalInvestment = 399
-    
-    if ( loading ) return null
-    const { meals: mealsData } = data;
-    const dataWithKeys = [ ...mealsData ].map( ( el, i ) => { return { ...el, key: i } } )
-    const spend = who === 'both' ? originalInvestment * 2 : originalInvestment
-    
-    const counts = dataSummary( "count", mealsData, who )
-    const sums = dataSummary( "sum", mealsData, who )
+    const displayData = dataProcess( mealsData )
 
     return (
         <Row>
-            <Row>
+            <Row gutter={[ 0, 4 ]}>
                 <Title level={ 3 }>Summary</Title>
                 <Select defaultValue={ who } onChange={ value => setWho( value ) }>
                     <Option value='both'>Both</Option>
@@ -53,28 +60,27 @@ const Analyse = () => {
                 </Select>
             </Row>
             <Row>
-                <Title level={ 4 }>Costs</Title>
-                <Text>Total spent: $</Text><Text strong>{ spend }</Text>
+                <ComposedChart>
+
+                </ComposedChart>
             </Row>
-            <Row>
-                <Text>Total meals: </Text><Text strong>{ counts.total }</Text>
-            </Row>
-            <Row>
-                <Text>Total savings (internal): $</Text><Text strong>{ ( counts.total ) * 10 }</Text><Text> at $10 per meal</Text>
-            </Row>
-            <Row>
-                <Text>Total savings (external): $</Text><Text strong>{ sums.total }</Text>
-            </Row>
-            <Row>
-                <Text>Net position (internal): $</Text><Text strong>{ ( counts.total ) * 10 - spend }</Text>
-            </Row>
-            <Row>
-                <Text>Net position (external)): $</Text><Text strong>{ sums.total - spend }</Text>
-            </Row>
-        
-            {/* { data && <Table dataSource={ dataWithKeys } columns={ columns } /> } */}
         </Row>
     )
 }
 
-export default Analyse;
+export default History;
+
+function ISO8601_week_no ( input ) {
+    const dt = new Date( ...input )
+    let tdt = new Date( dt.valueOf() );
+    const dayn = ( dt.getDay() + 6 ) % 7;
+    tdt.setDate( tdt.getDate() - dayn + 3) ;
+    const firstThursday = tdt.valueOf();
+    tdt.setMonth( 0, 1 );
+    
+    if ( tdt.getDay() !== 4 ) {
+        tdt.setMonth( 0, 1 + ( ( 4 - tdt.getDay() ) + 7 ) % 7 );
+    }
+
+    return 1 + Math.ceil( ( firstThursday - tdt ) / 604800000 );
+}
