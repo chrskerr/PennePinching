@@ -1,40 +1,23 @@
 
 // Packages
-import React, { useState } from 'react';
-import { Row, Select, Typography } from 'antd';
+import React, { useState, useMemo } from 'react';
+import { Row, Col, Card, Select, Typography, Statistic } from 'antd';
+import _ from 'lodash';
+import moment from 'moment';
+import CountUp from 'react-countup';
 
 
 // App
 const { Option } = Select;
-const { Title, Text } = Typography;
-
-const dataSummary = ( mode, data, who ) => {
-    let output = { total: 0, pizza: 0, pasta: 0, salad: 0 };
-    data.forEach( el => {
-        if ( ( who === 'both' || who === el.who ) && el.menu ) {
-            if ( mode === "count" ) {
-                output.total ++;
-                output[ el.menu.category.toLowerCase() ] ++;
-            }
-            if ( mode === "sum" ) {
-                output.total += el.menu.cost;
-                output[ el.menu.category.toLowerCase() ] += el.menu.cost;
-            }
-        }
-    })
-    return output;
-};
+const { Title } = Typography;
 
 const Summary = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
-    const originalInvestment = 399;
-    const spend = who === 'both' ? originalInvestment * 2 : originalInvestment;
-    const counts = dataSummary( "count", mealsData, who );
-    const sums = dataSummary( "sum", mealsData, who );
+    const { weekCount, position, originalInvestment, totalMeals,  internalCost, totalMenuCost } = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
 
     return (
         <Row>
-            <Row gutter={[ 0, 4 ]}>
+            <Row>
                 <Title level={ 3 }>Summary</Title>
                 <Select defaultValue={ who } onChange={ value => setWho( value ) }>
                     <Option value='both'>Both</Option>
@@ -42,30 +25,92 @@ const Summary = ({ mealsData }) => {
                     <Option value='Chris'>Chris</Option>
                 </Select>
             </Row>
-            <br />
-            <Row>
-                <Text>Total spent: $</Text><Text strong>{ spend }</Text>
-            </Row>
-            <br />
-            <Row>
-                <Text>Total meals: </Text><Text strong>{ counts.total }</Text>
-            </Row>
-            <Row>
-                <Text>What we would've spent at home: $</Text><Text strong>{ ( counts.total ) * 10 }</Text><Text> at $10 per meal</Text>
-            </Row>
-            <Row>
-                <Text>Total menu-cost: $</Text><Text strong>{ sums.total }</Text>
-            </Row>
-            <br />
-            <Row>
-                <Text>Savings against at home: $</Text><Text strong>{ ( counts.total ) * 10 - spend }</Text>
-            </Row>
-            <br />
-            <Row>
-                <Text>Total cost to Fratelli Fresh: $</Text><Text strong>{ sums.total - spend }</Text>
+
+            <Row style={{ width: "100%", paddingTop: "2.5em" }}>
+
+                <Row justify='space-around' type='flex' >
+                    <Col span={ 7 } style={{ minWidth: '200px', margin: '1em' }}>
+                        <Card title='Net Financial Position' headStyle={{ backgroundColor: "#bae7ff" }}  bodyStyle={{ backgroundColor: "#e6f7ff" }}>
+                            <Title level={ 3 }>
+                                <CountUp start={ originalInvestment } end={ position } duration={ 5 } prefix="$" />
+                            </Title>
+                        </Card>
+                    </Col>
+                    <Col span={ 7 } style={{ minWidth: '200px', margin: '1em' }}>
+                        <Card title='Original Spend' headStyle={{ backgroundColor: "#d9f7be" }} bodyStyle={{ backgroundColor: "#f6ffed" }}>
+                            <Title level={ 3 }>
+                                <CountUp start={ 0 } end={ originalInvestment } duration={ 3 } prefix="$" />
+                            </Title>
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Row justify='space-around' type='flex' >
+                    <Col span={ 7 } style={{ minWidth: '200px', margin: '1em' }}>
+                        <Card title='Meals Eaten' size="small" headStyle={{ backgroundColor: "#fff1b8" }}  bodyStyle={{ backgroundColor: "#fffbe6" }}>
+                            <Title level={ 3 }>
+                                <CountUp start={ 0 } end={ totalMeals } duration={ 3 } />
+                            </Title>
+                        </Card>
+                    </Col>
+                    <Col span={ 7 } style={{ minWidth: '200px', margin: '1em' }}>
+                        <Card title='Average' size="small" headStyle={{ backgroundColor: "#ffe7ba" }} bodyStyle={{ backgroundColor: "#fff7e6" }}>
+                            <Title level={ 3 }>
+                                <CountUp start={ 0 } end={ totalMeals / weekCount } duration={ 3 } decimals={ 1 } suffix=" /week" />
+                            </Title>
+                        </Card>
+                    </Col>
+                </Row>
+
+
+                <Row justify="space-around" type="flex" style={{ marginBottom: '1em' }}>
+                    <Col span={ 8 }>
+                        <Statistic title="Meals Eaten" value={ totalMeals } />
+                    </Col>
+                    <Col span={ 8 }>
+                        <Statistic title="Average Peals per Week" value={ totalMeals / weekCount } suffix={ `/ ${ who === 'both' ? 14 : 7 }` } />
+                    </Col>
+                </Row>
+                <Row justify="space-around" type="flex" style={{ marginBottom: '1em' }}>
+                    <Col span={ 8 }>
+                        <Statistic title="What That Would've Cost At Home" value={ `$${ internalCost }` } />
+                    </Col>
+                    <Col span={ 8 }>
+                        <Statistic title="Total cost to Fratelli Fresh" value={ `$${ totalMenuCost }` } />
+                    </Col>
+                </Row>
             </Row>
         </Row>
     )
 }
 
 export default Summary;
+
+
+function doFormatData( inputData, who ) {
+    const datedData = inputData.map( el => {
+        return {
+            ...el,
+            weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format('ww') }`,
+        }
+    });
+    const filteredData = _.filter( datedData, el => who === 'both' || who === el.who );
+    const mealCosts = _.map( filteredData, el => el.menu.cost );
+    const originalInvestment = who === "both" ? -399 * 2 : -399;
+    const totalMeals = filteredData.length;
+    const internalCost = totalMeals * 10;
+    const position = originalInvestment + internalCost;
+    const totalMenuCost = _.reduce( mealCosts, ( total, curr ) => total + curr );
+    const weekCount = [ ...new Set( datedData.map( el => el.weekId )) ].length;
+
+    return {
+        originalInvestment,
+        weekCount,
+        position,
+        totalMeals,
+        internalCost,
+        totalMenuCost,
+    }
+
+
+};

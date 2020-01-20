@@ -14,11 +14,11 @@ const { Option } = Select;
 const Split = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
-    const COLORS = [ '#FFB440', '#B37009', '#40A9FF' ];
+    const COLORS = [ '#1890ff', '#fa541c', '#faad14'];
 
     return (
         <Row>
-            <Row gutter={[ 0, 4 ]}>
+            <Row>
                 <Title level={ 3 }>Meal Split</Title>
                 <Select defaultValue={ who } onChange={ value => setWho( value ) }>
                     <Option value='both'>Both</Option>
@@ -26,14 +26,14 @@ const Split = ({ mealsData }) => {
                     <Option value='Chris'>Chris</Option>
                 </Select>
             </Row>
-            <Row justify="center" type="flex" style={{ width: "100%", marginTop: "1em" }}>
+            <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <PieChart margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
-                        <Pie dataKey="quantity" data={ formattedData } label>
+                        <Pie dataKey="quantity" data={ formattedData } label innerRadius={ 75 } outerRadius={ 100 } paddingAngle={ 5 } >
                             { _.map( formattedData, ( cell, index ) => <Cell key={ cell.name } fill={ COLORS[ index % COLORS.length ] }/>)}
                         </Pie>
                         <Tooltip />
-                        <Legend verticalAlign="top" />
+                        <Legend verticalAlign="top" wrapperStyle={{ top: '-1em' }} />
                     </PieChart>
                 </ResponsiveContainer>
             </Row>

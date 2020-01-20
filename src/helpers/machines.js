@@ -35,7 +35,7 @@ interpret( mealMachine ).start();
 
 export const analyticsMachine = new Machine({
     id: "meals",
-    initial: "history",
+    initial: "summary",
     states: {
         summary: {
 			on: { PREVIOUS: 'split', NEXT: 'history' },

@@ -18,7 +18,7 @@ const History = ({ mealsData }) => {
 
     return (
         <Row>
-            <Row gutter={[ 0, 4 ]}>
+            <Row>
                 <Title level={ 3 }>History</Title>
                 <Select defaultValue={ who } onChange={ value => setWho( value ) }>
                     <Option value='both'>Both</Option>
@@ -26,17 +26,17 @@ const History = ({ mealsData }) => {
                     <Option value='Chris'>Chris</Option>
                 </Select>
             </Row>
-            <Row justify="center" type="flex" style={{ width: "100%", marginTop: "3em" }}>
+            <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
-                    <ComposedChart data={ formattedData } margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
+                    <ComposedChart data={ formattedData }>
                         <Tooltip />
-                        <Legend verticalAlign="top" />
+                        <Legend verticalAlign="top" wrapperStyle={{ top: '-1em' }} />
                         <XAxis dataKey="week" />
                         <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } label="Weeks of the Year"/>
                         <YAxis yAxisId="left" dataKey="quantity" />
                         <YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
-                        <Bar yAxisId="left" fill="#40A9FF" dataKey='quantity' barSize={ 20 } name="# of Meals" />
-                        <Line yAxisId="right" type="monotone" dataKey="netPosition" stroke="#FFB440" name="Net Position $" strokeWidth={ 2 } />
+                        <Bar yAxisId="left" fill="#1890ff" dataKey='quantity' barSize={ 20 } name="# of Meals" />
+                        <Line yAxisId="right" type="monotone" dataKey="netPosition" stroke="#faad14" name="Net $" />
                     </ComposedChart>
                 </ResponsiveContainer>
             </Row>
