@@ -8,46 +8,16 @@ import _ from 'lodash';
 
 
 // App
-
 const { Title } = Typography;
 const { Option } = Select;
 
-const dataProcess = ( inputData ) => {
-    const output = {
-        width: 0,
-        height: 0,
-        dataPoints: [],
-    };
-
-    inputData.forEach( el => {
-        const year = el.date.split( '/' )[ 2 ];
-        const weekNum = moment( el.date, "DD-MM-YYYY" ).isoWeek();
-        const index = _.findIndex( output.dataPoints, { weekNum, year })
-        if ( index === -1 ) {
-            output.dataPoints.push({
-                year,
-                weekNum,
-                quantity: 1,
-                sum: el.menu.cost,
-                netInternalPos: 0,
-            })
-        } else {
-            output.dataPoints[ index ] = {
-                year,
-                weekNum,
-                quantity: output.dataPoints[ index ].quantity ++,
-                sum: output.dataPoints[ index ].sum += el.menu.cost,
-                netInternalPos: 0,
-            }
-        }
-    })
-    console.log( output )
-
-};
 
 const History = ({ mealsData }) => {
-    const [ who, setWho ] = useState( 'both' )
-    const displayData = dataProcess( mealsData )
+    const [ who, setWho ] = useState( 'both' );
+    const formattedData = doFormatData( mealsData );
+
+    console.log( formattedData )
+    console.log( mealsData )
 
     return (
         <Row>
@@ -60,8 +30,10 @@ const History = ({ mealsData }) => {
                 </Select>
             </Row>
             <Row>
-                <ComposedChart>
-
+                <ComposedChart data={ formattedData } height={ 800 } width={ 600 }>
+                    <XAxis dataKey="week" />
+                    <YAxis />
+                    <Bar fill="#413ea0" dataKey='quantity' />
                 </ComposedChart>
             </Row>
         </Row>
@@ -70,17 +42,29 @@ const History = ({ mealsData }) => {
 
 export default History;
 
-function ISO8601_week_no ( input ) {
-    const dt = new Date( ...input )
-    let tdt = new Date( dt.valueOf() );
-    const dayn = ( dt.getDay() + 6 ) % 7;
-    tdt.setDate( tdt.getDate() - dayn + 3) ;
-    const firstThursday = tdt.valueOf();
-    tdt.setMonth( 0, 1 );
-    
-    if ( tdt.getDay() !== 4 ) {
-        tdt.setMonth( 0, 1 + ( ( 4 - tdt.getDay() ) + 7 ) % 7 );
-    }
+function doFormatData( inputData, who = 'both' ) {
+    const output = [];
+    inputData.forEach( el => {
+        const year = el.date.split( '/' )[ 2 ];
+        const week = moment( el.date, "DD-MM-YYYY" ).isoWeek();
+        const index = _.findIndex( output, { week, year })
+        if ( index === -1 ) {
+            output.push({
+                year,
+                week,
+                quantity: 1,
+            })
+        } else {
+            const oldData = { ...output[ index ] };
+            output[ index ] = {
+                ...oldData,
+                quantity: oldData.quantity ++,
+            }
+        }
+    })
 
-    return 1 + Math.ceil( ( firstThursday - tdt ) / 604800000 );
-}
+    // Set then Map then Reduce could be cleaner
+
+    console.log( output )
+    return output;
+};
