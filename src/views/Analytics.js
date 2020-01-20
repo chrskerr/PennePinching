@@ -12,6 +12,7 @@ import { analyticsMachine } from '../helpers/machines';
 import CenteredSpin from '../components/Shared/CenteredSpin';
 import Summary from '../components/Analytics/Summary';
 import History from '../components/Analytics/History';
+import Split from '../components/Analytics/Split';
 
 const { Text } = Typography;
 
@@ -21,17 +22,15 @@ const Analytics = () => {
 
     if ( error ) {
         console.error( error )
-        return (
-            <Text type="danger">Hasura error, see Console</Text>
-        )
+        return <Text type="danger">Hasura error, see Console</Text>
     }
 
-    if ( loading || error ) return <CenteredSpin />
+    if ( loading ) return <CenteredSpin />
     const { meals: mealsData } = data;
 
     return (
         <Row>
-            <Row justify="space-between" type="flex" style={{ marginBottom: "0.5em" }}>
+            <Row justify="space-between" type="flex" style={{ marginBottom: "1.5em" }}>
                 <Col span={ 2 }>
                     <Button size="large" icon="left" onClick={ () => send( "PREVIOUS" ) }/>
                 </Col>
@@ -40,9 +39,10 @@ const Analytics = () => {
                 </Col>
             </Row>
             <Row>
-                <Col span={ 20 }>
+                <Col>
                     { current.matches( 'summary' ) && <Summary mealsData={ mealsData } /> }
                     { current.matches( 'history' ) && <History mealsData={ mealsData } /> }
+                    { current.matches( 'split' ) && <Split mealsData={ mealsData } /> }
                 </Col>
             </Row>
         </Row>

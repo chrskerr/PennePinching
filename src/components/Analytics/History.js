@@ -1,8 +1,8 @@
 
 // Packages
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Row, Select, Typography } from 'antd';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -14,27 +14,30 @@ const { Option } = Select;
 
 const History = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
-    const formattedData = doFormatData( mealsData );
-
-    console.log( formattedData )
-    console.log( mealsData )
+    const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
 
     return (
         <Row>
             <Row gutter={[ 0, 4 ]}>
-                <Title level={ 3 }>Summary</Title>
+                <Title level={ 3 }>History</Title>
                 <Select defaultValue={ who } onChange={ value => setWho( value ) }>
                     <Option value='both'>Both</Option>
                     <Option value='Katie'>Katie</Option>
                     <Option value='Chris'>Chris</Option>
                 </Select>
             </Row>
-            <Row>
-                <ComposedChart data={ formattedData } height={ 800 } width={ 600 }>
-                    <XAxis dataKey="week" />
-                    <YAxis />
-                    <Bar fill="#413ea0" dataKey='quantity' />
-                </ComposedChart>
+            <Row justify="center" type="flex" style={{ width: "100%", marginTop: "3em" }}>
+                <ResponsiveContainer width='100%' height={ 300 }>
+                    <ComposedChart data={ formattedData } margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
+                        <Tooltip />
+                        <XAxis dataKey="week" />
+                        <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 }/>
+                        <YAxis yAxisId="left" dataKey="quantity" units="# meals"/>
+                        <YAxis yAxisId="right" dataKey="netPosition" orientation="right" units="$"/>
+                        <Bar yAxisId="left" fill="#413ea0" dataKey='quantity' barSize={ 20 } />
+                        <Line yAxisId="right" type="monotone" dataKey="netPosition" stroke="#ff7300" />
+                    </ComposedChart>
+                </ResponsiveContainer>
             </Row>
         </Row>
     )
@@ -42,29 +45,34 @@ const History = ({ mealsData }) => {
 
 export default History;
 
-function doFormatData( inputData, who = 'both' ) {
-    const output = [];
-    inputData.forEach( el => {
-        const year = el.date.split( '/' )[ 2 ];
-        const week = moment( el.date, "DD-MM-YYYY" ).isoWeek();
-        const index = _.findIndex( output, { week, year })
-        if ( index === -1 ) {
-            output.push({
-                year,
-                week,
-                quantity: 1,
-            })
-        } else {
-            const oldData = { ...output[ index ] };
-            output[ index ] = {
-                ...oldData,
-                quantity: oldData.quantity ++,
-            }
+function doFormatData( inputData, who ) {
+    const datedData = inputData.map( el => {
+        return {
+            ...el,
+            weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format('ww') }`,
         }
-    })
+    });
+    const filteredData = _.filter( datedData, el => who === 'both' || who === el.who );
+    const weekList = [ ...new Set( datedData.map( el => el.weekId )) ];
+    weekList.unshift( '202001', '202002' );
 
-    // Set then Map then Reduce could be cleaner
+    let financialPosition = who === "both" ? -399 * 2 : -399;
 
-    console.log( output )
-    return output;
+    return _.map( weekList.sort(), week => {
+        const quantities = _.map( filteredData, el => {
+            if ( week === el.weekId ) return 1;
+            return 0;
+        });
+        const quantity = _.reduce( quantities, ( total, curr ) => total + curr );
+        const netPosition = quantity ? financialPosition + ( quantity * 10 ) : 0;
+        if (quantity) financialPosition = netPosition;
+
+        return {
+            weekId: week,
+            week: week.slice( 4 ),
+            year: week.slice( 0, 4 ),
+            quantity,
+            netPosition,
+        };
+    });
 };
