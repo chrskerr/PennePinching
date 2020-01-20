@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Row, Col, Form, DatePicker, Switch, Select, Button, Typography, Modal, Input, AutoComplete } from 'antd'
 import moment from 'moment';
 import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useService } from '@xstate/react';
 
 // App
 import { INSERT_MEALS, INSERT_MENU_ITEM } from '../../helpers/apolloMutations'
@@ -14,8 +15,9 @@ import CenteredSpin from '../../components/Shared/CenteredSpin';
 const { Title, Text } = Typography;
 const { Option, OptGroup } = Select;
 
-const PageOne = ({ confirmSave }) => {
-    const { data: initialMenuData } = useQuery( GET_MENU /*, { pollInterval: 1000 } */ );
+const PageOne = ({ confirmSave, authState, addService }) => {
+    const [ , send ] = useService( addService );
+    const { data: initialMenuData } = useQuery( GET_MENU );
     const [ insert_meals, { loading } ] = useMutation( INSERT_MEALS );
     const [ insert_menu, { loading: menuInsertLoading } ] = useMutation( INSERT_MENU_ITEM );
 
@@ -66,9 +68,10 @@ const PageOne = ({ confirmSave }) => {
         }
 
         if ( output.length ) {
-            const res = await insert_meals({ variables: { data: output } });
             try {
+                const res = await insert_meals({ variables: { data: output } });
                 confirmSave( res.data.insert_meals.returning );
+                send( "SUCCESS" );
             }
             catch {
                 setError( true );
@@ -123,6 +126,7 @@ const PageOne = ({ confirmSave }) => {
 				</Row>
                 
 				{ error && <Text type="danger" >Something went wrong...</Text>}
+				{ !authState && <Text type="warning" >Please log in to make any changes</Text>}
                 
 				<Form onSubmit={ handleSubmit } labelAlign="left">
                     <Form.Item label="Date" style={{ marginBottom: "0.5em" }}>
@@ -146,7 +150,7 @@ const PageOne = ({ confirmSave }) => {
                         />
                     </Form.Item>
 
-                    <Button loading={ loading } icon={ loading ? "poweroff" : "right" } htmlType="submit"  style={{ marginBottom: "1em" }}>Submit</Button>
+                    <Button disabled={ !authState } loading={ loading } icon={ loading ? "poweroff" : "right" } htmlType="submit"  style={{ marginBottom: "1em" }}>Submit</Button>
 
                     <Form.Item>
                         <Switch
@@ -186,7 +190,7 @@ const PageOne = ({ confirmSave }) => {
 							value={ modalData.cost }
 						/>
 					</Form.Item>
-					<Button loading={ menuInsertLoading } icon="check" htmlType="submit">Submit</Button>
+					<Button loading={ menuInsertLoading } icon="check" htmlType="submit" disabled={ !authState }>Submit</Button>
 
 					{ modalError && <Row><Text type="danger">{ modalError.message }</Text></Row> }
 				</Form>

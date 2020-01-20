@@ -8,24 +8,16 @@ import { useMachine } from '@xstate/react';
 import { mealMachine } from '../helpers/machines';
 import PageOne from '../components/Add/PageOne';
 import Success from '../components/Add/Success';
-import CenteredSpin from '../components/Shared/CenteredSpin';
 
 
-const Add = ({ authState }) => {
-    const [ current, send ] = useMachine( mealMachine );
+const Add = ({ authState, homeService }) => {
+    const [ current, , addService ] = useMachine( mealMachine );
     const [ returnedIds, setReturnedIds ] = useState();
-    const confirmSave = ( res ) => {
-        send( 'SUCCESS' );
-        setReturnedIds( res );
-    }
-    const restart = () => send( 'RESTART' )
-
-    if ( !authState ) return <CenteredSpin />
 
     return(
         <>
-            { current.matches( "pageone" ) && <PageOne confirmSave={ confirmSave } /> }
-            { current.matches( "success" ) && <Success restart={ restart } ids={ returnedIds } /> }
+            { current.matches( "pageone" ) && <PageOne addService={ addService } confirmSave={ res => setReturnedIds( res ) } authState={ authState } /> }
+            { current.matches( "success" ) && <Success addService={ addService } homeService={ homeService } ids={ returnedIds } /> }
         </>
     )
 }

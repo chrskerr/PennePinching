@@ -1,26 +1,26 @@
 
 // Packages
 import React from 'react';
-import { Row, Col, Typography, Button } from 'antd';
+import { Row, Button, Result } from 'antd';
+import { useService } from '@xstate/react';
 
 // App
 
-
-const { Title, Text } = Typography;
-
-const Success = ({ restart, ids }) => {
-    console.log( ids )
+const Success = ({ restart, ids, addService, homeService }) => {
+    const [ , addSend ] = useService( addService );
+    const [ , homeSend ] = useService( homeService );
     return (
-        <Row align="middle" justify="center">
-            <Col>
-                <Title level={ 4 }>Success!</Title>
-            </Col>
-            <Col>
-                <Text>Meals added!</Text>
-            </Col>
-            <Col>
-                <Button onClick={ () => restart() } size="small" >Add another?</Button>
-            </Col>
+        <Row align="middle">
+            <Result
+                status="success"
+                title="Successfully Added!"
+                extra={[
+                    <Button type="primary" key="console" onClick={ () => homeSend( "ANALYTICS" ) } >
+                        Go Analytics
+                    </Button>,
+                    <Button key="buy" onClick={ () => addSend( 'RESTART' ) } >Add more</Button>,
+                ]}
+            />
         </Row>
     )
 }

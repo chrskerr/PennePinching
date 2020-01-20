@@ -19,7 +19,7 @@ import Analytics from './views/Analytics';
 const { Title, Text } = Typography;
 
 const App = () => {
-	const [ current, sendHome ] = useMachine( homeMachine );
+	const [ current, send, homeService ] = useMachine( homeMachine );
 	const [ modal, setModal ] = useState( false );
 	const [ formData, setFormData ] = useState({});
 	const [ loginError, setLoginError ] = useState();
@@ -61,11 +61,8 @@ const App = () => {
 	}, [] );
 
 	const onNavClick = ( key ) => {
-		if ( key === "add" ) {
-			sendHome( "ADD" );
-			if ( !authState ) setModal( true );
-		};
-		if ( key === "analytics" ) sendHome( "ANALYTICS" );
+		if ( key === "add" ) send( "ADD" );
+		if ( key === "analytics" ) send( "ANALYTICS" );
 		if ( key === "login" ) setModal( true );
 		if ( key === "logout" ) logOut();
 	}
@@ -121,7 +118,7 @@ const App = () => {
 				</Row>
 				
 				<Row style={{ padding: "2em", flexGrow: "1", display: 'flex', flexDirection: 'column' }}>	
-					{ current.matches( "add" ) && <Add authState={ authState }/> }
+					{ current.matches( "add" ) && <Add authState={ authState } homeService={ homeService }/> }
 					{ current.matches( "analytics" ) && <Analytics /> }
 				</Row>
 			</Row>

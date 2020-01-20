@@ -2,7 +2,7 @@
 // Packages
 import React, { useState, useMemo } from 'react';
 import { Row, Select, Typography } from 'antd';
-import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -30,12 +30,13 @@ const History = ({ mealsData }) => {
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <ComposedChart data={ formattedData } margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
                         <Tooltip />
+                        <Legend verticalAlign="top" />
                         <XAxis dataKey="week" />
-                        <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 }/>
-                        <YAxis yAxisId="left" dataKey="quantity" units="# meals"/>
-                        <YAxis yAxisId="right" dataKey="netPosition" orientation="right" units="$"/>
-                        <Bar yAxisId="left" fill="#413ea0" dataKey='quantity' barSize={ 20 } />
-                        <Line yAxisId="right" type="monotone" dataKey="netPosition" stroke="#ff7300" />
+                        <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } label="Weeks of the Year"/>
+                        <YAxis yAxisId="left" dataKey="quantity" />
+                        <YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
+                        <Bar yAxisId="left" fill="#40A9FF" dataKey='quantity' barSize={ 20 } name="# of Meals" />
+                        <Line yAxisId="right" type="monotone" dataKey="netPosition" stroke="#FFB440" name="Net Position $" strokeWidth={ 2 } />
                     </ComposedChart>
                 </ResponsiveContainer>
             </Row>

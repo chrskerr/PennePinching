@@ -14,7 +14,7 @@ const { Option } = Select;
 const Split = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    const COLORS = [ '#FFB440', '#B37009', '#40A9FF' ];
 
     return (
         <Row>
@@ -33,7 +33,7 @@ const Split = ({ mealsData }) => {
                             { _.map( formattedData, ( cell, index ) => <Cell key={ cell.name } fill={ COLORS[ index % COLORS.length ] }/>)}
                         </Pie>
                         <Tooltip />
-                        <Legend />
+                        <Legend verticalAlign="top" />
                     </PieChart>
                 </ResponsiveContainer>
             </Row>
