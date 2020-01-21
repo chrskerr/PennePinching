@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from 'react';
 import { Row, Select, Typography } from 'antd';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import _ from 'lodash';
 import { blue, gold, volcano } from '@ant-design/colors'
 
 
@@ -31,7 +30,7 @@ const Split = ({ mealsData }) => {
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <PieChart margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
                         <Pie dataKey="quantity" data={ formattedData } label innerRadius={ 75 } outerRadius={ 100 } paddingAngle={ 5 } >
-                            { _.map( formattedData, ( cell, index ) => <Cell key={ cell.name } fill={ COLORS[ index % COLORS.length ] }/>)}
+                            { formattedData.map( ( cell, index ) => <Cell key={ cell.name } fill={ COLORS[ index % COLORS.length ] }/>)}
                         </Pie>
                         <Tooltip />
                         <Legend verticalAlign="top" wrapperStyle={{ top: '-1em' }} />
@@ -47,8 +46,8 @@ export default Split;
 function doFormatData( inputData, who ) {
     const menuCategories = [ ...new Set( inputData.map( input => input.menu.category )) ]
 
-    return _.map( menuCategories, name => {
-        const quantities = _.map( inputData, el => {
+    return menuCategories.map( name => {
+        const quantities = inputData.map( el => {
             if ( name === el.menu.category ) { 
                 if ( who === "both" ) return 1;
                 if ( el.shared ) return 0.5;
@@ -56,7 +55,7 @@ function doFormatData( inputData, who ) {
             }
             return 0;
         });
-        const quantity = _.reduce( quantities, ( total, curr ) => total + curr );
+        const quantity = quantities.reduce( ( total, curr ) => total + curr );
 
         return {
             name,

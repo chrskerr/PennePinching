@@ -2,7 +2,6 @@
 // Packages
 import React, { useState, useMemo } from 'react';
 import { Row, Col, Card, Select, Typography } from 'antd';
-import _ from 'lodash';
 import moment from 'moment';
 import CountUp from 'react-countup';
 import { red, volcano, yellow, green, cyan, blue, geekblue } from '@ant-design/colors'
@@ -106,13 +105,13 @@ function doFormatData( inputData, who ) {
             weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format('ww') }`,
         }
     });
-    const filteredData = _.filter( datedData, el => who === 'both' || who === el.who );
-    const mealCosts = _.map( filteredData, el => el.menu.cost );
+    const filteredData = datedData.filter( el => who === 'both' || who === el.who );
+    const mealCosts = filteredData.map( el => el.menu.cost );
     const originalInvestment = who === "both" ? -399 * 2 : -399;
     const totalMeals = filteredData.length;
     const internalCost = totalMeals * 10;
     const position = originalInvestment + internalCost;
-    const totalMenuCost = _.reduce( mealCosts, ( total, curr ) => total + curr );
+    const totalMenuCost = mealCosts.reduce( ( total, curr ) => total + curr );
     const weekCount = [ ...new Set( datedData.map( el => el.weekId )) ].length;
 
     return {

@@ -4,7 +4,6 @@ import React, { useState, useMemo } from 'react';
 import { Row, Select, Typography } from 'antd';
 import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import moment from 'moment';
-import _ from 'lodash';
 import { blue, gold } from '@ant-design/colors'
 
 
@@ -54,20 +53,20 @@ function doFormatData( inputData, who ) {
             weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format('ww') }`,
         }
     });
-    const filteredData = _.filter( datedData, el => who === 'both' || who === el.who );
+    const filteredData = datedData.filter( el => who === 'both' || who === el.who );
     const weekList = [ ...new Set( datedData.map( el => el.weekId )) ];
     weekList.unshift( '202001', '202002' );
 
     let financialPosition = who === "both" ? -399 * 2 : -399;
 
-    return _.map( weekList.sort(), week => {
-        const quantities = _.map( filteredData, el => {
+    return weekList.sort().map( week => {
+        const quantities = filteredData.map( el => {
             if ( week === el.weekId ) return 1;
             return 0;
         });
-        const quantity = _.reduce( quantities, ( total, curr ) => total + curr );
+        const quantity = quantities.reduce( ( total, curr ) => total + curr );
         const netPosition = quantity ? financialPosition + ( quantity * 10 ) : 0;
-        if (quantity) financialPosition = netPosition;
+        if ( quantity ) financialPosition = netPosition;
 
         return {
             weekId: week,
