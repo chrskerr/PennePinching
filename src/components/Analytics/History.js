@@ -5,6 +5,7 @@ import { Row, Select, Typography } from 'antd';
 import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import moment from 'moment';
 import _ from 'lodash';
+import { blue, gold } from '@ant-design/colors'
 
 
 // App
@@ -35,8 +36,8 @@ const History = ({ mealsData }) => {
                         <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } label="Weeks of the Year"/>
                         <YAxis yAxisId="left" dataKey="quantity" />
                         <YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
-                        <Bar yAxisId="left" fill="#1890ff" dataKey='quantity' barSize={ 20 } name="# of Meals" />
-                        <Line yAxisId="right" type="monotone" dataKey="netPosition" stroke="#faad14" name="Net $" />
+                        <Bar yAxisId="left" fill={ blue[5] } dataKey='quantity' barSize={ 20 } name="# of Meals" />
+                        <Line yAxisId="right" type="monotone" dataKey="netPosition" stroke={ gold[5] } name="Net $" />
                     </ComposedChart>
                 </ResponsiveContainer>
             </Row>

@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Row, Select, Typography } from 'antd';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import _ from 'lodash';
+import { blue, gold, volcano } from '@ant-design/colors'
 
 
 // App
@@ -14,7 +15,7 @@ const { Option } = Select;
 const Split = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
-    const COLORS = [ '#1890ff', '#fa541c', '#faad14'];
+    const COLORS = [ blue[5], gold[5], volcano[5] ];
 
     return (
         <Row>
