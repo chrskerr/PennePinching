@@ -10,11 +10,9 @@ import 'firebase/auth';
 import 'firebase/database';
 
 // App
-// import { client } from './index';
 import { homeMachine } from './helpers/machines';
 import Add from './views/Add';
 import Analytics from './views/Analytics';
-
 
 const { Title, Text } = Typography;
 
@@ -117,7 +115,7 @@ const App = () => {
 					</Menu>
 				</Row>
 				
-				<Row style={{ padding: "2em", flexGrow: "1", display: 'flex', flexDirection: 'column' }}>	
+				<Row style={{ padding: '2em', flexGrow: "1", display: 'flex', flexDirection: 'column' }}>	
 					{ current.matches( "add" ) && <Add authState={ authState } homeService={ homeService }/> }
 					{ current.matches( "analytics" ) && <Analytics /> }
 				</Row>

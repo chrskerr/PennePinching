@@ -17,7 +17,7 @@ import Split from '../components/Analytics/Split';
 const { Text } = Typography;
 
 const Analytics = () => {
-    const { loading, data, error } = useQuery( GET_ALL_MEALS );
+    const { data, error } = useQuery( GET_ALL_MEALS );
     const [ current, send ] = useMachine( analyticsMachine );
 
     if ( error ) {
@@ -25,26 +25,24 @@ const Analytics = () => {
         return <Text type="danger">Hasura error, see Console</Text>
     }
 
-    if ( loading ) return <CenteredSpin />
+    if ( !data ) return <CenteredSpin />
     const { meals: mealsData } = data;
 
     return (
         <Row>
-            <Row justify="space-between" type="flex" style={{ marginBottom: "1.5em" }}>
-                <Col span={ 2 }>
+            <Col>
+                <Row justify="space-between" type="flex" style={{ marginBottom: "1.5em" }}>
                     <Button size="large" icon="left" onClick={ () => send( "PREVIOUS" ) }/>
-                </Col>
-                <Col span={ 2 }>
                     <Button size="large" icon="right" onClick={ () => send( "NEXT" ) }/>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    { current.matches( 'summary' ) && <Summary mealsData={ mealsData } /> }
-                    { current.matches( 'history' ) && <History mealsData={ mealsData } /> }
-                    { current.matches( 'split' ) && <Split mealsData={ mealsData } /> }
-                </Col>
-            </Row>
+                </Row>
+                <Row>
+                    <Col>
+                        { current.matches( 'summary' ) && <Summary mealsData={ mealsData } /> }
+                        { current.matches( 'history' ) && <History mealsData={ mealsData } /> }
+                        { current.matches( 'split' ) && <Split mealsData={ mealsData } /> }
+                    </Col>
+                </Row>
+            </Col>
         </Row>
     )
 }

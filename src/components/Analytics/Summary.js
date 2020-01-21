@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Row, Col, Card, Select, Typography } from 'antd';
 import moment from 'moment';
 import CountUp from 'react-countup';
-import { red, volcano, yellow, green, cyan, blue, geekblue } from '@ant-design/colors'
+import { red, volcano, yellow, gold, lime, cyan, blue, geekblue, purple, grey } from '@ant-design/colors'
 
 // App
 const { Option } = Select;
@@ -14,8 +14,8 @@ const Summary = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
     const { weekCount, position, originalInvestment, totalMeals,  internalCost, totalMenuCost } = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
     
-    const rowStructure = { type: 'flex', justify: 'center' };
-    const smallColProps = { span: 7, offset: 1, style: { minWidth: '140px', marginBottom: '1em' } };
+    const rowStructure = { type: 'flex', justify: 'center', gutter: 20 };
+    const smallColProps = { span: 12, style: {  marginTop: '20px' } };
 
 
     return (
@@ -29,67 +29,68 @@ const Summary = ({ mealsData }) => {
                 </Select>
             </Row>
 
-            <Row style={{ width: "100%", paddingTop: "2.5em" }}>
+            <Row style={{ width: "100%", paddingTop: "2em" }} type='flex' justify='center' >
+                <Col xs={ 24 } md={ 18 } >
+                    <Row { ...rowStructure } >
+                        <Col span={ 24 } >
+                            <Card title='Net Financial Position' headStyle={{ backgroundColor: geekblue[2] }}  bodyStyle={{ backgroundColor: geekblue[0] }}>
+                                <Title level={ 4 }>
+                                    <CountUp start={ originalInvestment } end={ position } duration={ 5 } prefix="$" />
+                                </Title>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row { ...rowStructure }>
+                        <Col { ...smallColProps } >
+                            <Card title='Saved' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
+                                <Text strong>
+                                    <CountUp start={ 0 } end={ internalCost } duration={ 3 } prefix="$" />
+                                </Text>
+                            </Card>
+                        </Col>
+                        <Col { ...smallColProps } >
+                            <Card title='Spent' size="small" headStyle={{ backgroundColor: blue[1] }} bodyStyle={{ backgroundColor: blue[0] }}>
+                                <Text strong >
+                                    <CountUp start={ 0 } end={ originalInvestment } duration={ 3 } prefix="$" />
+                                </Text>
+                            </Card>
+                        </Col>
+                    </Row>
 
-                <Row { ...rowStructure } >
-                    <Col xs={ 22 } md={ 15 } offset={ 1 } style={{ marginBottom: '1em' }}>
-                        <Card title='Net Financial Position' headStyle={{ backgroundColor: geekblue[1] }}  bodyStyle={{ backgroundColor: geekblue[0] }}>
-                            <Title level={ 4 }>
-                                <CountUp start={ originalInvestment } end={ position } duration={ 5 } prefix="$" />
-                            </Title>
-                        </Card>
-                    </Col>
-                </Row>
-                <Row { ...rowStructure }>
-                    <Col { ...smallColProps } >
-                        <Card title='Saved' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
-                            <Text strong>
-                                <CountUp start={ 0 } end={ internalCost } duration={ 3 } prefix="$" />
-                            </Text>
-                        </Card>
-                    </Col>
-                    <Col { ...smallColProps } >
-                        <Card title='Spent' size="small" headStyle={{ backgroundColor: cyan[1] }} bodyStyle={{ backgroundColor: cyan[0] }}>
-                            <Text strong >
-                                <CountUp start={ 0 } end={ originalInvestment } duration={ 3 } prefix="$" />
-                            </Text>
-                        </Card>
-                    </Col>
-                </Row>
+                    <Row { ...rowStructure } >
+                        <Col { ...smallColProps } >
+                            <Card title='Meals Eaten' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
+                                <Text strong>
+                                    <CountUp start={ 0 } end={ totalMeals } duration={ 3 } />
+                                </Text>
+                            </Card>
+                        </Col>
+                        <Col { ...smallColProps } >
+                            <Card title='Average' size="small" headStyle={{ backgroundColor: blue[1] }} bodyStyle={{ backgroundColor: blue[0] }}>
+                                <Text strong>
+                                    <CountUp start={ 0 } end={ totalMeals / weekCount } duration={ 3 } decimals={ 1 } suffix=" / wk" />
+                                </Text>
+                            </Card>
+                        </Col>
+                    </Row>
 
-                <Row { ...rowStructure } >
-                    <Col { ...smallColProps } >
-                        <Card title='Meals Eaten' size="small" headStyle={{ backgroundColor: green[1] }}  bodyStyle={{ backgroundColor: green[0] }}>
-                            <Text strong>
-                                <CountUp start={ 0 } end={ totalMeals } duration={ 3 } />
-                            </Text>
-                        </Card>
-                    </Col>
-                    <Col { ...smallColProps } >
-                        <Card title='Average' size="small" headStyle={{ backgroundColor: yellow[1] }} bodyStyle={{ backgroundColor: yellow[0] }}>
-                            <Text strong>
-                                <CountUp start={ 0 } end={ totalMeals / weekCount } duration={ 3 } decimals={ 1 } suffix=" / wk" />
-                            </Text>
-                        </Card>
-                    </Col>
-                </Row>
-
-                <Row { ...rowStructure } >
-                    <Col { ...smallColProps } >
-                        <Card title='Cost to FF' size="small" headStyle={{ backgroundColor: red[1] }}  bodyStyle={{ backgroundColor: red[0] }}>
-                            <Text strong>
-                                <CountUp start={ 0 } end={ totalMenuCost } duration={ 3 } prefix="$" />
-                            </Text>
-                        </Card>
-                    </Col>
-                    <Col { ...smallColProps } >
-                        <Card title='FF p/l' size="small" headStyle={{ backgroundColor: volcano[1] }} bodyStyle={{ backgroundColor: volcano[0] }}>
-                            <Text strong>
-                                <CountUp start={ originalInvestment * -1 } end={ ( originalInvestment * -1 ) - totalMenuCost } duration={ 3 } prefix="$" />
-                            </Text>
-                        </Card>
-                    </Col>
-                </Row>
+                    <Row { ...rowStructure } >
+                        <Col { ...smallColProps } >
+                            <Card title='Cost to FF' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
+                                <Text strong>
+                                    <CountUp start={ 0 } end={ totalMenuCost } duration={ 3 } prefix="$" />
+                                </Text>
+                            </Card>
+                        </Col>
+                        <Col { ...smallColProps } >
+                            <Card title='FF p/l' size="small" headStyle={{ backgroundColor: blue[1] }} bodyStyle={{ backgroundColor: blue[0] }}>
+                                <Text strong>
+                                    <CountUp start={ originalInvestment * -1 } end={ ( originalInvestment * -1 ) - totalMenuCost } duration={ 3 } prefix="$" />
+                                </Text>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Col>
             </Row>
         </Row>
     )

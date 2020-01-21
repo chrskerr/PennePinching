@@ -17,7 +17,7 @@ const { Option, OptGroup } = Select;
 
 const PageOne = ({ confirmSave, authState, addService }) => {
     const [ , send ] = useService( addService );
-    const { data: initialMenuData } = useQuery( GET_MENU );
+    const { data } = useQuery( GET_MENU );
     const [ insert_meals, { loading } ] = useMutation( INSERT_MEALS );
     const [ insert_menu, { loading: menuInsertLoading } ] = useMutation( INSERT_MENU_ITEM );
 
@@ -104,9 +104,9 @@ const PageOne = ({ confirmSave, authState, addService }) => {
 		}
 	};
 
-    if ( !initialMenuData ) return <CenteredSpin />
+    if ( !data ) return <CenteredSpin />
 
-    const { menu } = initialMenuData
+    const { menu } = data
     const menuCategories = [ ...new Set( menu.map( menu_item => menu_item.category )) ]
 
     return (
@@ -150,7 +150,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                         />
                     </Form.Item>
 
-                    <Button disabled={ !authState } loading={ loading } icon={ loading ? "poweroff" : "right" } htmlType="submit"  style={{ marginBottom: "1em" }}>Submit</Button>
+                    <Button type="primary" disabled={ !authState } loading={ loading } icon={ "right" } htmlType="submit"  style={{ marginBottom: "1em" }}>Submit</Button>
 
                     <Form.Item>
                         <Switch
@@ -190,7 +190,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
 							value={ modalData.cost }
 						/>
 					</Form.Item>
-					<Button loading={ menuInsertLoading } icon="check" htmlType="submit" disabled={ !authState }>Submit</Button>
+					<Button type="primary" loading={ menuInsertLoading } icon="check" htmlType="submit" disabled={ !authState }>Submit</Button>
 
 					{ modalError && <Row><Text type="danger">{ modalError.message }</Text></Row> }
 				</Form>
@@ -207,7 +207,7 @@ export default PageOne
 function IndividualForm({ who, formData, setFormData, menu, menuCategories }) {
     return (
         <>
-            <Form.Item label={ `What did ${ who } order?` } style={{ marginBottom: "0" }} colon={ false }>
+            <Form.Item label={ `What did ${ who.replace( /^(.)/, v => v.toUpperCase()) } order?` } style={{ marginBottom: "0" }} colon={ false }>
                 <Select 
                     onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], menu_id: e } }) }
                     defaultValue="Did not eat"
