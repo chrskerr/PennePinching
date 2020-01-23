@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { Row, Select, Typography } from 'antd';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { blue, gold, volcano } from '@ant-design/colors'
+import { blue, gold, volcano, green } from '@ant-design/colors'
 
 
 // App
@@ -14,7 +14,7 @@ const { Option } = Select;
 const Split = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
-    const COLORS = [ blue[5], gold[5], volcano[5] ];
+    const COLORS = [ blue[5], gold[5], volcano[5], green[5] ];
 
     return (
         <Row>

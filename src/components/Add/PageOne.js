@@ -107,7 +107,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
     if ( !data ) return <CenteredSpin />
 
     const { menu } = data
-    const menuCategories = [ ...new Set( menu.map( menu_item => menu_item.category )) ]
+    const menuCategories = [ ...new Set( menu.map( menu_item => menu_item.category )) ].sort()
 
     return (
         <Row>
@@ -218,7 +218,7 @@ function IndividualForm({ who, formData, setFormData, menu, menuCategories }) {
                     { menuCategories.map( category => {
                         return (
                             <OptGroup key={ category } label={ category }>
-                                { menu.map( menuItem => {
+                                { menu.sort().map( menuItem => {
                                     return (
                                         menuItem.category === category && menuItem.active &&
                                         <Option key={ menuItem.id } value={ menuItem.id }>{ menuItem.name } - ${ menuItem.cost }</Option>
