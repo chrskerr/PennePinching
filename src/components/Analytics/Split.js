@@ -14,7 +14,7 @@ const { Option } = Select;
 const Split = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
-    const COLORS = [ blue[5], gold[5], volcano[5], green[5] ];
+    const COLORS = [ volcano[5], gold[5], blue[5], green[5] ];
 
     return (
         <Row>
@@ -44,7 +44,7 @@ const Split = ({ mealsData }) => {
 export default Split;
 
 function doFormatData( inputData, who ) {
-    const menuCategories = [ ...new Set( inputData.map( input => input.menu.category )) ]
+    const menuCategories = [ ...new Set( inputData.map( input => input.menu.category )) ].sort();
 
     return menuCategories.map( name => {
         const quantities = inputData.map( el => {

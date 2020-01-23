@@ -31,8 +31,8 @@ const History = ({ mealsData }) => {
                     <ComposedChart data={ formattedData }>
                         <Tooltip />
                         <Legend verticalAlign="top" wrapperStyle={{ top: '-1em' }} />
-                        <XAxis dataKey="week" />
-                        <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } label="Weeks of the Year"/>
+                        <XAxis dataKey="week" padding={{ left: 35, right: 35 }} />
+                        <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } label="Weeks of the Year" padding={{ left: 35, right: 35 }}/>
                         <YAxis yAxisId="left" dataKey="quantity" />
                         <YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
                         <Bar yAxisId="left" fill={ blue[5] } dataKey='quantity' barSize={ 20 } name="# of Meals" />
@@ -59,9 +59,9 @@ function doFormatData( inputData, who ) {
 
     let financialPosition = who === "both" ? -399 * 2 : -399;
 
-    return weekList.sort().map( week => {
+    return weekList.sort().map( weekId => {
         const quantities = filteredData.map( el => {
-            if ( week === el.weekId ) return 1;
+            if ( weekId === el.weekId ) return 1;
             return 0;
         });
         const quantity = quantities.reduce( ( total, curr ) => total + curr );
@@ -69,9 +69,9 @@ function doFormatData( inputData, who ) {
         if ( quantity ) financialPosition = netPosition;
 
         return {
-            weekId: week,
-            week: week.slice( 4 ),
-            year: week.slice( 0, 4 ),
+            weekId,
+            week: weekId.slice( 4 ),
+            year: weekId.slice( 0, 4 ),
             quantity,
             netPosition,
         };

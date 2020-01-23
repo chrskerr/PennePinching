@@ -13,6 +13,7 @@ import CenteredSpin from '../components/Shared/CenteredSpin';
 import Summary from '../components/Analytics/Summary';
 import History from '../components/Analytics/History';
 import Split from '../components/Analytics/Split';
+import Weekdays from '../components/Analytics/Weekdays';
 
 const { Text } = Typography;
 
@@ -40,6 +41,7 @@ const Analytics = () => {
                         { current.matches( 'summary' ) && <Summary mealsData={ mealsData } /> }
                         { current.matches( 'history' ) && <History mealsData={ mealsData } /> }
                         { current.matches( 'split' ) && <Split mealsData={ mealsData } /> }
+                        { current.matches( 'weekdays' ) && <Weekdays mealsData={ mealsData } /> }
                     </Col>
                 </Row>
             </Col>

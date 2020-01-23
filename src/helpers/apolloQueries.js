@@ -11,6 +11,7 @@ export const GET_ALL_MEALS = gql`
             }
             shared
             who
+            isDinner
         }
     }
 `
@@ -23,16 +24,6 @@ export const GET_MENU = gql`
             id
             name
             active
-        }
-    }
-`
-
-export const MENU_SUBSCRIPTION = gql`
-    subscription MenuSubscription {
-        menu {
-            category
-            cost
-            name
         }
     }
 `

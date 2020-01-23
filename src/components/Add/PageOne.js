@@ -107,6 +107,8 @@ const PageOne = ({ confirmSave, authState, addService }) => {
     if ( !data ) return <CenteredSpin />
 
     const { menu } = data
+    const sortedMenu = menu.sort( ( a, b ) => { return a.name < b.name ? -1 : 1 })
+    console.log( sortedMenu )
     const menuCategories = [ ...new Set( menu.map( menu_item => menu_item.category )) ].sort()
 
     return (
@@ -137,9 +139,11 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                         />
                     </Form.Item>
 
-                    <IndividualForm who="katie" setFormData={ setFormData } formData={ formData } menu={ menu } menuCategories={ menuCategories } /> 
+                    <MenuItemSelecter who="katie" setFormData={ setFormData } formData={ formData } menu={ sortedMenu } menuCategories={ menuCategories } /> 
 
-                    <IndividualForm who="chris" setFormData={ setFormData } formData={ formData }  menu={ menu } menuCategories={ menuCategories } />
+
+                    <MenuItemSelecter who="chris" setFormData={ setFormData } formData={ formData }  menu={ sortedMenu } menuCategories={ menuCategories } />
+
 
                     <Form.Item >
                         <Switch
@@ -204,7 +208,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
 export default PageOne
 
 
-function IndividualForm({ who, formData, setFormData, menu, menuCategories }) {
+function MenuItemSelecter({ who, formData, setFormData, menu, menuCategories }) {
     return (
         <>
             <Form.Item label={ `What did ${ who.replace( /^(.)/, v => v.toUpperCase()) } order?` } colon={ false }>
@@ -218,7 +222,7 @@ function IndividualForm({ who, formData, setFormData, menu, menuCategories }) {
                     { menuCategories.map( category => {
                         return (
                             <OptGroup key={ category } label={ category }>
-                                { menu.sort().map( menuItem => {
+                                { menu.map( menuItem => {
                                     return (
                                         menuItem.category === category && menuItem.active &&
                                         <Option key={ menuItem.id } value={ menuItem.id }>{ menuItem.name } - ${ menuItem.cost }</Option>

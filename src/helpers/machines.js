@@ -38,13 +38,16 @@ export const analyticsMachine = new Machine({
     initial: "summary",
     states: {
         summary: {
-			on: { PREVIOUS: 'split', NEXT: 'history' },
+			on: { PREVIOUS: 'weekdays', NEXT: 'history' },
 		},
 		history: {
 			on: { PREVIOUS: 'summary', NEXT: 'split' },
 		},
 		split: {
-			on: { PREVIOUS: 'history', NEXT: 'summary' },
+			on: { PREVIOUS: 'history', NEXT: 'weekdays' },
+		},
+		weekdays: {
+			on: { PREVIOUS: 'split', NEXT: 'summary' },
 		},
     },
 });
