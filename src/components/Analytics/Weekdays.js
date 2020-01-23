@@ -50,7 +50,9 @@ function doFormatData( inputData, who ) {
             day: moment( el.date, "DD-MM-YYYY" ).day(),
         }
     });
-    const days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
+    const days = window.innerWidth < 500 ?  
+        [ 'S', 'M', 'T', 'W', 'T', 'F', 'S' ] 
+        : [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat' ]
     const filteredData = datedData.filter( el => who === 'both' || who === el.who );
     
     return days.map( ( day, i ) => {
