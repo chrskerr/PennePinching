@@ -36,13 +36,14 @@ const PageOne = ({ confirmSave, authState, addService }) => {
         chris: { menu_id: '' },
         shared: true,
         testing: false,
+        isDinner: true,
     } )
 
     const handleSubmit = async e => {
         e.preventDefault();
         setError( false );
 
-        const { date, shared, katie, chris, testing } = formData;
+        const { date, shared, katie, chris, testing, isDinner } = formData;
         
         let updatedShared = shared;
         if ( ( katie.menu_id && !chris.menu_id ) || ( !katie.menu_id && chris.menu_id ) ) updatedShared = false;
@@ -53,8 +54,9 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                 menu_id: katie.menu_id,
                 shared: updatedShared, 
                 who: "Katie", 
-                date: date,
+                date,
                 test: testing,
+                isDinner,
             })
         }
         if ( chris.menu_id ) {
@@ -62,8 +64,9 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                 menu_id: chris.menu_id,  
                 shared: updatedShared, 
                 who: "Chris", 
-                date: date,
+                date,
                 test: testing,
+                isDinner,
             })
         }
 
@@ -108,7 +111,6 @@ const PageOne = ({ confirmSave, authState, addService }) => {
 
     const { menu } = data
     const sortedMenu = menu.sort( ( a, b ) => { return a.name < b.name ? -1 : 1 })
-    console.log( sortedMenu )
     const menuCategories = [ ...new Set( menu.map( menu_item => menu_item.category )) ].sort()
 
     return (
@@ -144,16 +146,28 @@ const PageOne = ({ confirmSave, authState, addService }) => {
 
                     <MenuItemSelecter who="chris" setFormData={ setFormData } formData={ formData }  menu={ sortedMenu } menuCategories={ menuCategories } />
 
-
-                    <Form.Item >
-                        <Switch
-                            checkedChildren="Shared"
-                            unCheckedChildren="Shared"
-                            defaultChecked
-                            onChange={ e => setFormData({ ...formData, shared: e }) }
-                        />
-                    </Form.Item>
-
+                    <Row gutter={ 16 }>
+                        <Col xs={ 8 } sm={ 4 } md={ 4 } lg={ 4 } xl={ 4 }>
+                            <Form.Item >
+                                <Switch
+                                    checkedChildren="Dinner"
+                                    unCheckedChildren="Lunch"
+                                    defaultChecked
+                                    onChange={ e => setFormData({ ...formData, isDinner: e }) }
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col xs={ 8 } sm={ 4 } md={ 4 } lg={ 4 } xl={ 4 }>
+                            <Form.Item >
+                                <Switch
+                                    checkedChildren="Shared"
+                                    unCheckedChildren="Shared"
+                                    defaultChecked
+                                    onChange={ e => setFormData({ ...formData, shared: e }) }
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
                     <Button type="primary" disabled={ !authState } loading={ loading } icon={ "right" } htmlType="submit">Submit</Button>
 
                     <Form.Item>
@@ -163,7 +177,6 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                             onChange={ e => setFormData({ ...formData, testing: e }) }
                         />
                     </Form.Item>
-
                 </Form>
             </Col>
 

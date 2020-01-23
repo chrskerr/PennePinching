@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Row, Select, Typography } from 'antd';
 import { ComposedChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import moment from 'moment';
-import { blue } from '@ant-design/colors'
+import { blue, green } from '@ant-design/colors'
 
 
 // App
@@ -15,6 +15,8 @@ const { Option } = Select;
 const Weekdays = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
+
+    console.log( formattedData )
 
     return (
         <Row>
@@ -32,8 +34,9 @@ const Weekdays = ({ mealsData }) => {
                         <Tooltip />
                         <Legend verticalAlign="top" wrapperStyle={{ top: '-1em' }} />
                         <XAxis dataKey="day" padding={{ left: 35, right: 35 }}/>
-                        <YAxis yAxisId="left" dataKey="quantity" />
-                        <Bar yAxisId="left" fill={ blue[5] } dataKey='quantity' barSize={ 20 } name="Number of meals" />
+                        <YAxis />
+                        <Bar stackId="a" fill={ blue[5] } dataKey='dinner' barSize={ 20 } name="Number of dinners" />
+                        <Bar stackId="a" fill={ green[5] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
                     </ComposedChart>
                 </ResponsiveContainer>
             </Row>
@@ -58,7 +61,8 @@ function doFormatData( inputData, who ) {
     return days.map( ( day, i ) => {
         return {
             day: days[ i ],
-            quantity: filteredData.filter( el => { return el.day === i } ).length
+            lunch: filteredData.filter( el => { return el.day === i && !el.isDinner } ).length,
+            dinner: filteredData.filter( el => { return ( el.day === i && el.isDinner ) } ).length,
         }
     });
 };
