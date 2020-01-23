@@ -2,9 +2,10 @@
 // Packages
 import React, { useState, useMemo } from 'react';
 import { Row, Col, Card, Select, Typography } from 'antd';
-import moment from 'moment';
+import moment from 'moment'
+
 import CountUp from 'react-countup';
-import { red, volcano, yellow, gold, lime, cyan, blue, geekblue, purple, grey } from '@ant-design/colors'
+import { blue, geekblue } from '@ant-design/colors'
 
 // App
 const { Option } = Select;
@@ -12,11 +13,14 @@ const { Title, Text } = Typography;
 
 const Summary = ({ mealsData }) => {
     const [ who, setWho ] = useState( 'both' );
-    const { weekCount, position, originalInvestment, totalMeals,  internalCost, totalMenuCost } = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
-    
+    const { position, originalInvestment, totalMeals, savings, totalMenuCost } = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
+
+    const daysElapsed = moment().diff( moment( "2020/01/15" ), 'day' );
+    const daysRemainingToBreakEven = ( position * -1 ) / ( savings / daysElapsed );
+    const averageWeekly = totalMeals / ( daysElapsed / 7 );
+
     const rowStructure = { type: 'flex', justify: 'center', gutter: 20 };
     const smallColProps = { span: 12, style: {  marginTop: '20px' } };
-
 
     return (
         <Row>
@@ -44,7 +48,7 @@ const Summary = ({ mealsData }) => {
                         <Col { ...smallColProps } >
                             <Card title='Saved' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
                                 <Text strong>
-                                    <CountUp start={ 0 } end={ internalCost } duration={ 3 } prefix="$" />
+                                    <CountUp start={ 0 } end={ savings } duration={ 3 } prefix="$" />
                                 </Text>
                             </Card>
                         </Col>
@@ -59,16 +63,16 @@ const Summary = ({ mealsData }) => {
 
                     <Row { ...rowStructure } >
                         <Col { ...smallColProps } >
-                            <Card title='Meals Eaten' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
+                            <Card title='Breakeven' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
                                 <Text strong>
-                                    <CountUp start={ 0 } end={ totalMeals } duration={ 3 } />
+                                    <CountUp start={ 0 } end={ daysRemainingToBreakEven } duration={ 3 } suffix=" days" />
                                 </Text>
                             </Card>
                         </Col>
                         <Col { ...smallColProps } >
                             <Card title='Average' size="small" headStyle={{ backgroundColor: blue[1] }} bodyStyle={{ backgroundColor: blue[0] }}>
                                 <Text strong>
-                                    <CountUp start={ 0 } end={ totalMeals / weekCount } duration={ 3 } decimals={ 1 } suffix=" / wk" />
+                                    <CountUp start={ 0 } end={ averageWeekly } duration={ 3 } decimals={ 1 } suffix=" meals / wk" />
                                 </Text>
                             </Card>
                         </Col>
@@ -110,19 +114,15 @@ function doFormatData( inputData, who ) {
     const mealCosts = filteredData.map( el => el.menu.cost );
     const originalInvestment = who === "both" ? -399 * 2 : -399;
     const totalMeals = filteredData.length;
-    const internalCost = totalMeals * 10;
-    const position = originalInvestment + internalCost;
+    const savings = totalMeals * 10;
+    const position = originalInvestment + savings;
     const totalMenuCost = mealCosts.reduce( ( total, curr ) => total + curr );
-    const weekCount = [ ...new Set( datedData.map( el => el.weekId )) ].length;
 
     return {
         originalInvestment,
-        weekCount,
         position,
         totalMeals,
-        internalCost,
+        savings,
         totalMenuCost,
     }
-
-
 };

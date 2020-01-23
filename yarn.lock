@@ -4027,6 +4027,11 @@ data-urls@^1.0.0, data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
+day@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/day/-/day-0.0.2.tgz#a133c926ba4125dce2783cd2b99c918b3e52fb03"
+  integrity sha1-oTPJJrpBJdzieDzSuZyRiz5S+wM=
+
 dayjs@*:
   version "1.8.19"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.19.tgz#5117dc390d8f8e586d53891dbff3fa308f51abfe"

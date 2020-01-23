@@ -2,17 +2,18 @@
 // Packages
 import React, { useState, useEffect } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { Row, Menu, Icon, Typography, Modal, Form, Input, Button } from 'antd';
+import { Row, Col, Menu, Icon, Typography, Modal, Form, Input, Button } from 'antd';
 import ApolloClient from 'apollo-boost';
 import { useMachine } from '@xstate/react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/database';
+// import 'firebase/database';
 
 // App
 import { homeMachine } from './helpers/machines';
 import Add from './views/Add';
 import Analytics from './views/Analytics';
+// import logo from './components/Shared/favicon.png'
 
 const { Title, Text } = Typography;
 
@@ -40,18 +41,19 @@ const App = () => {
 
 				if ( hasuraClaim ) {
 					setAuthState({ user, token });
-				} else {
-					// Check if refresh is required.
-					const metadataRef = firebase
-						.database()
-						.ref( "metadata/" + user.uid + "/refreshTime" );
+				} 
+				// else {
+				// 	// Check if refresh is required.
+				// 	const metadataRef = firebase
+				// 		.database()
+				// 		.ref( "metadata/" + user.uid + "/refreshTime" );
 
-					metadataRef.on( "value", async () => {
-						// Force refresh to pick up the latest custom claims changes.
-						const token = await user.getIdToken( true );
-						setAuthState({ user, token });
-					});
-				}
+				// 	metadataRef.on( "value", async () => {
+				// 		// Force refresh to pick up the latest custom claims changes.
+				// 		const token = await user.getIdToken( true );
+				// 		setAuthState({ user, token });
+				// 	});
+				// }
 			} else {
 				setAuthState( false );
 			}
@@ -96,7 +98,15 @@ const App = () => {
 		<ApolloProvider client={ client }>
 			<Row style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
 				<Row>
-					<Title style={{ padding: "1em 0 0 1em" }}>Penne Pinching</Title>
+					<Row align='middle'>
+						{/* <Col span={ 2 }>
+							<img src={ logo } style={{ width: '3em', margin: 'auto' }}/>
+						</Col> */}
+						<Col span={ 22 }>
+							<Title style={{ padding: "1em 0 0 1em" }}>Penne Pinching</Title>
+						</Col>
+					</Row>
+						
 					<Menu selectedKeys={ current.value } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
 						<Menu.Item key="add">
 							<Icon type="plus" />

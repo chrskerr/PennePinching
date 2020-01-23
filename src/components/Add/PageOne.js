@@ -129,7 +129,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
 				{ !authState && <Text type="warning" >Please log in to make any changes</Text>}
                 
 				<Form onSubmit={ handleSubmit } labelAlign="left">
-                    <Form.Item label="Date" style={{ marginBottom: "0.5em" }}>
+                    <Form.Item label="Date" >
                         <DatePicker 
                             format="DD-MM-YYYY" 
                             defaultValue={ moment( new Date().toLocaleDateString(), "DD-MM-YYYY" ) } 
@@ -141,7 +141,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
 
                     <IndividualForm who="chris" setFormData={ setFormData } formData={ formData }  menu={ menu } menuCategories={ menuCategories } />
 
-                    <Form.Item style={{ marginBottom: "0.5em" }}>
+                    <Form.Item >
                         <Switch
                             checkedChildren="Shared"
                             unCheckedChildren="Shared"
@@ -150,7 +150,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                         />
                     </Form.Item>
 
-                    <Button type="primary" disabled={ !authState } loading={ loading } icon={ "right" } htmlType="submit"  style={{ marginBottom: "1em" }}>Submit</Button>
+                    <Button type="primary" disabled={ !authState } loading={ loading } icon={ "right" } htmlType="submit">Submit</Button>
 
                     <Form.Item>
                         <Switch
@@ -207,7 +207,7 @@ export default PageOne
 function IndividualForm({ who, formData, setFormData, menu, menuCategories }) {
     return (
         <>
-            <Form.Item label={ `What did ${ who.replace( /^(.)/, v => v.toUpperCase()) } order?` } style={{ marginBottom: "0" }} colon={ false }>
+            <Form.Item label={ `What did ${ who.replace( /^(.)/, v => v.toUpperCase()) } order?` } colon={ false }>
                 <Select 
                     onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], menu_id: e } }) }
                     defaultValue="Did not eat"
