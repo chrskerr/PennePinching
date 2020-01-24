@@ -1,31 +1,23 @@
 
 // Packages
-import React, { useState, useMemo } from 'react';
-import { Row, Select, Typography } from 'antd';
+import React, { useMemo } from 'react';
+import { Row } from 'antd';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { blue, gold, volcano, green } from '@ant-design/colors'
 
 
 // App
-const { Title } = Typography;
-const { Option } = Select;
 
 
-const Split = ({ mealsData }) => {
-    const [ who, setWho ] = useState( 'both' );
+const Split = ({ mealsData, who }) => {
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
     const COLORS = [ volcano[5], gold[5], blue[5], green[5] ];
 
     return (
         <Row>
-            <Row>
+            {/* <Row>
                 <Title level={ 3 }>Meal Split</Title>
-                <Select defaultValue={ who } onChange={ value => setWho( value ) }>
-                    <Option value='both'>Both</Option>
-                    <Option value='Katie'>Katie</Option>
-                    <Option value='Chris'>Chris</Option>
-                </Select>
-            </Row>
+            </Row> */}
             <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <PieChart margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>

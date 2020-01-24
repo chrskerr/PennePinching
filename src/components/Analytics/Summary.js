@@ -1,18 +1,16 @@
 
 // Packages
-import React, { useState, useMemo } from 'react';
-import { Row, Col, Card, Select, Typography } from 'antd';
+import React, { useMemo } from 'react';
+import { Row, Col, Card, Typography } from 'antd';
 import moment from 'moment'
 
 import CountUp from 'react-countup';
 import { blue, geekblue } from '@ant-design/colors'
 
 // App
-const { Option } = Select;
 const { Title, Text } = Typography;
 
-const Summary = ({ mealsData }) => {
-    const [ who, setWho ] = useState( 'both' );
+const Summary = ({ mealsData, who }) => {
     const { position, originalInvestment, totalMeals, savings, totalMenuCost } = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
 
     const daysElapsed = moment().diff( moment( "2020/01/15" ), 'day' );
@@ -24,15 +22,9 @@ const Summary = ({ mealsData }) => {
 
     return (
         <Row>
-            <Row>
+            {/* <Row>
                 <Title level={ 3 }>Summary</Title>
-                <Select defaultValue={ who } onChange={ value => setWho( value ) }>
-                    <Option value='both'>Both</Option>
-                    <Option value='Katie'>Katie</Option>
-                    <Option value='Chris'>Chris</Option>
-                </Select>
-            </Row>
-
+            </Row> */}
             <Row style={{ width: "100%", paddingTop: "2em" }} type='flex' justify='center' >
                 <Col xs={ 24 } md={ 18 } >
                     <Row { ...rowStructure } >

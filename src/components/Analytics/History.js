@@ -1,38 +1,30 @@
 
 // Packages
-import React, { useState, useMemo } from 'react';
-import { Row, Select, Typography } from 'antd';
+import React, { useMemo } from 'react';
+import { Row } from 'antd';
 import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import moment from 'moment';
 import { blue, gold } from '@ant-design/colors'
 
 
 // App
-const { Title } = Typography;
-const { Option } = Select;
 
 
-const History = ({ mealsData }) => {
-    const [ who, setWho ] = useState( 'both' );
+const History = ({ mealsData, who }) => {
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
 
     return (
         <Row>
-            <Row>
+            {/* <Row>
                 <Title level={ 3 }>History</Title>
-                <Select defaultValue={ who } onChange={ value => setWho( value ) }>
-                    <Option value='both'>Both</Option>
-                    <Option value='Katie'>Katie</Option>
-                    <Option value='Chris'>Chris</Option>
-                </Select>
-            </Row>
+            </Row> */}
             <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <ComposedChart data={ formattedData }>
                         <Tooltip />
                         <Legend verticalAlign="top" wrapperStyle={{ top: '-1em' }} />
-                        <XAxis dataKey="week" padding={{ left: 35, right: 35 }} />
-                        <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } label="Weeks of the Year" padding={{ left: 35, right: 35 }}/>
+                        <XAxis dataKey="week" padding={{ left: 15, right: 15 }} />
+                        <XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } padding={{ left: 15, right: 15 }} label="Week #" />
                         <YAxis yAxisId="left" dataKey="quantity" />
                         <YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
                         <Bar yAxisId="left" fill={ blue[5] } dataKey='quantity' barSize={ 20 } name="# of Meals" />

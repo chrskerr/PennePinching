@@ -1,10 +1,10 @@
 
 // Packages
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Button, Typography } from 'antd';
 import { useQuery } from '@apollo/react-hooks';
 import { useMachine } from '@xstate/react';
-
+import { Select } from 'antd';
 
 // App
 import { GET_ALL_MEALS } from '../helpers/apolloQueries';
@@ -15,11 +15,19 @@ import History from '../components/Analytics/History';
 import Split from '../components/Analytics/Split';
 import Weekdays from '../components/Analytics/Weekdays';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
+
+const titleMap = {
+    summary: 'Summary',
+    history: 'History',
+    split: 'Meal Split',
+    weekdays: 'Weekday Split',
+}
 
 const Analytics = () => {
     const { data, error } = useQuery( GET_ALL_MEALS );
     const [ current, send ] = useMachine( analyticsMachine );
+    const [ who, setWho ] = useState( 'both' );
 
     if ( error ) {
         console.error( error )
@@ -34,14 +42,22 @@ const Analytics = () => {
             <Col>
                 <Row justify="space-between" type="flex" style={{ marginBottom: "1.5em" }}>
                     <Button size="large" icon="left" onClick={ () => send( "PREVIOUS" ) }/>
+                    <Title level={ 3 }>{ titleMap[ current.value ] }</Title>
                     <Button size="large" icon="right" onClick={ () => send( "NEXT" ) }/>
                 </Row>
                 <Row>
+                    <Select defaultValue={ who } onChange={ value => setWho( value ) }>
+                        <Select.Option value='both'>Both</Select.Option>
+                        <Select.Option value='Katie'>Katie</Select.Option>
+                        <Select.Option value='Chris'>Chris</Select.Option>
+                    </Select>
+                </Row>
+                <Row>
                     <Col>
-                        { current.matches( 'summary' ) && <Summary mealsData={ mealsData } /> }
-                        { current.matches( 'history' ) && <History mealsData={ mealsData } /> }
-                        { current.matches( 'split' ) && <Split mealsData={ mealsData } /> }
-                        { current.matches( 'weekdays' ) && <Weekdays mealsData={ mealsData } /> }
+                        { current.matches( 'summary' ) && <Summary mealsData={ mealsData } who={ who }/> }
+                        { current.matches( 'history' ) && <History mealsData={ mealsData } who={ who }/> }
+                        { current.matches( 'split' ) && <Split mealsData={ mealsData } who={ who }/> }
+                        { current.matches( 'weekdays' ) && <Weekdays mealsData={ mealsData } who={ who }/> }
                     </Col>
                 </Row>
             </Col>
