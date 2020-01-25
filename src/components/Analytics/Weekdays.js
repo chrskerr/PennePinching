@@ -17,7 +17,7 @@ const Weekdays = ({ mealsData, who }) => {
             {/* <Row>
                 <Title level={ 3 }>Weekday Distribution</Title>
             </Row> */}
-            <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
+            <Row justify="center" type="flex" style={{ width: "100%" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <ComposedChart data={ formattedData } >
                         <Tooltip />

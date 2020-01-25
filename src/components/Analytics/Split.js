@@ -15,10 +15,7 @@ const Split = ({ mealsData, who }) => {
 
     return (
         <Row>
-            {/* <Row>
-                <Title level={ 3 }>Meal Split</Title>
-            </Row> */}
-            <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
+            <Row justify="center" type="flex" style={{ width: "100%" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <PieChart margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
                         <Pie dataKey="quantity" data={ formattedData } label innerRadius={ 75 } outerRadius={ 100 } paddingAngle={ 5 } >

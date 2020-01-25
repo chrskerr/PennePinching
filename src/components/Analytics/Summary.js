@@ -18,19 +18,19 @@ const Summary = ({ mealsData, who }) => {
     const averageWeekly = totalMeals / ( daysElapsed / 7 );
 
     const rowStructure = { type: 'flex', justify: 'center', gutter: 20 };
-    const smallColProps = { span: 12, style: {  marginTop: '20px' } };
+    const smallColProps = { span: 12 };
 
     return (
         <Row>
             {/* <Row>
                 <Title level={ 3 }>Summary</Title>
             </Row> */}
-            <Row style={{ width: "100%", paddingTop: "2em" }} type='flex' justify='center' >
+            <Row style={{ width: "100%", paddingBottom: "2em" }} type='flex' justify='center' >
                 <Col xs={ 24 } md={ 18 } >
                     <Row { ...rowStructure } >
                         <Col span={ 24 } >
-                            <Card title='Net Financial Position' headStyle={{ backgroundColor: geekblue[2] }}  bodyStyle={{ backgroundColor: geekblue[0] }}>
-                                <Title level={ 4 }>
+                            <Card title='Net Financial Position' bordered={ false } >
+                                <Title level={ 2 }>
                                     <CountUp start={ originalInvestment } end={ position } duration={ 5 } prefix="$" />
                                 </Title>
                             </Card>
@@ -38,51 +38,51 @@ const Summary = ({ mealsData, who }) => {
                     </Row>
                     <Row { ...rowStructure }>
                         <Col { ...smallColProps } >
-                            <Card title='Saved' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
-                                <Text strong>
+                            <Card title='Saved' size="small"  bordered={ false }>
+                                <Title level={ 4 }>
                                     <CountUp start={ 0 } end={ savings } duration={ 3 } prefix="$" />
-                                </Text>
+                                </Title>
                             </Card>
                         </Col>
                         <Col { ...smallColProps } >
-                            <Card title='Spent' size="small" headStyle={{ backgroundColor: blue[1] }} bodyStyle={{ backgroundColor: blue[0] }}>
-                                <Text strong >
+                            <Card title='Spent' size="small"  bordered={ false }>
+                                <Title level={ 4 } >
                                     <CountUp start={ 0 } end={ originalInvestment } duration={ 3 } prefix="$" />
-                                </Text>
+                                </Title>
                             </Card>
                         </Col>
                     </Row>
 
                     <Row { ...rowStructure } >
                         <Col { ...smallColProps } >
-                            <Card title='Breakeven' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
-                                <Text strong>
+                            <Card title='Breakeven' size="small"  bordered={ false }>
+                                <Title level={ 4 }>
                                     <CountUp start={ 0 } end={ daysRemainingToBreakEven } duration={ 3 } suffix=" days" />
-                                </Text>
+                                </Title>
                             </Card>
                         </Col>
                         <Col { ...smallColProps } >
-                            <Card title='Average' size="small" headStyle={{ backgroundColor: blue[1] }} bodyStyle={{ backgroundColor: blue[0] }}>
-                                <Text strong>
-                                    <CountUp start={ 0 } end={ averageWeekly } duration={ 3 } decimals={ 1 } suffix=" meals / wk" />
-                                </Text>
+                            <Card title='Avg Meals' size="small"  bordered={ false }>
+                                <Title level={ 4 }>
+                                    <CountUp start={ 0 } end={ averageWeekly } duration={ 3 } decimals={ 1 } suffix=" / wk" />
+                                </Title>
                             </Card>
                         </Col>
                     </Row>
 
                     <Row { ...rowStructure } >
                         <Col { ...smallColProps } >
-                            <Card title='Cost to FF' size="small" headStyle={{ backgroundColor: blue[1] }}  bodyStyle={{ backgroundColor: blue[0] }}>
-                                <Text strong>
+                            <Card title='Cost to FF' size="small"  bordered={ false }>
+                                <Title level={ 4 }>
                                     <CountUp start={ 0 } end={ totalMenuCost } duration={ 3 } prefix="$" />
-                                </Text>
+                                </Title>
                             </Card>
                         </Col>
                         <Col { ...smallColProps } >
-                            <Card title='FF p/l' size="small" headStyle={{ backgroundColor: blue[1] }} bodyStyle={{ backgroundColor: blue[0] }}>
-                                <Text strong>
+                            <Card title='FF p/l' size="small"  bordered={ false }>
+                                <Title level={ 4 }>
                                     <CountUp start={ originalInvestment * -1 } end={ ( originalInvestment * -1 ) - totalMenuCost } duration={ 3 } prefix="$" />
-                                </Text>
+                                </Title>
                             </Card>
                         </Col>
                     </Row>

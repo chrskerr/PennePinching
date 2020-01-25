@@ -168,6 +168,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                             </Form.Item>
                         </Col>
                     </Row>
+                    
                     <Button type="primary" disabled={ !authState } loading={ loading } icon={ "right" } htmlType="submit">Submit</Button>
 
                     <Form.Item>

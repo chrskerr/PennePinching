@@ -125,8 +125,8 @@ const App = () => {
 					</Menu>
 				</Row>
 				
-				<Row style={{ padding: '2em', flexGrow: "1", display: 'flex', flexDirection: 'column' }}>	
-					{ current.matches( "add" ) && <Add authState={ authState } homeService={ homeService }/> }
+				<Row style={{ padding: '2em', flexGrow: "1", display: 'flex', flexDirection: 'column' }} >	
+					{ current.matches( "add" ) && <Add authState={ authState } homeService={ homeService } /> }
 					{ current.matches( "analytics" ) && <Analytics /> }
 				</Row>
 			</Row>

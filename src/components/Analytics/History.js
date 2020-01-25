@@ -15,10 +15,7 @@ const History = ({ mealsData, who }) => {
 
     return (
         <Row>
-            {/* <Row>
-                <Title level={ 3 }>History</Title>
-            </Row> */}
-            <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
+            <Row justify="center" type="flex" style={{ width: "100%" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <ComposedChart data={ formattedData }>
                         <Tooltip />

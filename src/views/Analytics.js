@@ -24,27 +24,26 @@ const titleMap = {
     weekdays: 'Weekday Split',
 }
 
-const Analytics = () => {
+const Analytics = ({ offsetTop }) => {
     const { data, error } = useQuery( GET_ALL_MEALS );
     const [ current, send ] = useMachine( analyticsMachine );
     const [ who, setWho ] = useState( 'both' );
-
+    
     if ( error ) {
         console.error( error )
         return <Text type="danger">Hasura error, see Console</Text>
     }
-
     if ( !data ) return <CenteredSpin />
     const { meals: mealsData } = data;
 
     return (
         <Row>
             <Col>
-                <Row justify="space-between" type="flex" style={{ marginBottom: "1.5em" }}>
+                {/* <Row justify="space-between" type="flex" style={{ marginBottom: "1.5em" }}>
                     <Button size="large" icon="left" onClick={ () => send( "PREVIOUS" ) }/>
                     <Title level={ 3 }>{ titleMap[ current.value ] }</Title>
                     <Button size="large" icon="right" onClick={ () => send( "NEXT" ) }/>
-                </Row>
+                </Row> */}
                 <Row>
                     <Select defaultValue={ who } onChange={ value => setWho( value ) }>
                         <Select.Option value='both'>Both</Select.Option>
@@ -54,10 +53,18 @@ const Analytics = () => {
                 </Row>
                 <Row>
                     <Col>
-                        { current.matches( 'summary' ) && <Summary mealsData={ mealsData } who={ who }/> }
-                        { current.matches( 'history' ) && <History mealsData={ mealsData } who={ who }/> }
-                        { current.matches( 'split' ) && <Split mealsData={ mealsData } who={ who }/> }
-                        { current.matches( 'weekdays' ) && <Weekdays mealsData={ mealsData } who={ who }/> }
+                        <InfoCard label="Summary" >
+                            <Summary mealsData={ mealsData } who={ who } />
+                        </InfoCard>
+                        <InfoCard label="History">
+                            <History mealsData={ mealsData } who={ who } />
+                        </InfoCard>
+                        <InfoCard label="Meal Split">
+                            <Split mealsData={ mealsData } who={ who } />
+                        </InfoCard>
+                        <InfoCard label="Weekday Split">
+                            <Weekdays mealsData={ mealsData } who={ who } />
+                        </InfoCard>
                     </Col>
                 </Row>
             </Col>
@@ -66,3 +73,15 @@ const Analytics = () => {
 }
 
 export default Analytics;
+
+function InfoCard({ children, label }) {
+
+
+
+    return (
+            <Row style={{ height: '600px' }}>
+                <Title level={ 4 } style={{ marginBottom: '1em', marginLeft: '3em' }}>{ label }</Title>
+                { children }
+            </Row>
+    )
+}
