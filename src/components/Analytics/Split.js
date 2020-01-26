@@ -5,9 +5,8 @@ import { Row, Modal } from 'antd';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { blue, gold, volcano, green } from '@ant-design/colors'
 
-
 // App
-import Menu from '../Analytics/Menu'
+import Menu from '../Analytics/Menu';
 
 const Split = ({ mealsData, who }) => {
     const [ displayedMenu, setDisplayedMenu ] = useState( '' );

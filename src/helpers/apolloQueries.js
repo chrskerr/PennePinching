@@ -48,6 +48,7 @@ export const GET_FILTERED_MENU = gql`
             cost
             name
             id
+            active
         }
     }
 `

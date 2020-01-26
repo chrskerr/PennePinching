@@ -1,7 +1,7 @@
 
 // Packages
-import React from 'react';
-import { Row, Table } from 'antd';
+import React, { useState } from 'react';
+import { Row, List, Switch, Select } from 'antd';
 import { useQuery } from '@apollo/react-hooks';
 import moment from 'moment';
 
@@ -39,17 +39,35 @@ const tableColumns = [
 const Menu = ({ category, who }) => {
     const { data: menuQueryData } = useQuery( GET_FILTERED_MENU, { variables: { category }} );
     const { data: mealsQueryData } = useQuery( GET_FILTERED_MEALS, { variables: { category }} );
+    const [ sortBy, setSortBy ] = useState( 'a-z' );
 
     if ( !menuQueryData || !mealsQueryData ) return <CenteredSpin />;
 
-    const tableData = doFormatData( menuQueryData.menu, mealsQueryData.meals, who );
+    const tableData = doFormatData( menuQueryData.menu, mealsQueryData.meals, who, sortBy );
 
     return (
         <Row>
-            <Table 
-                dataSource={ tableData } 
-                columns={ tableColumns } 
-                pagination={ false /* { size: 'small', simple: true, pageSize: 5 } */ }
+            <Select />
+            <List
+                itemLayout="horizontal"
+                dataSource={ tableData }
+                renderItem={ item => (
+                <List.Item
+                    actions={[ <Switch
+                        size="small"
+                        checkedChildren="Active"
+                        unCheckedChildren="Active"
+                        checked={ item.active }
+                        disabled
+                        // onChange={ e => setFormData({ ...formData, shared: e }) }
+                    /> ]}
+                >
+                    <List.Item.Meta
+                        title={ item.name }
+                        description={ `Eaten ${ item.quantity } time(s). Last eaten on ${ item.last }.` }
+                    />
+                </List.Item>
+                )}
             />
         </Row>
     )
@@ -57,8 +75,8 @@ const Menu = ({ category, who }) => {
 
 export default Menu;
 
-function doFormatData ( menuInputData, mealsInputData, who ) {
-    return menuInputData.map( item => {
+function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
+    const unsortedData = menuInputData.map( item => {
         const filteredMeals = mealsInputData.filter( meal => { return meal.menu.name === item.name });
         const quantities = filteredMeals.map( el => {
             if ( who === "both" ) return 1;
@@ -79,6 +97,12 @@ function doFormatData ( menuInputData, mealsInputData, who ) {
             key: item.id,
             quantity,
             last: quantity ? last : '',
+            active: item.active,
         }
-    })
+    });
+
+    // sort here
+    const sortedData = unsortedData;
+
+    return sortedData;
 }
