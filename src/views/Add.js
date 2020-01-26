@@ -1,23 +1,23 @@
 
 // Packages
 import React, { useState } from 'react';
-import { useMachine } from '@xstate/react';
+import { useService } from '@xstate/react';
 
 
 // App
-import { mealMachine } from '../helpers/machines';
+import { navMachine } from '../helpers/machines';
 import PageOne from '../components/Add/PageOne';
 import Success from '../components/Add/Success';
 
 
-const Add = ({ authState, homeService }) => {
-    const [ current, , addService ] = useMachine( mealMachine );
+const Add = ({ authState }) => {
+    const [ current ] = useService( navMachine );
     const [ returnedIds, setReturnedIds ] = useState();
 
     return(
         <>
-            { current.matches( "pageone" ) && <PageOne addService={ addService } confirmSave={ res => setReturnedIds( res ) } authState={ authState } /> }
-            { current.matches( "success" ) && <Success addService={ addService } homeService={ homeService } ids={ returnedIds } /> }
+            { current.matches({ add: "pageone" }) && <PageOne confirmSave={ res => setReturnedIds( res ) } authState={ authState } /> }
+            { current.matches({ add: "success" }) && <Success ids={ returnedIds } /> }
         </>
     )
 }

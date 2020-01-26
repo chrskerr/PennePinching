@@ -6,7 +6,9 @@ import moment from 'moment';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { useService } from '@xstate/react';
 
+
 // App
+import { navMachine } from '../../helpers/machines';
 import { INSERT_MEALS, INSERT_MENU_ITEM } from '../../helpers/apolloMutations'
 import { GET_MENU } from '../../helpers/apolloQueries'
 import CenteredSpin from '../../components/Shared/CenteredSpin';
@@ -15,8 +17,8 @@ import CenteredSpin from '../../components/Shared/CenteredSpin';
 const { Title, Text } = Typography;
 const { Option, OptGroup } = Select;
 
-const PageOne = ({ confirmSave, authState, addService }) => {
-    const [ , send ] = useService( addService );
+const PageOne = ({ confirmSave, authState }) => {
+    const [ , send ] = useService( navMachine );
     const { data } = useQuery( GET_MENU );
     const [ insert_meals, { loading } ] = useMutation( INSERT_MEALS );
     const [ insert_menu, { loading: menuInsertLoading } ] = useMutation( INSERT_MENU_ITEM );
@@ -37,16 +39,17 @@ const PageOne = ({ confirmSave, authState, addService }) => {
         shared: true,
         testing: false,
         isDinner: true,
+        incidentals: 0,
     } )
 
     const handleSubmit = async e => {
         e.preventDefault();
         setError( false );
 
-        const { date, shared, katie, chris, testing, isDinner } = formData;
+        const { date, shared, katie, chris, testing, isDinner, incidentals } = formData;
         
-        let updatedShared = shared;
-        if ( ( katie.menu_id && !chris.menu_id ) || ( !katie.menu_id && chris.menu_id ) ) updatedShared = false;
+        let updatedShared = ( katie.menu_id && !chris.menu_id ) || ( !katie.menu_id && chris.menu_id ) ? false : shared;
+        let splitIncidentals = katie.menu_id && chris.menu_id ? incidentals / 2 : incidentals;
 
         const output = [];
         if ( katie.menu_id ) {
@@ -57,6 +60,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                 date,
                 test: testing,
                 isDinner,
+                incidentals: splitIncidentals,
             })
         }
         if ( chris.menu_id ) {
@@ -67,6 +71,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                 date,
                 test: testing,
                 isDinner,
+                incidentals: splitIncidentals,
             })
         }
 
@@ -142,9 +147,16 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                     </Form.Item>
 
                     <MenuItemSelecter who="katie" setFormData={ setFormData } formData={ formData } menu={ sortedMenu } menuCategories={ menuCategories } /> 
-
-
                     <MenuItemSelecter who="chris" setFormData={ setFormData } formData={ formData }  menu={ sortedMenu } menuCategories={ menuCategories } />
+
+					<Form.Item label="Incidentals">
+						<Input 
+                            type='number'
+                            prefix="$"
+							onChange={ e => setFormData({ ...formData, incidentals: e.target.value }) }
+							value={ formData.incidentals }
+						/>
+					</Form.Item>
 
                     <Row gutter={ 16 }>
                         <Col xs={ 8 } sm={ 4 } md={ 4 } lg={ 4 } xl={ 4 }>
@@ -168,9 +180,10 @@ const PageOne = ({ confirmSave, authState, addService }) => {
                             </Form.Item>
                         </Col>
                     </Row>
+
                     <Button type="primary" disabled={ !authState } loading={ loading } icon={ "right" } htmlType="submit">Submit</Button>
 
-                    <Form.Item>
+                    <Form.Item style={{ marginTop: '2em' }}>
                         <Switch
                             checkedChildren="Testing"
                             unCheckedChildren="Testing"
@@ -203,6 +216,7 @@ const PageOne = ({ confirmSave, authState, addService }) => {
 					<Form.Item label="Cost">
 						<Input 
                             type='number'
+                            prefix="$"
 							onChange={ e => setModalData({ ...modalData, cost: e.target.value }) }
 							value={ modalData.cost }
 						/>

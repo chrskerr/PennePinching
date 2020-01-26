@@ -5,20 +5,20 @@ import { Row, Button, Result } from 'antd';
 import { useService } from '@xstate/react';
 
 // App
+import { navMachine } from '../../helpers/machines';
 
 const Success = ({ restart, ids, addService, homeService }) => {
-    const [ , addSend ] = useService( addService );
-    const [ , homeSend ] = useService( homeService );
+    const [ , send ] = useService( navMachine );
     return (
         <Row align="middle">
             <Result
                 status="success"
                 title="Successfully Added!"
                 extra={[
-                    <Button type="primary" key="console" onClick={ () => homeSend( "ANALYTICS" ) } >
+                    <Button type="primary" key="console" onClick={ () => send( "ANALYTICS" ) } >
                         Go Analytics
                     </Button>,
-                    <Button key="buy" onClick={ () => addSend( 'RESTART' ) } >Add more</Button>,
+                    <Button key="buy" onClick={ () => send( 'RESTART' ) } >Add more</Button>,
                 ]}
             />
         </Row>

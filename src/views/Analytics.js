@@ -3,12 +3,12 @@
 import React, { useState } from 'react';
 import { Row, Col, Button, Typography } from 'antd';
 import { useQuery } from '@apollo/react-hooks';
-import { useMachine } from '@xstate/react';
+import { useService } from '@xstate/react';
 import { Select } from 'antd';
 
 // App
 import { GET_ALL_MEALS } from '../helpers/apolloQueries';
-import { analyticsMachine } from '../helpers/machines';
+import { navMachine } from '../helpers/machines';
 import CenteredSpin from '../components/Shared/CenteredSpin';
 import Summary from '../components/Analytics/Summary';
 import History from '../components/Analytics/History';
@@ -26,7 +26,7 @@ const titleMap = {
 
 const Analytics = () => {
     const { data, error } = useQuery( GET_ALL_MEALS );
-    const [ current, send ] = useMachine( analyticsMachine );
+    const [ current, send ] = useService( navMachine );
     const [ who, setWho ] = useState( 'both' );
 
     if ( error ) {
@@ -40,13 +40,13 @@ const Analytics = () => {
     return (
         <Row>
             <Col>
-                <Row justify="space-between" type="flex" style={{ marginBottom: "1.5em" }}>
-                    <Button size="large" icon="left" onClick={ () => send( "PREVIOUS" ) }/>
-                    <Title level={ 3 }>{ titleMap[ current.value ] }</Title>
-                    <Button size="large" icon="right" onClick={ () => send( "NEXT" ) }/>
+                <Row justify="space-between" type="flex" style={{ marginBottom: "1.5em", width: '85%', marginLeft: 'auto', marginRight: 'auto' }}>
+                    <Button icon="left" onClick={ () => send( "PREVIOUS" ) } />
+                    <Title level={ 4 }>{ titleMap[ current.value.analytics ] }</Title>
+                    <Button icon="right" onClick={ () => send( "NEXT" ) } />
                 </Row>
                 <Row>
-                    <Select defaultValue={ who } onChange={ value => setWho( value ) }>
+                    <Select defaultValue={ who } onChange={ value => setWho( value ) } size="small" >
                         <Select.Option value='both'>Both</Select.Option>
                         <Select.Option value='Katie'>Katie</Select.Option>
                         <Select.Option value='Chris'>Chris</Select.Option>
@@ -54,10 +54,10 @@ const Analytics = () => {
                 </Row>
                 <Row>
                     <Col>
-                        { current.matches( 'summary' ) && <Summary mealsData={ mealsData } who={ who }/> }
-                        { current.matches( 'history' ) && <History mealsData={ mealsData } who={ who }/> }
-                        { current.matches( 'split' ) && <Split mealsData={ mealsData } who={ who }/> }
-                        { current.matches( 'weekdays' ) && <Weekdays mealsData={ mealsData } who={ who }/> }
+                        { current.matches({ analytics: 'summary' }) && <Summary mealsData={ mealsData } who={ who }/> }
+                        { current.matches({ analytics: 'history' }) && <History mealsData={ mealsData } who={ who }/> }
+                        { current.matches({ analytics: 'split' }) && <Split mealsData={ mealsData } who={ who }/> }
+                        { current.matches({ analytics: 'weekdays' }) && <Weekdays mealsData={ mealsData } who={ who }/> }
                     </Col>
                 </Row>
             </Col>

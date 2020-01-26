@@ -20,7 +20,7 @@ const History = ({ mealsData, who }) => {
             </Row> */}
             <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
-                    <ComposedChart data={ formattedData }>
+                    <ComposedChart data={ formattedData } margin={{ top: 0, right: -20, bottom: 0, left: -20 }}>
                         <Tooltip />
                         <Legend verticalAlign="top" wrapperStyle={{ top: '-1em' }} />
                         <XAxis dataKey="week" padding={{ left: 15, right: 15 }} />
