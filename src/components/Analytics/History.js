@@ -12,12 +12,8 @@ import { blue, gold } from '@ant-design/colors'
 
 const History = ({ mealsData, who }) => {
     const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
-
     return (
         <Row>
-            {/* <Row>
-                <Title level={ 3 }>History</Title>
-            </Row> */}
             <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
                     <ComposedChart data={ formattedData } margin={{ top: 0, right: -20, bottom: 0, left: -20 }}>
@@ -35,7 +31,6 @@ const History = ({ mealsData, who }) => {
         </Row>
     )
 }
-
 export default History;
 
 function doFormatData( inputData, who ) {
@@ -49,16 +44,20 @@ function doFormatData( inputData, who ) {
     const weekList = [ ...new Set( datedData.map( el => el.weekId )) ];
     weekList.unshift( '202001', '202002' );
 
-    let financialPosition = who === "both" ? -399 * 2 : -399;
+    const initialFinancialPosition = who === "both" ? -399 * 2 : -399;
+    let mutableFinancialPosition = initialFinancialPosition;
 
     return weekList.sort().map( weekId => {
-        const quantities = filteredData.map( el => {
-            if ( weekId === el.weekId ) return 1;
-            return 0;
-        });
-        const quantity = quantities.reduce( ( total, curr ) => total + curr );
-        const netPosition = quantity ? financialPosition + ( quantity * 10 ) : 0;
-        if ( quantity ) financialPosition = netPosition;
+        const thisWeeksData = filteredData.filter( el => { return weekId === el.weekId });
+
+        const quantity = thisWeeksData.length;
+        const incrementalSave = quantity * 10;        
+        const incrementalSpend = thisWeeksData.reduce( ( total, curr ) => { return total + curr.incidentals }, 0 );        
+        
+        const netPosition = ( weekId === '202001' || weekId === '202002' ) ? 0 : mutableFinancialPosition - incrementalSpend + incrementalSave;
+        
+        // indexing variable, running total of netPosition. This should be improved later.
+        mutableFinancialPosition = ( weekId === '202001' || weekId === '202002' ) ? mutableFinancialPosition : netPosition;
 
         return {
             weekId,

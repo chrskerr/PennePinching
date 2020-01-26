@@ -10,7 +10,7 @@ import { useService } from '@xstate/react';
 // App
 import { navMachine } from '../../helpers/machines';
 import { INSERT_MEALS, INSERT_MENU_ITEM } from '../../helpers/apolloMutations'
-import { GET_MENU } from '../../helpers/apolloQueries'
+import { GET_MENU, GET_ALL_MEALS } from '../../helpers/apolloQueries'
 import CenteredSpin from '../../components/Shared/CenteredSpin';
 
 
@@ -77,7 +77,7 @@ const PageOne = ({ confirmSave, authState }) => {
 
         if ( output.length ) {
             try {
-                const res = await insert_meals({ variables: { data: output } });
+                const res = await insert_meals({ variables: { data: output }, refetchQueries: [{ query: GET_ALL_MEALS }] });
                 confirmSave( res.data.insert_meals.returning );
                 send( "SUCCESS" );
             }
