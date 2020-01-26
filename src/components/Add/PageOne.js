@@ -39,7 +39,7 @@ const PageOne = ({ confirmSave, authState }) => {
         shared: true,
         testing: false,
         isDinner: true,
-        incidentals: 0,
+        incidentals: null,
     } )
 
     const handleSubmit = async e => {
