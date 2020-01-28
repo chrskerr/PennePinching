@@ -32,6 +32,7 @@ export const GET_FILTERED_MEALS = gql`
     query GetFilteredMeals($category: String! ) {
         meals(where: {test: {_eq: false}, menu: {category: {_eq: $category}}}) {
             date
+            date_eaten
             menu {
                 name
             }
