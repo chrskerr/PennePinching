@@ -83,6 +83,7 @@ const App = () => {
 						<Input 
 							onChange={ e => setFormData({ ...formData, email: e.target.value }) }
 							value={ formData.email }
+							autoFocus
 						/>
 					</Form.Item>
 					<Form.Item label="Password">

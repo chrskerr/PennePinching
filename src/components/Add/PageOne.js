@@ -206,7 +206,8 @@ const PageOne = ({ confirmSave, authState }) => {
 						<AutoComplete
 							dataSource={ menuCategories }
 							onChange={ val => setModalData({ ...modalData, category: val }) }
-							value={ modalData.category }
+                            value={ modalData.category }
+                            autoFocus
 						/>
 					</Form.Item>
 					<Form.Item label="Name">
