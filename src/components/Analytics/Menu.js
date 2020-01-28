@@ -61,12 +61,6 @@ Menu.propTypes = {
 export default Menu;
 
 function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
-
-	console.log ( mealsInputData.map( el => { if ( el.date_eaten ) return new Date( el.date_eaten ); }));
-	/// ITS TIME TO SWITCH DATES TO A DATE FORMAT
-	/// Add is now inserting them, need to convert old ones and then update forms, then remove new inserts
-
-
 	const unsortedData = menuInputData.map( item => {
 		const filteredMeals = mealsInputData.filter( meal => { return meal.menu.name === item.name; });
 		const quantities = filteredMeals.map( el => {
@@ -100,4 +94,6 @@ function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
 	default:
 		return unsortedData.sort( ( a, b ) => a[ sortBy ].localeCompare( b[ sortBy ] ) );
 	}
+
+	/// ITS TIME TO SWITCH DATES TO A DATE FORMAT
 }

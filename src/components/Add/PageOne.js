@@ -33,7 +33,7 @@ const PageOne = ({ confirmSave, authState }) => {
 
     const [ error, setError ] = useState( false );
     const [ formData, setFormData ] = useState( {
-        date: moment.utc( new Date() ),
+        date: moment( new Date().toLocaleDateString(), "DD-MM-YYYY" )._i ,
         katie: { menu_id: '' },
         chris: { menu_id: '' },
         shared: true,
@@ -59,8 +59,7 @@ const PageOne = ({ confirmSave, authState }) => {
                 menu_id: katie.menu_id,
                 shared: updatedShared, 
                 who: "Katie", 
-                date: date.format( "DD/MM/YYYY" ),
-                date_eaten: date.toDate(),
+                date,
                 test: testing,
                 isDinner,
                 incidentals: splitIncidentals,
@@ -71,8 +70,7 @@ const PageOne = ({ confirmSave, authState }) => {
                 menu_id: chris.menu_id,  
                 shared: updatedShared, 
                 who: "Chris", 
-                date: date.format( "DD/MM/YYYY" ),
-                date_eaten: date.toDate(),
+                date,
                 test: testing,
                 isDinner,
                 incidentals: splitIncidentals,
@@ -145,8 +143,8 @@ const PageOne = ({ confirmSave, authState }) => {
                     <Form.Item label="Date" >
                         <DatePicker 
                             format="DD-MM-YYYY" 
-                            value={ formData.date } 
-                            onChange={ e => setFormData({ ...formData, date: e }) }
+                            defaultValue={ moment( new Date().toLocaleDateString(), "DD-MM-YYYY" ) } 
+                            onChange={ e => setFormData({ ...formData, date: e._d.toLocaleDateString() }) }
                         />
                     </Form.Item>
 
