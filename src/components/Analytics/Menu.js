@@ -20,7 +20,7 @@ const Menu = ({ category, who }) => {
 	const tableData = doFormatData( menuQueryData.menu, mealsQueryData.meals, who, sortBy );
 
 	return (
-		<Row>
+		<Form layout="horizontal" >
 			<Form.Item label="Sort">
 				<Select onChange={ value => setSortBy( value ) } value={ sortBy } size="small" >
 					<Select.Option value={ "last" }>Last Eaten</Select.Option>
@@ -45,12 +45,12 @@ const Menu = ({ category, who }) => {
 					>
 						<List.Item.Meta
 							title={ item.name }
-							description={ `Eaten ${ item.quantity } time(s). Last eaten on ${ item.last }.` }
+							description={ `Eaten ${ item.quantity } time${ item.quantity > 1 ? "s" : "" }.${ item.last && ` Last eaten on ${ item.last.toDateString() }.` }` }
 						/>
 					</List.Item>
 				)}
 			/>
-		</Row>
+		</Form>
 	);
 };
 Menu.propTypes = {
@@ -72,10 +72,10 @@ function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
 		const quantity = quantities.length > 0 ? quantities.reduce( ( total = 0, curr ) => total + curr ) : 0;
         
 		const last = filteredMeals.reduce( ( best, curr ) => {
-			const currDate = moment( curr.date, "DD-MM-YYYY");
-			if ( best.isSameOrBefore( currDate ) ) return currDate;
+			const currDate = moment( curr.date, "DD-MM-YYYY").toDate();
+			if ( best < currDate ) return currDate;
 			return best;
-		}, moment( "01/01/2020", "DD-MM-YYYY" )).format( "DD-MM-YYYY" );
+		}, moment( "01/01/2020", "DD-MM-YYYY" ).toDate());
 
 		return {
 			...item,
@@ -86,11 +86,9 @@ function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
 		};
 	});
 
-	console.log( unsortedData );
-
 	switch ( sortBy ) {
 	case "last":
-		return unsortedData.sort( ( a, b ) => moment( b.last, "DD-MM-YYYY" ).isSameOrBefore( moment( a.last, "DD-MM-YYYY" )) );
+		return unsortedData.sort( ( a, b ) => b.last - a.last );
 	case "quantity":
 		return unsortedData.sort( ( a, b ) => b.quantity - a.quantity );
 	default:
