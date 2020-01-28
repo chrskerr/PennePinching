@@ -11,7 +11,7 @@ import { blue, lime } from '@ant-design/colors'
 
 
 const Weekdays = ({ mealsData, who }) => {
-    const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
+    const formattedData = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
     return (
         <Row>
             <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
