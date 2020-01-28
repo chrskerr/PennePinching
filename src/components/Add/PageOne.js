@@ -49,7 +49,9 @@ const PageOne = ({ confirmSave, authState }) => {
         const { date, shared, katie, chris, testing, isDinner, incidentals } = formData;
         
         let updatedShared = ( katie.menu_id && !chris.menu_id ) || ( !katie.menu_id && chris.menu_id ) ? false : shared;
-        let splitIncidentals = katie.menu_id && chris.menu_id ? incidentals / 2 : incidentals;
+
+        let splitIncidentals = !incidentals ? 0 : 
+            katie.menu_id && chris.menu_id ? incidentals / 2 : incidentals;
 
         const output = [];
         if ( katie.menu_id ) {
