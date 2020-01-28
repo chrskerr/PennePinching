@@ -13,7 +13,7 @@ import CenteredSpin from "../../components/Shared/CenteredSpin";
 const Menu = ({ category, who }) => {
 	const { data: menuQueryData } = useQuery( GET_FILTERED_MENU, { variables: { category } } );
 	const { data: mealsQueryData } = useQuery( GET_FILTERED_MEALS, { variables: { category } } );
-	const [ sortBy, setSortBy ] = useState( "last" );
+	const [ sortBy, setSortBy ] = useState( "quantity" );
 
 	if ( !menuQueryData || !mealsQueryData ) return <CenteredSpin />;
 
@@ -26,7 +26,6 @@ const Menu = ({ category, who }) => {
 					<Select.Option value={ "last" }>Last Eaten</Select.Option>
 					<Select.Option value={ "quantity" }>Quantity</Select.Option>
 					<Select.Option value={ "name" }>Name</Select.Option>
-					<Select.Option value={ "active" }>Active?</Select.Option>
 				</Select>
 			</Form.Item>
 			<List
@@ -87,6 +86,16 @@ function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
 		};
 	});
 
-	return unsortedData.sort( ( a, b ) => b[ sortBy ] - a[sortBy]);
+	console.log( unsortedData );
 
+	switch ( sortBy ) {
+	case "last":
+		return unsortedData.sort( ( a, b ) => moment( b.last, "DD-MM-YYYY" ).isSameOrBefore( moment( a.last, "DD-MM-YYYY" )) );
+	case "quantity":
+		return unsortedData.sort( ( a, b ) => b.quantity - a.quantity );
+	default:
+		return unsortedData.sort( ( a, b ) => a[ sortBy ].localeCompare( b[ sortBy ] ) );
+	}
+
+	/// ITS TIME TO SWITCH DATES TO A DATE FORMAT
 }
