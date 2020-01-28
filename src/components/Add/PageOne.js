@@ -27,7 +27,7 @@ const PageOne = ({ confirmSave, authState }) => {
 	const [ modalData, setModalData ] = useState({
 		category: '',
 		name: '',
-		cost: '',
+		cost: null,
 	});
 	const [ modalError, setModalError ] = useState( false );
 

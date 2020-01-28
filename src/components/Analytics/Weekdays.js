@@ -2,7 +2,7 @@
 // Packages
 import React, { useMemo } from 'react';
 import { Row } from 'antd';
-import { ComposedChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import moment from 'moment';
 import { blue, lime } from '@ant-design/colors'
 
@@ -16,14 +16,14 @@ const Weekdays = ({ mealsData, who }) => {
         <Row>
             <Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
                 <ResponsiveContainer width='100%' height={ 300 }>
-                    <ComposedChart data={ formattedData } >
+                    <BarChart data={ formattedData } >
                         <Tooltip />
                         <Legend verticalAlign="top" wrapperStyle={{ top: '-1em' }} />
-                        <XAxis dataKey="day" padding={{ left: 15, right: 15 }}/>
+                        <XAxis dataKey="day" />
                         <YAxis />
-                        <Bar stackId="a" fill={ blue[5] } dataKey='dinner' barSize={ 20 } name="Number of dinners" />
-                        <Bar stackId="a" fill={ lime[5] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
-                    </ComposedChart>
+                        <Bar stackId="a" units='meals' fill={ blue[5] } dataKey='dinner' barSize={ 20 } name="Number of dinners" />
+                        <Bar stackId="a" units='meals' fill={ lime[5] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
+                    </BarChart>
                 </ResponsiveContainer>
             </Row>
         </Row>
