@@ -1,6 +1,6 @@
 
 // Packages
-import { Machine, interpret } from 'xstate';
+import { Machine, interpret } from "xstate";
 
 export const navMachine = interpret( 
 	new Machine({
@@ -8,35 +8,35 @@ export const navMachine = interpret(
 		initial: "analytics",
 		states: {
 			add: {
-				on: { ANALYTICS: 'analytics' },
+				on: { ANALYTICS: "analytics" },
 				initial: "pageone",
 				states: {
 					pageone: {
-						on: { SUCCESS: 'success' },
+						on: { SUCCESS: "success" },
 					},
 					success: {
-						on: { RESTART: 'pageone' },
+						on: { RESTART: "pageone" },
 					},
 				},
 			},
 			analytics: {
-				on: { ADD: 'add' },
+				on: { ADD: "add" },
 				initial: "summary",
 				states: {
 					summary: {
-						on: { PREVIOUS: 'weekdays', NEXT: 'history' },
+						on: { PREVIOUS: "weekdays", NEXT: "history" },
 					},
 					history: {
-						on: { PREVIOUS: 'summary', NEXT: 'split' },
+						on: { PREVIOUS: "summary", NEXT: "split" },
 					},
 					split: {
-						on: { PREVIOUS: 'history', NEXT: 'weekdays' },
+						on: { PREVIOUS: "history", NEXT: "weekdays" },
 					},
 					weekdays: {
-						on: { PREVIOUS: 'split', NEXT: 'summary' },
+						on: { PREVIOUS: "split", NEXT: "summary" },
 					},
 				},
 			},
 		},
 	})
- ).start();
+).start();

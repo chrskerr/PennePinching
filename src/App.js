@@ -1,16 +1,16 @@
 
 // Packages
-import React, { useState, useEffect } from 'react';
-import { ApolloProvider } from '@apollo/react-hooks';
-import { Row, Typography, Modal, Form, Input, Button } from 'antd';
-import ApolloClient from 'apollo-boost';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import React, { useState, useEffect } from "react";
+import { ApolloProvider } from "@apollo/react-hooks";
+import { Row, Typography, Modal, Form, Input, Button } from "antd";
+import ApolloClient from "apollo-boost";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 // App
-import Home from './views/Home';
+import Home from "./views/Home";
 
-const { Text } = Typography
+const { Text } = Typography;
 
 const App = () => {
 	const [ modal, setModal ] = useState( false );
@@ -20,7 +20,7 @@ const App = () => {
 	const [ authState, setAuthState ] = useState( false );
 	
 	const client = new ApolloClient({
-		uri: 'https://penne-pinching.herokuapp.com/v1/graphql',
+		uri: "https://penne-pinching.herokuapp.com/v1/graphql",
 		headers: authState 
 			? { Authorization: `Bearer ${ authState.token }` } 
 			: {},
@@ -66,7 +66,7 @@ const App = () => {
 	const logOut = () => {
 		firebase.auth().signOut();
 		setAuthState( false );
-	}
+	};
 
 	return (
 		<ApolloProvider client={ client }>
@@ -98,6 +98,6 @@ const App = () => {
         	</Modal>
 		</ApolloProvider>
 	);
-}
+};
 
-export default App
+export default App;

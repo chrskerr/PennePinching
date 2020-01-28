@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const GET_ALL_MEALS = gql`
     query GetAllMeals {
@@ -15,7 +15,7 @@ export const GET_ALL_MEALS = gql`
             incidentals
         }
     }
-`
+`;
 
 export const GET_MENU = gql`
     query GetMenu {
@@ -27,7 +27,7 @@ export const GET_MENU = gql`
             active
         }
     }
-`
+`;
 export const GET_FILTERED_MEALS = gql`
     query GetFilteredMeals($category: String! ) {
         meals(where: {test: {_eq: false}, menu: {category: {_eq: $category}}}) {
@@ -39,7 +39,7 @@ export const GET_FILTERED_MEALS = gql`
             who
         }
     }
-`
+`;
 
 export const GET_FILTERED_MENU = gql`
     query GetFilteredMenu($category: String! ) {
@@ -51,4 +51,4 @@ export const GET_FILTERED_MENU = gql`
             active
         }
     }
-`
+`;

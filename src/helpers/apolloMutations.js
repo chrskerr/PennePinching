@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const INSERT_MEALS = gql`
     mutation InsertMeals($data: [ meals_insert_input! ]! ) {
@@ -8,7 +8,7 @@ export const INSERT_MEALS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_MEALS = gql`
     mutation UpdateMeals($id: UUID!, $data: [ meals_update_input! ]! ) {
@@ -18,7 +18,7 @@ export const UPDATE_MEALS = gql`
             }
         }
     }
-`
+`;
 
 export const INSERT_MENU_ITEM = gql`
     mutation InsertMenuItem($data: [ menu_insert_input! ]! ) {
@@ -28,4 +28,4 @@ export const INSERT_MENU_ITEM = gql`
             }
         }
     }
-`
+`;
