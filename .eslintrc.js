@@ -45,6 +45,18 @@ module.exports = {
 		"object-curly-spacing": [
 			"error", 
 			"always"
-		]
+		],
+		"space-in-parens": [
+			"error", 
+			"always"
+		],
+		"computed-property-spacing": [
+			"error", 
+			"always"
+		],
+        "comma-dangle": [
+            "error", 
+            "always-multiline"
+        ]
 	}
 };

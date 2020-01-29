@@ -48,10 +48,10 @@ const PageOne = ({ confirmSave, authState }) => {
 
         const { date, shared, katie, chris, testing, isDinner, incidentals } = formData;
         
-        let updatedShared = ( katie.menu_id && !chris.menu_id ) || ( !katie.menu_id && chris.menu_id ) ? false : shared;
-
-        let splitIncidentals = !incidentals ? 0 : 
+        const updatedShared = ( katie.menu_id && !chris.menu_id ) || ( !katie.menu_id && chris.menu_id ) ? false : shared;
+        const splitIncidentals = !incidentals ? 0 : 
             katie.menu_id && chris.menu_id ? incidentals / 2 : incidentals;
+        const date_eaten = moment( date, "DD-MM-YYYY" ).toDate();
 
         const output = [];
         if ( katie.menu_id ) {
@@ -60,6 +60,7 @@ const PageOne = ({ confirmSave, authState }) => {
                 shared: updatedShared, 
                 who: "Katie", 
                 date,
+                date_eaten,
                 test: testing,
                 isDinner,
                 incidentals: splitIncidentals,
@@ -71,6 +72,7 @@ const PageOne = ({ confirmSave, authState }) => {
                 shared: updatedShared, 
                 who: "Chris", 
                 date,
+                date_eaten,
                 test: testing,
                 isDinner,
                 incidentals: splitIncidentals,
