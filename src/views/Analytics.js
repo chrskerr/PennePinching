@@ -54,10 +54,10 @@ const Analytics = () => {
 				</Row>
 				<Row>
 					<Col>
-						{ current.matches({ analytics: "summary" }) && <Summary mealsData={ mealsData } who={ who }/> }
-						{ current.matches({ analytics: "history" }) && <History mealsData={ mealsData } who={ who }/> }
-						{ current.matches({ analytics: "split" }) && <Split mealsData={ mealsData } who={ who }/> }
-						{ current.matches({ analytics: "weekdays" }) && <Weekdays mealsData={ mealsData } who={ who }/> }
+						{ current.matches( { analytics: "summary" } ) && <Summary mealsData={ mealsData } who={ who }/> }
+						{ current.matches( { analytics: "history" } ) && <History mealsData={ mealsData } who={ who }/> }
+						{ current.matches( { analytics: "split" } ) && <Split mealsData={ mealsData } who={ who }/> }
+						{ current.matches( { analytics: "weekdays" } ) && <Weekdays mealsData={ mealsData } who={ who }/> }
 					</Col>
 				</Row>
 			</Col>

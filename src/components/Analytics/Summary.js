@@ -8,8 +8,8 @@ import CountUp from "react-countup";
 // App
 const { Title } = Typography;
 
-const Summary = ({ mealsData, who }) => {
-	const { position, spend, totalMeals, savings, totalMenuCost } = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
+const Summary = ( { mealsData, who } ) => {
+	const { position, spend, totalMeals, savings, totalMenuCost } = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ] );
 
 	const daysElapsed = moment().diff( moment( "15/01/2020", "DD-MM-YYYY" ), "day" );
 	const daysRemainingToBreakEven = ( position * -1 ) / ( savings / daysElapsed );
@@ -94,9 +94,9 @@ function doFormatData( inputData, who ) {
 	const datedData = inputData.map( el => {
 		return {
 			...el,
-			weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format("ww") }`,
+			weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format( "ww" ) }`,
 		};
-	});
+	} );
 	const filteredData = datedData.filter( el => who === "both" || who === el.who );
 	const incidentals = filteredData.reduce( ( total, curr ) => total + curr.incidentals, 0 ) * -1;
 	const mealCosts = filteredData.map( el => el.menu.cost );

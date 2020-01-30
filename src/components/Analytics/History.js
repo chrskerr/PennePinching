@@ -10,8 +10,8 @@ import { blue, gold } from "@ant-design/colors";
 // App
 
 
-const History = ({ mealsData, who }) => {
-	const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
+const History = ( { mealsData, who } ) => {
+	const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ] );
 	return (
 		<Row>
 			<Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
@@ -23,8 +23,8 @@ const History = ({ mealsData, who }) => {
 						<XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } padding={{ left: 15, right: 15 }} label="Week #" />
 						<YAxis yAxisId="left" dataKey="quantity" />
 						<YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
-						<Bar yAxisId="left" fill={ blue[5] } dataKey='quantity' barSize={ 20 } name="# of Meals" />
-						<Line yAxisId="right" type="monotone" dataKey="netPosition" stroke={ gold[5] } name="Net $" />
+						<Bar yAxisId="left" fill={ blue[ 5 ] } dataKey='quantity' barSize={ 20 } name="# of Meals" />
+						<Line yAxisId="right" type="monotone" dataKey="netPosition" stroke={ gold[ 5 ] } name="Net $" />
 					</ComposedChart>
 				</ResponsiveContainer>
 			</Row>
@@ -37,18 +37,18 @@ function doFormatData( inputData, who ) {
 	const datedData = inputData.map( el => {
 		return {
 			...el,
-			weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format("ww") }`,
+			weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format( "ww" ) }`,
 		};
-	});
+	} );
 	const filteredData = datedData.filter( el => who === "both" || who === el.who );
-	const weekList = [ ...new Set( datedData.map( el => el.weekId )) ];
+	const weekList = [ ...new Set( datedData.map( el => el.weekId ) ) ];
 	weekList.unshift( "202001", "202002" );
 
 	const initialFinancialPosition = who === "both" ? -399 * 2 : -399;
 	let mutableFinancialPosition = initialFinancialPosition;
 
 	return weekList.sort().map( weekId => {
-		const thisWeeksData = filteredData.filter( el => { return weekId === el.weekId; });
+		const thisWeeksData = filteredData.filter( el => { return weekId === el.weekId; } );
 
 		const quantity = thisWeeksData.length;
 		const incrementalSave = quantity * 10;        
@@ -66,5 +66,5 @@ function doFormatData( inputData, who ) {
 			quantity,
 			netPosition,
 		};
-	});
+	} );
 }

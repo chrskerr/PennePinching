@@ -10,8 +10,8 @@ import { blue, lime } from "@ant-design/colors";
 // App
 
 
-const Weekdays = ({ mealsData, who }) => {
-	const formattedData = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
+const Weekdays = ( { mealsData, who } ) => {
+	const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ] );
 	return (
 		<Row>
 			<Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
@@ -21,8 +21,8 @@ const Weekdays = ({ mealsData, who }) => {
 						<Legend verticalAlign="top" wrapperStyle={{ top: "-1em" }} />
 						<XAxis dataKey="day" />
 						<YAxis />
-						<Bar stackId="a" units='meals' fill={ blue[5] } dataKey='dinner' barSize={ 20 } name="Number of dinners" />
-						<Bar stackId="a" units='meals' fill={ lime[5] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
+						<Bar stackId="a" units='meals' fill={ blue[ 5 ] } dataKey='dinner' barSize={ 20 } name="Number of dinners" />
+						<Bar stackId="a" units='meals' fill={ lime[ 5 ] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
 					</BarChart>
 				</ResponsiveContainer>
 			</Row>
@@ -38,7 +38,7 @@ function doFormatData( inputData, who ) {
 			...el,
 			day: moment( el.date, "DD-MM-YYYY" ).day(),
 		};
-	});
+	} );
 	const days = window.innerWidth < 500 ?  
 		[ "S", "M", "T", "W", "T", "F", "S" ] 
 		: [ "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" ];
@@ -50,5 +50,5 @@ function doFormatData( inputData, who ) {
 			lunch: filteredData.filter( el => { return el.day === i && !el.isDinner; } ).length,
 			dinner: filteredData.filter( el => { return ( el.day === i && el.isDinner ); } ).length,
 		};
-	});
+	} );
 }

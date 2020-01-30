@@ -3,7 +3,7 @@
 import { Machine, interpret } from "xstate";
 
 export const navMachine = interpret( 
-	new Machine({
+	new Machine( {
 		id: "home",
 		initial: "analytics",
 		states: {
@@ -38,5 +38,5 @@ export const navMachine = interpret(
 				},
 			},
 		},
-	})
+	} ),
 ).start();

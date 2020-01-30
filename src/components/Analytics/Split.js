@@ -8,11 +8,11 @@ import { blue, gold, volcano, green } from "@ant-design/colors";
 // App
 import Menu from "../Analytics/Menu";
 
-const Split = ({ mealsData, who }) => {
+const Split = ( { mealsData, who } ) => {
 	const [ displayedMenu, setDisplayedMenu ] = useState( "" );
 	const [ modalVisible, setModalVisible ] = useState( false );
-	const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ]);
-	const COLORS = [ volcano[5], gold[5], blue[5], green[5] ];
+	const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ] );
+	const COLORS = [ volcano[ 5 ], gold[ 5 ], blue[ 5 ], green[ 5 ] ];
 
 	const toggleModal = target => {
 		if ( !target ) {
@@ -30,7 +30,7 @@ const Split = ({ mealsData, who }) => {
 				<ResponsiveContainer width='100%' height={ 300 }>
 					<PieChart margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
 						<Pie dataKey="quantity" data={ formattedData } label innerRadius={ 75 } outerRadius={ 100 } paddingAngle={ 5 } >
-							{ formattedData.map( ( cell, index ) => <Cell key={ cell.name } fill={ COLORS[ index % COLORS.length ] } onClick={ () => toggleModal( cell.name ) } />)}
+							{ formattedData.map( ( cell, index ) => <Cell key={ cell.name } fill={ COLORS[ index % COLORS.length ] } onClick={ () => toggleModal( cell.name ) } /> )}
 						</Pie>
 						<Tooltip />
 						<Legend verticalAlign="top" wrapperStyle={{ top: "-1em" }} />
@@ -54,7 +54,7 @@ const Split = ({ mealsData, who }) => {
 export default Split;
 
 function doFormatData( inputData, who ) {
-	const menuCategories = [ ...new Set( inputData.map( input => input.menu.category )) ].sort();
+	const menuCategories = [ ...new Set( inputData.map( input => input.menu.category ) ) ].sort();
 
 	return menuCategories.map( name => {
 		const quantities = inputData.map( el => {
@@ -64,12 +64,12 @@ function doFormatData( inputData, who ) {
 				if ( who === el.who ) return 1;
 			}
 			return 0;
-		});
+		} );
 		const quantity = quantities.reduce( ( total, curr ) => total + curr );
 
 		return {
 			name,
 			quantity,
 		};
-	});
+	} );
 }
