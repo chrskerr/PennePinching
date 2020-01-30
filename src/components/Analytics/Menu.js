@@ -10,7 +10,7 @@ import moment from "moment";
 import { GET_FILTERED_MENU, GET_FILTERED_MEALS } from "../../helpers/apolloQueries";
 import CenteredSpin from "../../components/Shared/CenteredSpin";
 
-const Menu = ({ category, who }) => {
+const Menu = ( { category, who } ) => {
 	const { data: menuQueryData } = useQuery( GET_FILTERED_MENU, { variables: { category } } );
 	const { data: mealsQueryData } = useQuery( GET_FILTERED_MEALS, { variables: { category } } );
 	const [ sortBy, setSortBy ] = useState( "quantity" );
@@ -23,8 +23,8 @@ const Menu = ({ category, who }) => {
 		<Form layout="horizontal" >
 			<Form.Item label="Sort">
 				<Select onChange={ value => setSortBy( value ) } value={ sortBy } size="small" >
-					<Select.Option value={ "last" }>Last Eaten</Select.Option>
 					<Select.Option value={ "quantity" }>Quantity</Select.Option>
+					<Select.Option value={ "last" }>Last Eaten</Select.Option>
 					<Select.Option value={ "name" }>Name</Select.Option>
 				</Select>
 			</Form.Item>
@@ -62,20 +62,20 @@ export default Menu;
 
 function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
 	const unsortedData = menuInputData.map( item => {
-		const filteredMeals = mealsInputData.filter( meal => { return meal.menu.name === item.name; });
+		const filteredMeals = mealsInputData.filter( meal => { return meal.menu.name === item.name; } );
 		const quantities = filteredMeals.map( el => {
 			if ( who === "both" ) return 1;
 			if ( el.shared ) return 0.5;
 			if ( who === el.who ) return 1;
 			return 0;
-		});
+		} );
 		const quantity = quantities.length > 0 ? quantities.reduce( ( total = 0, curr ) => total + curr ) : 0;
         
 		const last = filteredMeals.reduce( ( best, curr ) => {
-			const currDate = moment( curr.date, "DD-MM-YYYY").toDate();
+			const currDate = moment( curr.date, "DD-MM-YYYY" ).toDate();
 			if ( best < currDate ) return currDate;
 			return best;
-		}, moment( "01/01/2020", "DD-MM-YYYY" ).toDate());
+		}, moment( "01/01/2020", "DD-MM-YYYY" ).toDate() );
 
 		return {
 			...item,
@@ -84,7 +84,7 @@ function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
 			last: quantity ? last : "",
 			active: item.active,
 		};
-	});
+	} );
 
 	switch ( sortBy ) {
 	case "last":
