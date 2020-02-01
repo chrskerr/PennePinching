@@ -21,7 +21,7 @@ export const navMachine = interpret(
 			},
 			analytics: {
 				on: { ADD: "add" },
-				initial: "summary",
+				initial: "meals",
 				states: {
 					summary: {
 						on: { PREVIOUS: "weekdays", NEXT: "history" },
@@ -33,7 +33,10 @@ export const navMachine = interpret(
 						on: { PREVIOUS: "history", NEXT: "weekdays" },
 					},
 					weekdays: {
-						on: { PREVIOUS: "split", NEXT: "summary" },
+						on: { PREVIOUS: "split", NEXT: "meals" },
+					},
+					meals: {
+						on: { PREVIOUS: "weekdays", NEXT: "summary" },
 					},
 				},
 			},

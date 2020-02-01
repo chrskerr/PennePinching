@@ -14,6 +14,7 @@ import Summary from "../components/Analytics/Summary";
 import History from "../components/Analytics/History";
 import Split from "../components/Analytics/Split";
 import Weekdays from "../components/Analytics/Weekdays";
+import Meals from "../components/Analytics/Meals";
 
 const { Text, Title } = Typography;
 
@@ -58,6 +59,7 @@ const Analytics = () => {
 						{ current.matches( { analytics: "history" } ) && <History mealsData={ mealsData } who={ who }/> }
 						{ current.matches( { analytics: "split" } ) && <Split mealsData={ mealsData } who={ who }/> }
 						{ current.matches( { analytics: "weekdays" } ) && <Weekdays mealsData={ mealsData } who={ who }/> }
+						{ current.matches( { analytics: "meals" } ) && <Meals mealsData={ mealsData } who={ who }/> }
 					</Col>
 				</Row>
 			</Col>

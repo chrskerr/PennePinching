@@ -2,7 +2,7 @@
 // Packages
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Row, List, Switch, Select, Form } from "antd";
+import { List, Switch, Select, Form } from "antd";
 import { useQuery } from "@apollo/react-hooks";
 import moment from "moment";
 
