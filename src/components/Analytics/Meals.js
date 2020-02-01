@@ -17,8 +17,12 @@ const Meals = ({ mealsData, who, authState }) => {
 	const { data, loading } = useQuery( GET_TESTING_MEALS );
 	const [ deleteMeal ] = useMutation( DELETE_MEAL );
 
-	const handleDelete = id => {
-		if ( !authState ) return;
+	const handleDelete = ( id, e ) => {
+		e.preventDefault();
+		if ( !authState ) {
+			alert( "You must be logged in to do this" ); 
+			return;
+		}
 		if ( window.confirm( "Are you sure?" )) deleteMeal({ variables: { id }, refetchQueries: [{ query: GET_ALL_MEALS }, { query: GET_TESTING_MEALS }]});
 	};
 
@@ -46,7 +50,7 @@ const Meals = ({ mealsData, who, authState }) => {
 						dataSource={ listData }
 						renderItem={ item => (
 							<List.Item
-								actions={[ <a key={ item.id } href="#" onClick={ () => { handleDelete( item.id ); }}>Delete</a> ]}
+								actions={[ <a key={ item.id } href="#" onClick={ ( e ) => { handleDelete( item.id, e ); }}>Delete</a> ]}
 							>
 								<List.Item.Meta
 									title={ item.title }
@@ -63,6 +67,7 @@ const Meals = ({ mealsData, who, authState }) => {
 Meals.propTypes = {
 	mealsData: PropTypes.array,
 	who: PropTypes.string,
+	authState: PropTypes.any,
 };
 
 export default Meals;
