@@ -2,7 +2,7 @@
 // Packages
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Row, Col, List, Switch } from "antd";
+import { Row, Col, List, Switch, Typography } from "antd";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import moment from "moment";
 
@@ -10,6 +10,8 @@ import moment from "moment";
 import { GET_TESTING_MEALS, GET_ALL_MEALS } from "../../helpers/apolloQueries";
 import { DELETE_MEAL } from "../../helpers/apolloMutations";
 import CenteredSpin from "../../components/Shared/CenteredSpin";
+
+const { Text } = Typography;
 
 
 const Meals = ({ mealsData, who, authState }) => {
@@ -23,7 +25,7 @@ const Meals = ({ mealsData, who, authState }) => {
 			alert( "You must be logged in to do this" ); 
 			return;
 		}
-		if ( window.confirm( "Are you sure?" )) deleteMeal({ variables: { id }, refetchQueries: [{ query: GET_ALL_MEALS }, { query: GET_TESTING_MEALS }]});
+		if ( window.confirm( "Are you sure you want to delete ?" )) deleteMeal({ variables: { id }, refetchQueries: [{ query: GET_ALL_MEALS }, { query: GET_TESTING_MEALS }]});
 	};
 
 	if ( showTesting && loading ) return <CenteredSpin />;
@@ -79,7 +81,7 @@ function formatData( mealsData, who ) {
 		const dateStr = moment( meal.date, "DD-MM-YYYY" ).toDate().toDateString();
 		return {
 			title: `${ meal.shared ? "Shared" : meal.who } on ${ dateStr }`,
-			description: `${ meal.menu.category }: ${ meal.menu.name } - $${ meal.menu.cost }${ meal.test ? " - TESTING" : "" }`,
+			description: <Text>{ meal.menu.category }: { meal.menu.name } - ${ meal.menu.cost }{ meal.test ? <Text type="danger"> - TESTING</Text> : "" }</Text>,
 			id: meal.id,
 		};
 	});
