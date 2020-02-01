@@ -55,7 +55,7 @@ const Home = ({ setModal, authState, logOut }) => {
             
 			<Row style={{ padding: "2em", flexGrow: "1", display: "flex", flexDirection: "column" }}>	
 				{ current.matches( "add" ) && <Add authState={ authState } /> }
-				{ current.matches( "analytics" ) && <Analytics /> }
+				{ current.matches( "analytics" ) && <Analytics authState={ authState } /> }
 			</Row>
 		</Row>
 	);

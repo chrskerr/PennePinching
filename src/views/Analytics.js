@@ -25,7 +25,7 @@ const titleMap = {
 	weekdays: "Weekday Split",
 };
 
-const Analytics = () => {
+const Analytics = ({ authState }) => {
 	const { data, error } = useQuery( GET_ALL_MEALS );
 	const [ current, send ] = useService( navMachine );
 	const [ who, setWho ] = useState( "both" );
@@ -61,7 +61,7 @@ const Analytics = () => {
 						{ current.matches({ analytics: "history" }) && <History mealsData={ mealsData } who={ who }/> }
 						{ current.matches({ analytics: "split" }) && <Split mealsData={ mealsData } who={ who }/> }
 						{ current.matches({ analytics: "weekdays" }) && <Weekdays mealsData={ mealsData } who={ who }/> }
-						{ current.matches({ analytics: "meals" }) && <Meals mealsData={ mealsData } who={ who }/> }
+						{ current.matches({ analytics: "meals" }) && <Meals mealsData={ mealsData } who={ who } authState={ authState } /> }
 					</Col>
 				</Row>
 			</Col>

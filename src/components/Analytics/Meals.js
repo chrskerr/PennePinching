@@ -12,12 +12,13 @@ import { DELETE_MEAL } from "../../helpers/apolloMutations";
 import CenteredSpin from "../../components/Shared/CenteredSpin";
 
 
-const Meals = ({ mealsData, who }) => {
+const Meals = ({ mealsData, who, authState }) => {
 	const [ showTesting, setShowTesting ] = useState( false );
 	const { data, loading } = useQuery( GET_TESTING_MEALS );
 	const [ deleteMeal ] = useMutation( DELETE_MEAL );
 
 	const handleDelete = id => {
+		if ( !authState ) return;
 		if ( window.confirm( "Are you sure?" )) deleteMeal({ variables: { id }, refetchQueries: [{ query: GET_ALL_MEALS }, { query: GET_TESTING_MEALS }]});
 	};
 
