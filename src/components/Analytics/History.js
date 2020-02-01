@@ -10,8 +10,8 @@ import { blue, gold } from "@ant-design/colors";
 // App
 
 
-const History = ( { mealsData, who } ) => {
-	const formattedData = useMemo( () => doFormatData( mealsData, who ), [ mealsData, who ] );
+const History = ({ mealsData, who }) => {
+	const formattedData = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
 	return (
 		<Row>
 			<Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
@@ -39,20 +39,20 @@ function doFormatData( inputData, who ) {
 			...el,
 			weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format( "ww" ) }`,
 		};
-	} );
+	});
 	const filteredData = datedData.filter( el => who === "both" || who === el.who );
-	const weekList = [ ...new Set( datedData.map( el => el.weekId ) ) ];
+	const weekList = [ ...new Set( datedData.map( el => el.weekId )) ];
 	weekList.unshift( "202001", "202002" );
 
 	const initialFinancialPosition = who === "both" ? -399 * 2 : -399;
 	let mutableFinancialPosition = initialFinancialPosition;
 
 	return weekList.sort().map( weekId => {
-		const thisWeeksData = filteredData.filter( el => { return weekId === el.weekId; } );
+		const thisWeeksData = filteredData.filter( el => { return weekId === el.weekId; });
 
 		const quantity = thisWeeksData.length;
 		const incrementalSave = quantity * 10;        
-		const incrementalSpend = thisWeeksData.reduce( ( total, curr ) => { return total + curr.incidentals; }, 0 );        
+		const incrementalSpend = thisWeeksData.reduce(( total, curr ) => { return total + curr.incidentals; }, 0 );        
         
 		const netPosition = ( weekId === "202001" || weekId === "202002" ) ? 0 : mutableFinancialPosition - incrementalSpend + incrementalSave;
         
@@ -66,5 +66,5 @@ function doFormatData( inputData, who ) {
 			quantity,
 			netPosition,
 		};
-	} );
+	});
 }

@@ -3,7 +3,7 @@
 import { Machine, interpret } from "xstate";
 
 export const navMachine = interpret( 
-	new Machine( {
+	new Machine({
 		id: "home",
 		initial: "analytics",
 		states: {
@@ -21,10 +21,10 @@ export const navMachine = interpret(
 			},
 			analytics: {
 				on: { ADD: "add" },
-				initial: "meals",
+				initial: "summary",
 				states: {
 					summary: {
-						on: { PREVIOUS: "weekdays", NEXT: "history" },
+						on: { PREVIOUS: "meals", NEXT: "history" },
 					},
 					history: {
 						on: { PREVIOUS: "summary", NEXT: "split" },
@@ -41,5 +41,5 @@ export const navMachine = interpret(
 				},
 			},
 		},
-	} ),
+	}),
 ).start();

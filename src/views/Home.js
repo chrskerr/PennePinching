@@ -13,7 +13,7 @@ import logo from "../components/Shared/logo.png";
 
 const { Title } = Typography;
 
-const Home = ( { setModal, authState, logOut } ) => {
+const Home = ({ setModal, authState, logOut }) => {
 	const [ current, send ] = useService( navMachine );
 
 	const onNavClick = ( key ) => {
@@ -35,7 +35,7 @@ const Home = ( { setModal, authState, logOut } ) => {
 					</Col>
 				</Row>
                     
-				<Menu selectedKeys={ Object.keys( current.value ) } mode="horizontal" onClick={ ( { key } ) => onNavClick( key )}>
+				<Menu selectedKeys={ Object.keys( current.value ) } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
 					<Menu.Item key="add">
 						<Icon type="plus" />
                         Add

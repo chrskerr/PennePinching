@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 export const GET_ALL_MEALS = gql`
     query GetAllMeals {
         meals(where: {test: {_eq: false}}) {
+            id
             date
             menu {
                 category
@@ -13,6 +14,7 @@ export const GET_ALL_MEALS = gql`
             who
             isDinner
             incidentals
+            test
         }
     }
 `;
@@ -49,6 +51,25 @@ export const GET_FILTERED_MENU = gql`
             name
             id
             active
+        }
+    }
+`;
+
+export const GET_TESTING_MEALS = gql`
+    query GetTestingMeals {
+        meals {
+            id
+            date
+            menu {
+                category
+                cost
+                name
+            }
+            shared
+            who
+            isDinner
+            incidentals
+            test
         }
     }
 `;

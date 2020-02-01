@@ -47,19 +47,21 @@ const Analytics = () => {
 					<Button icon="right" onClick={ () => send( "NEXT" ) } />
 				</Row>
 				<Row>
-					<Select defaultValue={ who } onChange={ value => setWho( value ) } size="small" >
-						<Select.Option value='both'>Both</Select.Option>
-						<Select.Option value='Katie'>Katie</Select.Option>
-						<Select.Option value='Chris'>Chris</Select.Option>
-					</Select>
+					<Col sm={{ offset: 3 }}>
+						<Select defaultValue={ who } onChange={ value => setWho( value ) } size="small" >
+							<Select.Option value='both'>Both</Select.Option>
+							<Select.Option value='Katie'>Katie</Select.Option>
+							<Select.Option value='Chris'>Chris</Select.Option>
+						</Select>
+					</Col>
 				</Row>
 				<Row>
 					<Col>
-						{ current.matches( { analytics: "summary" } ) && <Summary mealsData={ mealsData } who={ who }/> }
-						{ current.matches( { analytics: "history" } ) && <History mealsData={ mealsData } who={ who }/> }
-						{ current.matches( { analytics: "split" } ) && <Split mealsData={ mealsData } who={ who }/> }
-						{ current.matches( { analytics: "weekdays" } ) && <Weekdays mealsData={ mealsData } who={ who }/> }
-						{ current.matches( { analytics: "meals" } ) && <Meals mealsData={ mealsData } who={ who }/> }
+						{ current.matches({ analytics: "summary" }) && <Summary mealsData={ mealsData } who={ who }/> }
+						{ current.matches({ analytics: "history" }) && <History mealsData={ mealsData } who={ who }/> }
+						{ current.matches({ analytics: "split" }) && <Split mealsData={ mealsData } who={ who }/> }
+						{ current.matches({ analytics: "weekdays" }) && <Weekdays mealsData={ mealsData } who={ who }/> }
+						{ current.matches({ analytics: "meals" }) && <Meals mealsData={ mealsData } who={ who }/> }
 					</Col>
 				</Row>
 			</Col>

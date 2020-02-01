@@ -7,7 +7,7 @@ import { useService } from "@xstate/react";
 // App
 import { navMachine } from "../../helpers/machines";
 
-const Success = ( { restart, ids, addService, homeService } ) => {
+const Success = ({ restart, ids, addService, homeService }) => {
 	const [ , send ] = useService( navMachine );
 	return (
 		<Row align="middle">

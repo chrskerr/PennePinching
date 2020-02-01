@@ -29,3 +29,13 @@ export const INSERT_MENU_ITEM = gql`
         }
     }
 `;
+
+export const DELETE_MEAL = gql`
+    mutation MyMutation($id: uuid!) {
+        delete_meals(where: {id: {_eq: $id}}) {
+            returning {
+                id
+            }
+        }
+    }
+`;

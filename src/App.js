@@ -14,32 +14,32 @@ const { Text } = Typography;
 
 const App = () => {
 	const [ modal, setModal ] = useState( false );
-	const [ formData, setFormData ] = useState( {} );
+	const [ formData, setFormData ] = useState({});
 	const [ loginError, setLoginError ] = useState();
 	const [ loading, setLoading ] = useState( false );
 	const [ authState, setAuthState ] = useState( false );
 	
-	const client = new ApolloClient( {
+	const client = new ApolloClient({
 		uri: "https://penne-pinching.herokuapp.com/v1/graphql",
 		headers: authState 
 			? { Authorization: `Bearer ${ authState.token }` } 
 			: {},
-	} );
+	});
 
-	useEffect( () => {
+	useEffect(() => {
 		return firebase.auth().onAuthStateChanged( async user => {
 			if ( user ) {
 				const token = await user.getIdToken();
 				const idTokenResult = await user.getIdTokenResult();
 				const hasuraClaim = idTokenResult.claims[ "https://hasura.io/jwt/claims" ];
 				if ( hasuraClaim ) {
-					setAuthState( { user, token } );
+					setAuthState({ user, token });
 				} 
 			} else {
 				setAuthState( false );
 			}
-		} );
-	}, [] );
+		});
+	}, []);
 
 	const handleLogin = async e => {
 		e.preventDefault();
@@ -49,13 +49,13 @@ const App = () => {
 		try {	
 			setLoading( true );
 			await firebase.auth().signInWithEmailAndPassword( email, password );
-			setFormData( {} );
+			setFormData({});
 			setModal( false );
 			setAuthState( true );
 		} 
 		catch ( err ) {
 			setLoginError( err );
-			setFormData( { ...formData, password: "" } );
+			setFormData({ ...formData, password: "" });
 
 		} 
 		finally {
@@ -81,14 +81,14 @@ const App = () => {
 				<Form onSubmit={ e => handleLogin( e ) }>
 					<Form.Item label="Email">
 						<Input 
-							onChange={ e => setFormData( { ...formData, email: e.target.value } ) }
+							onChange={ e => setFormData({ ...formData, email: e.target.value }) }
 							value={ formData.email }
 							autoFocus
 						/>
 					</Form.Item>
 					<Form.Item label="Password">
 						<Input.Password 
-							onChange={ e => setFormData( { ...formData, password: e.target.value } ) }
+							onChange={ e => setFormData({ ...formData, password: e.target.value }) }
 							value={ formData.password }
 						/>
 					</Form.Item>

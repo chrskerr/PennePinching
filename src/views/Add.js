@@ -10,14 +10,14 @@ import PageOne from "../components/Add/PageOne";
 import Success from "../components/Add/Success";
 
 
-const Add = ( { authState } ) => {
+const Add = ({ authState }) => {
 	const [ current ] = useService( navMachine );
 	const [ returnedIds, setReturnedIds ] = useState();
 
 	return(
 		<>
-			{ current.matches( { add: "pageone" } ) && <PageOne confirmSave={ res => setReturnedIds( res ) } authState={ authState } /> }
-			{ current.matches( { add: "success" } ) && <Success ids={ returnedIds } /> }
+			{ current.matches({ add: "pageone" }) && <PageOne confirmSave={ res => setReturnedIds( res ) } authState={ authState } /> }
+			{ current.matches({ add: "success" }) && <Success ids={ returnedIds } /> }
 		</>
 	);
 };
