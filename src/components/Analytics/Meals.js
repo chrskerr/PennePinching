@@ -76,9 +76,11 @@ export default Meals;
 
 function formatData( mealsData, who ) {
 	const filteredData = mealsData.filter( meal => { return who === "both" || meal.shared || meal.who === who; });
+	const addedDate = filteredData.map( meal => { return { ...meal, date: moment( meal.date, "DD-MM-YYYY" ).toDate() };});
+	const sortedData = addedDate.sort(( a, b ) => { return b.date - a.date; });
 
-	return filteredData.map( meal => {
-		const dateStr = moment( meal.date, "DD-MM-YYYY" ).toDate().toDateString();
+	return sortedData.map( meal => {
+		const dateStr = meal.date.toDateString();
 		return {
 			title: `${ meal.shared ? "Shared" : meal.who } on ${ dateStr }`,
 			description: <Text>{ meal.menu.category }: { meal.menu.name } - ${ meal.menu.cost }{ meal.test ? <Text type="danger"> - TESTING</Text> : "" }</Text>,
