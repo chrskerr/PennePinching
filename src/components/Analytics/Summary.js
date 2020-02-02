@@ -1,6 +1,7 @@
 
 // Packages
 import React, { useMemo } from "react";
+import PropTypes from "prop-types";
 import { Row, Col, Card, Typography } from "antd";
 import moment from "moment";
 import CountUp from "react-countup";
@@ -86,7 +87,10 @@ const Summary = ({ mealsData, who }) => {
 		</Row>
 	);
 };
-
+Summary.propTypes = {
+	mealsData: PropTypes.array,
+	who: PropTypes.string,
+};
 export default Summary;
 
 

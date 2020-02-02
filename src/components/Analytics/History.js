@@ -1,6 +1,7 @@
 
 // Packages
 import React, { useMemo } from "react";
+import PropTypes from "prop-types";
 import { Row } from "antd";
 import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import moment from "moment";
@@ -30,6 +31,10 @@ const History = ({ mealsData, who }) => {
 			</Row>
 		</Row>
 	);
+};
+History.propTypes = {
+	mealsData: PropTypes.array,
+	who: PropTypes.string,
 };
 export default History;
 

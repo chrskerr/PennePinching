@@ -1,6 +1,7 @@
 
 // Packages
 import React, { useMemo } from "react";
+import PropTypes from "prop-types";
 import { Row } from "antd";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import moment from "moment";
@@ -29,7 +30,10 @@ const Weekdays = ({ mealsData, who }) => {
 		</Row>
 	);
 };
-
+Weekdays.propTypes = {
+	mealsData: PropTypes.array,
+	who: PropTypes.string,
+};
 export default Weekdays;
 
 function doFormatData( inputData, who ) {
