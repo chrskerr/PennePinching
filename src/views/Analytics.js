@@ -23,6 +23,7 @@ const titleMap = {
 	history: "History",
 	split: "Meal Split",
 	weekdays: "Weekday Split",
+	meals: "Meals List",
 };
 
 const Analytics = ({ authState }) => {

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Row } from "antd";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import moment from "moment";
-import { blue, lime } from "@ant-design/colors";
+import { blue, gold } from "@ant-design/colors";
 
 
 // App
@@ -23,7 +23,7 @@ const Weekdays = ({ mealsData, who }) => {
 						<XAxis dataKey="day" />
 						<YAxis />
 						<Bar stackId="a" units='meals' fill={ blue[ 5 ] } dataKey='dinner' barSize={ 20 } name="Number of dinners" />
-						<Bar stackId="a" units='meals' fill={ lime[ 5 ] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
+						<Bar stackId="a" units='meals' fill={ gold[ 5 ] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
 					</BarChart>
 				</ResponsiveContainer>
 			</Row>
