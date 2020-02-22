@@ -153,14 +153,14 @@ const PageOne = ({ confirmSave, authState }) => {
 					<MenuItemSelecter who="katie" setFormData={ setFormData } formData={ formData } menu={ sortedMenu } menuCategories={ menuCategories } /> 
 					<MenuItemSelecter who="chris" setFormData={ setFormData } formData={ formData }  menu={ sortedMenu } menuCategories={ menuCategories } />
 
-					<Form.Item label="Incidentals">
+					{/* <Form.Item label="Incidentals">
 						<Input 
 							type='number'
 							prefix="$"
 							onChange={ e => setFormData({ ...formData, incidentals: e.target.value }) }
 							value={ formData.incidentals }
 						/>
-					</Form.Item>
+					</Form.Item> */}
 
 					<Row gutter={ 16 }>
 						<Col xs={ 8 } sm={ 4 } md={ 4 } lg={ 4 } xl={ 4 }>
