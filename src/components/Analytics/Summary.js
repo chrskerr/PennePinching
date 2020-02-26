@@ -14,6 +14,7 @@ const Summary = ({ mealsData, who }) => {
 
 	const daysElapsed = moment().diff( moment( "15/01/2020", "DD-MM-YYYY" ), "day" );
 	const daysRemainingToBreakEven = ( position * -1 ) / ( savings / daysElapsed );
+	const adjustedDaysRemainingToBreakEven = daysRemainingToBreakEven < 0 ? 0 : daysRemainingToBreakEven;
 	const averageWeekly = totalMeals / ( daysElapsed / 7 );
 
 	const rowStructure = { type: "flex", justify: "center", gutter: 10 };
@@ -27,7 +28,7 @@ const Summary = ({ mealsData, who }) => {
 						<Col span={ 24 } >
 							<Card title={ <Text strong >Net Financial Position</Text> } bordered={ false }>
 								<Title type="secondary" level={ 2 }>
-									<CountUp start={ spend } end={ position } duration={ 5 } prefix="$" />
+									<CountUp start={ 0 } end={ position } duration={ 5 } prefix="$" />
 								</Title>
 							</Card>
 						</Col>
@@ -53,7 +54,7 @@ const Summary = ({ mealsData, who }) => {
 						<Col { ...smallColProps } >
 							<Card title={ <Text strong >Breakeven</Text> } size="small" bordered={ false }>
 								<Title type="secondary" level={ 4 }>
-									<CountUp start={ 0 } end={ daysRemainingToBreakEven } duration={ 3 } suffix=" days" />
+									<CountUp start={ 0 } end={ adjustedDaysRemainingToBreakEven } duration={ 3 } suffix=" days" />
 								</Title>
 							</Card>
 						</Col>
