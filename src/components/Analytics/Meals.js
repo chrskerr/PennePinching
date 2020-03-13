@@ -34,9 +34,7 @@ const Meals = ({ mealsData, who, authState }) => {
 
 	return (
 		<Row>
-
 			<Row>
-
 				<Col sm={{ span: 18, offset: 3 }} xs={{ span: 24 }}>
 					<Row type="flex" justify="end" >
 						<Switch

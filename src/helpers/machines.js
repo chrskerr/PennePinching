@@ -30,10 +30,13 @@ export const navMachine = interpret(
 						on: { PREVIOUS: "summary", NEXT: "split" },
 					},
 					split: {
-						on: { PREVIOUS: "history", NEXT: "weekdays" },
+						on: { PREVIOUS: "history", NEXT: "menu" },
+					},
+					menu: {
+						on: { PREVIOUS: "split", NEXT: "weekdays" },
 					},
 					weekdays: {
-						on: { PREVIOUS: "split", NEXT: "meals" },
+						on: { PREVIOUS: "menu", NEXT: "meals" },
 					},
 					meals: {
 						on: { PREVIOUS: "weekdays", NEXT: "summary" },

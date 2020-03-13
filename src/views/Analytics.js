@@ -15,6 +15,7 @@ import History from "../components/Analytics/History";
 import Split from "../components/Analytics/Split";
 import Weekdays from "../components/Analytics/Weekdays";
 import Meals from "../components/Analytics/Meals";
+import Menu from "../components/Analytics/Menu";
 
 const { Text, Title } = Typography;
 
@@ -24,6 +25,7 @@ const titleMap = {
 	split: "Meal Split",
 	weekdays: "Weekday Split",
 	meals: "Meals List",
+	menu: "Menu Summary",
 };
 
 const Analytics = ({ authState }) => {
@@ -63,6 +65,7 @@ const Analytics = ({ authState }) => {
 						{ current.matches({ analytics: "split" }) && <Split mealsData={ mealsData } who={ who }/> }
 						{ current.matches({ analytics: "weekdays" }) && <Weekdays mealsData={ mealsData } who={ who }/> }
 						{ current.matches({ analytics: "meals" }) && <Meals mealsData={ mealsData } who={ who } authState={ authState } /> }
+						{ current.matches({ analytics: "menu" }) && <Menu mealsData={ mealsData } who={ who } /> }
 					</Col>
 				</Row>
 			</Col>

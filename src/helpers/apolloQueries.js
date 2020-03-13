@@ -44,8 +44,8 @@ export const GET_FILTERED_MEALS = gql`
 `;
 
 export const GET_FILTERED_MENU = gql`
-    query GetFilteredMenu($category: String! ) {
-        menu(where: {category: {_eq: $category}}) {
+    query GetFilteredMenu($category: [String!] ) {
+        menu(where: {category: {_in: $category}}) {
             active
             cost
             name
