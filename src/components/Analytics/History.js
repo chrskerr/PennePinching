@@ -24,7 +24,7 @@ const History = ({ mealsData, who }) => {
 						<XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } padding={{ left: 15, right: 15 }} label="Week #" />
 						<YAxis yAxisId="left" dataKey="quantity" />
 						<YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
-						<Bar yAxisId="left" fill={ blue[ 5 ] } dataKey='quantity' barSize={ 20 } name="# of Meals" />
+						<Bar yAxisId="left" fill={ blue[ 5 ] } dataKey='quantity' barSize={ 10 } name="# of Meals" />
 						<Line yAxisId="right" type="monotone" dataKey="netPosition" stroke={ gold[ 5 ] } name="Net $" />
 					</ComposedChart>
 				</ResponsiveContainer>
