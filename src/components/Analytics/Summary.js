@@ -22,7 +22,7 @@ const Summary = ({ mealsData, who }) => {
 
 	return (
 		<Row>
-			<Row style={{ width: "100%", paddingTop: "2em" }} type='flex' justify='center' >
+			<Row style={{ paddingTop: "2em" }} type='flex' justify='center' >
 				<Col xs={ 24 } md={ 18 } >
 					<Row { ...rowStructure } >
 						<Col span={ 24 } >

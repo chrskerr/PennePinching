@@ -1,7 +1,8 @@
 
 // Packages
 import React from "react";
-import { Row, Col, Menu, Icon, Typography } from "antd";
+import { DotChartOutlined, PlusOutlined } from "@ant-design/icons";
+import { Row, Col, Menu, Typography } from "antd";
 import { useService } from "@xstate/react";
 
 
@@ -25,30 +26,26 @@ const Home = ({ setModal, authState, logOut }) => {
 
 	return (
 		<Row style={{ minHeight: "100vh", display: "flex", flexDirection: "column", paddingTop: "1em" }}>
-			<Row>
-				<Row align='middle' type="flex" justifcation="start">
-					<Col sm={{ span: 2, offset: 1 }} xs={{ span: 4, offset: 1 }} >
-						<img src={ logo } style={{ width: "75%" }} alt="Site logo, knife and fork" />
-					</Col>
-					<Col sm={ 20 } xs={ 18 }>
-						<Title style={{ marginBottom: "0" }}>Penne Pinching</Title>
-					</Col>
-				</Row>
+			<Row align='middle' type="flex" justifcation="start">
+				<Col sm={{ span: 2, offset: 1 }} xs={{ span: 4, offset: 1 }} >
+					<img src={ logo } style={{ width: "75%" }} alt="Site logo, knife and fork" />
+				</Col>
+				<Col sm={ 20 } xs={ 18 }>
+					<Title style={{ marginBottom: "0" }}>Penne Pinching</Title>
+				</Col>
+			</Row>
                     
+			<Row>
 				<Menu selectedKeys={ Object.keys( current.value ) } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
 					<Menu.Item key="add">
-						<Icon type="plus" />
-                        Add
+						<PlusOutlined />Add
 					</Menu.Item>
 					<Menu.Item key="analytics">
-						<Icon type="dot-chart" />
-                        Analytics
+						<DotChartOutlined />Analytics
 					</Menu.Item>
-					{ authState && <Menu.Item key="logout">
-                        Log out
+					{ authState && <Menu.Item key="logout">Log out
 					</Menu.Item> }
-					{ !authState && <Menu.Item key="login">
-                        Log in
+					{ !authState && <Menu.Item key="login">Log in
 					</Menu.Item> }
 				</Menu>
 			</Row>

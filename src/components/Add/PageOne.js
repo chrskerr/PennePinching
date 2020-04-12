@@ -2,7 +2,8 @@
 // Packages
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Row, Col, Form, DatePicker, Switch, Select, Button, Typography, Modal, Input, AutoComplete } from "antd";
+import { CheckOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
+import { Row, Col, DatePicker, Switch, Select, Button, Typography, Modal, Input, AutoComplete, Form } from "antd";
 import moment from "moment";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useService } from "@xstate/react";
@@ -133,7 +134,7 @@ const PageOne = ({ confirmSave, authState }) => {
 					</Col>
 					<Col span={ 6 }>
 						<Row  type="flex" justify="end">
-						    <Button icon="plus" onClick={ () => setAddMenuModal( true ) }>Menu</Button>
+						    <Button icon={<PlusOutlined />} onClick={ () => setAddMenuModal( true ) }>Menu</Button>
 						</Row>
 					</Col>
 				</Row>
@@ -152,15 +153,6 @@ const PageOne = ({ confirmSave, authState }) => {
 
 					<MenuItemSelecter who="katie" setFormData={ setFormData } formData={ formData } menu={ sortedMenu } menuCategories={ menuCategories } /> 
 					<MenuItemSelecter who="chris" setFormData={ setFormData } formData={ formData }  menu={ sortedMenu } menuCategories={ menuCategories } />
-
-					{/* <Form.Item label="Incidentals">
-						<Input 
-							type='number'
-							prefix="$"
-							onChange={ e => setFormData({ ...formData, incidentals: e.target.value }) }
-							value={ formData.incidentals }
-						/>
-					</Form.Item> */}
 
 					<Row gutter={ 16 }>
 						<Col xs={ 8 } sm={ 4 } md={ 4 } lg={ 4 } xl={ 4 }>
@@ -185,7 +177,7 @@ const PageOne = ({ confirmSave, authState }) => {
 						</Col>
 					</Row>
 
-					<Button type="primary" disabled={ !authState } loading={ loading } icon={ "right" } htmlType="submit">Submit</Button>
+					<Button type="primary" disabled={ !authState } loading={ loading } icon={<RightOutlined />} htmlType="submit">Submit</Button>
 
 					<Form.Item style={{ marginTop: "2em" }}>
 						<Switch
@@ -226,7 +218,7 @@ const PageOne = ({ confirmSave, authState }) => {
 							value={ modalData.cost }
 						/>
 					</Form.Item>
-					<Button type="primary" loading={ menuInsertLoading } icon="check" htmlType="submit" disabled={ !authState }>Submit</Button>
+					<Button type="primary" loading={ menuInsertLoading } icon={<CheckOutlined />} htmlType="submit" disabled={ !authState }>Submit</Button>
 
 					{ modalError && <Row><Text type="danger">{ modalError.message }</Text></Row> }
 				</Form>
@@ -245,30 +237,28 @@ export default PageOne;
 
 
 function MenuItemSelecter({ who, formData, setFormData, menu, menuCategories }) {
-	return (
-		<>
-			<Form.Item label={ `What did ${ who.replace( /^(.)/, v => v.toUpperCase()) } order?` } colon={ false }>
-				<Select 
-					onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], menu_id: e }}) }
-					defaultValue="Did not eat"
-				>
-					<OptGroup key={ "groupNothing" } label='Did not eat'>
-						<Option key={ "nothing" } value={ 0 }>Did not eat</Option>
-					</OptGroup>
-					{ menuCategories.map( category => {
-						return (
-							<OptGroup key={ category } label={ category }>
-								{ menu.map( menuItem => {
-									return (
-										menuItem.category === category && menuItem.active &&
-                                        <Option key={ menuItem.id } value={ menuItem.id }>{ menuItem.name } - ${ menuItem.cost }</Option>
-									);
-								})}
-							</OptGroup>
-						);
-					}) }
-				</Select>
-			</Form.Item>
-		</>
-	);
+	return <>
+		<Form.Item label={ `What did ${ who.replace( /^(.)/, v => v.toUpperCase()) } order?` } colon={ false }>
+			<Select 
+				onChange={ e => setFormData({ ...formData, [ who ]: { ...formData[ who ], menu_id: e }}) }
+				defaultValue="Did not eat"
+			>
+				<OptGroup key={ "groupNothing" } label='Did not eat'>
+					<Option key={ "nothing" } value={ 0 }>Did not eat</Option>
+				</OptGroup>
+				{ menuCategories.map( category => {
+					return (
+						<OptGroup key={ category } label={ category }>
+							{ menu.map( menuItem => {
+								return (
+									menuItem.category === category && menuItem.active &&
+                                    <Option key={ menuItem.id } value={ menuItem.id }>{ menuItem.name } - ${ menuItem.cost }</Option>
+								);
+							})}
+						</OptGroup>
+					);
+				}) }
+			</Select>
+		</Form.Item>
+	</>;
 }

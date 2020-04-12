@@ -1,6 +1,7 @@
 
 // Packages
 import React, { useState } from "react";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Row, Col, Button, Typography } from "antd";
 import { useQuery } from "@apollo/react-hooks";
 import { useService } from "@xstate/react";
@@ -42,12 +43,12 @@ const Analytics = ({ authState }) => {
 	const { meals: mealsData } = data;
 
 	return (
-		<Row>
+        <Row>
 			<Col>
 				<Row justify="space-between" type="flex" style={{ marginBottom: "1.5em", width: "85%", marginLeft: "auto", marginRight: "auto" }}>
-					<Button icon="left" onClick={ () => send( "PREVIOUS" ) } />
+					<Button icon={<LeftOutlined />} onClick={ () => send( "PREVIOUS" ) } />
 					<Title level={ 4 }>{ titleMap[ current.value.analytics ] }</Title>
-					<Button icon="right" onClick={ () => send( "NEXT" ) } />
+					<Button icon={<RightOutlined />} onClick={ () => send( "NEXT" ) } />
 				</Row>
 				<Row>
 					<Col sm={{ offset: 3 }}>
@@ -70,7 +71,7 @@ const Analytics = ({ authState }) => {
 				</Row>
 			</Col>
 		</Row>
-	);
+    );
 };
 
 export default Analytics;

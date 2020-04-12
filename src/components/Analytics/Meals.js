@@ -50,7 +50,7 @@ const Meals = ({ mealsData, who, authState }) => {
 						dataSource={ listData }
 						renderItem={ item => (
 							<List.Item
-								actions={[ <a key={ item.id } href="#" onClick={ ( e ) => { handleDelete( item.id, e ); }}>Delete</a> ]}
+								actions={[ <p key={ item.id } onClick={ ( e ) => { handleDelete( item.id, e ); }}>Delete</p> ]}
 							>
 								<List.Item.Meta
 									title={ item.title }

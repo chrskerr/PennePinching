@@ -2,7 +2,8 @@
 // Packages
 import React, { useState, useEffect } from "react";
 import { ApolloProvider } from "@apollo/react-hooks";
-import { Row, Typography, Modal, Form, Input, Button } from "antd";
+import { CheckOutlined } from "@ant-design/icons";
+import { Row, Typography, Modal, Input, Button, Form } from "antd";
 import ApolloClient from "apollo-boost";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -92,7 +93,7 @@ const App = () => {
 							value={ formData.password }
 						/>
 					</Form.Item>
-					<Button loading={ loading } icon="check" htmlType="submit">Submit</Button>
+					<Button loading={ loading } icon={<CheckOutlined />} htmlType="submit">Submit</Button>
 					{ loginError && <Row><Text type="danger">{ loginError.message }</Text></Row> }
 				</Form>
         	</Modal>
