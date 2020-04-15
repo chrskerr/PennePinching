@@ -23,7 +23,7 @@ const Menu = ({ mealsData, who }) => {
 
 	return (
 		<Form layout="horizontal" >
-			<Row type="flex" justify="space-around" style={{ marginTop: "1.5em" }}>
+			<Row justify="space-around">
 				<Col xs={ 8 } sm={ 8 }>
 					<Form.Item label="Menu">
 						<Select onChange={ value => setCategory( value ) } value={ category } size="small" >
@@ -45,7 +45,7 @@ const Menu = ({ mealsData, who }) => {
 					</Form.Item>
 				</Col>
 			</Row>
-			<Row type="flex" justify="center">
+			<Row justify="center">
 				<Col xs={ 22 } sm={ 18 }>
 					<List
 						itemLayout="horizontal"

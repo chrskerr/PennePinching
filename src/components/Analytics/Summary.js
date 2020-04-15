@@ -17,74 +17,72 @@ const Summary = ({ mealsData, who }) => {
 	const adjustedDaysRemainingToBreakEven = daysRemainingToBreakEven < 0 ? 0 : daysRemainingToBreakEven;
 	const averageWeekly = totalMeals / ( daysElapsed / 7 );
 
-	const rowStructure = { type: "flex", justify: "center", gutter: 10 };
+	const rowStructure = { justify: "center", gutter: 10 };
 	const smallColProps = { span: 12 };
 
 	return (
-		<Row>
-			<Row style={{ paddingTop: "2em" }} type='flex' justify='center' >
-				<Col xs={ 24 } md={ 18 } >
-					<Row { ...rowStructure } >
-						<Col span={ 24 } >
-							<Card title={ <Text strong >Net Financial Position</Text> } bordered={ false }>
-								<Title type="secondary" level={ 2 }>
-									<CountUp start={ 0 } end={ position } duration={ 5 } prefix="$" />
-								</Title>
-							</Card>
-						</Col>
-					</Row>
-					<Row { ...rowStructure }>
-						<Col { ...smallColProps } >
-							<Card title={ <Text strong >Saved</Text> } size="small" bordered={ false }>
-								<Title type="secondary" level={ 4 }>
-									<CountUp start={ 0 } end={ savings } duration={ 3 } prefix="$" />
-								</Title>
-							</Card>
-						</Col>
-						<Col { ...smallColProps } >
-							<Card title={ <Text strong >Spent</Text> } size="small" bordered={ false }>
-								<Title type="secondary" level={ 4 } >
-									<CountUp start={ 0 } end={ spend } duration={ 3 } prefix="$" />
-								</Title>
-							</Card>
-						</Col>
-					</Row>
+		<Row justify='center' >
+			<Col xs={ 24 } md={ 18 } >
+				<Row { ...rowStructure } >
+					<Col span={ 24 } >
+						<Card title={ <Text strong >Net Financial Position</Text> } bordered={ false }>
+							<Title type="secondary" level={ 2 }>
+								<CountUp start={ 0 } end={ position } duration={ 5 } prefix="$" />
+							</Title>
+						</Card>
+					</Col>
+				</Row>
+				<Row { ...rowStructure }>
+					<Col { ...smallColProps } >
+						<Card title={ <Text strong >Saved</Text> } size="small" bordered={ false }>
+							<Title type="secondary" level={ 4 }>
+								<CountUp start={ 0 } end={ savings } duration={ 3 } prefix="$" />
+							</Title>
+						</Card>
+					</Col>
+					<Col { ...smallColProps } >
+						<Card title={ <Text strong >Spent</Text> } size="small" bordered={ false }>
+							<Title type="secondary" level={ 4 } >
+								<CountUp start={ 0 } end={ spend } duration={ 3 } prefix="$" />
+							</Title>
+						</Card>
+					</Col>
+				</Row>
 
-					<Row { ...rowStructure } >
-						<Col { ...smallColProps } >
-							<Card title={ <Text strong >Breakeven</Text> } size="small" bordered={ false }>
-								<Title type="secondary" level={ 4 }>
-									<CountUp start={ 0 } end={ adjustedDaysRemainingToBreakEven } duration={ 3 } suffix=" days" />
-								</Title>
-							</Card>
-						</Col>
-						<Col { ...smallColProps } >
-							<Card title={ <Text strong >Avg meals</Text> } size="small" bordered={ false }>
-								<Title type="secondary" level={ 4 }>
-									<CountUp start={ 0 } end={ averageWeekly } duration={ 3 } decimals={ 1 } suffix=" / wk" />
-								</Title>
-							</Card>
-						</Col>
-					</Row>
+				<Row { ...rowStructure } >
+					<Col { ...smallColProps } >
+						<Card title={ <Text strong >Breakeven</Text> } size="small" bordered={ false }>
+							<Title type="secondary" level={ 4 }>
+								<CountUp start={ 0 } end={ adjustedDaysRemainingToBreakEven } duration={ 3 } suffix=" days" />
+							</Title>
+						</Card>
+					</Col>
+					<Col { ...smallColProps } >
+						<Card title={ <Text strong >Avg meals</Text> } size="small" bordered={ false }>
+							<Title type="secondary" level={ 4 }>
+								<CountUp start={ 0 } end={ averageWeekly } duration={ 3 } decimals={ 1 } suffix=" / wk" />
+							</Title>
+						</Card>
+					</Col>
+				</Row>
 
-					<Row { ...rowStructure } >
-						<Col { ...smallColProps } >
-							<Card title={ <Text strong >Cost to FF</Text> } size="small" bordered={ false }>
-								<Title type="secondary" level={ 4 }>
-									<CountUp start={ 0 } end={ totalMenuCost } duration={ 3 } prefix="$" />
-								</Title>
-							</Card>
-						</Col>
-						<Col { ...smallColProps } >
-							<Card title={ <Text strong >FF p/l</Text> } size="small" bordered={ false }>
-								<Title type="secondary" level={ 4 }>
-									<CountUp start={ spend * -1 } end={ ( spend * -1 ) - totalMenuCost } duration={ 3 } prefix="$" />
-								</Title>
-							</Card>
-						</Col>
-					</Row>
-				</Col>
-			</Row>
+				<Row { ...rowStructure } >
+					<Col { ...smallColProps } >
+						<Card title={ <Text strong >Cost to FF</Text> } size="small" bordered={ false }>
+							<Title type="secondary" level={ 4 }>
+								<CountUp start={ 0 } end={ totalMenuCost } duration={ 3 } prefix="$" />
+							</Title>
+						</Card>
+					</Col>
+					<Col { ...smallColProps } >
+						<Card title={ <Text strong >FF p/l</Text> } size="small" bordered={ false }>
+							<Title type="secondary" level={ 4 }>
+								<CountUp start={ spend * -1 } end={ ( spend * -1 ) - totalMenuCost } duration={ 3 } prefix="$" />
+							</Title>
+						</Card>
+					</Col>
+				</Row>
+			</Col>
 		</Row>
 	);
 };

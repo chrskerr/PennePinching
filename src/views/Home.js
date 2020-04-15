@@ -2,7 +2,7 @@
 // Packages
 import React from "react";
 import { DotChartOutlined, PlusOutlined } from "@ant-design/icons";
-import { Row, Col, Menu, Typography } from "antd";
+import { Space, Row, Col, Menu, Typography } from "antd";
 import { useService } from "@xstate/react";
 
 
@@ -25,8 +25,8 @@ const Home = ({ setModal, authState, logOut }) => {
 	};
 
 	return (
-		<Row style={{ minHeight: "100vh", display: "flex", flexDirection: "column", paddingTop: "1em" }}>
-			<Row align='middle' type="flex" justifcation="start">
+		<Space direction="vertical" size="middle">
+			<Row align='middle' justify="start">
 				<Col sm={{ span: 2, offset: 1 }} xs={{ span: 4, offset: 1 }} >
 					<img src={ logo } style={{ width: "75%" }} alt="Site logo, knife and fork" />
 				</Col>
@@ -36,25 +36,29 @@ const Home = ({ setModal, authState, logOut }) => {
 			</Row>
                     
 			<Row>
-				<Menu selectedKeys={ Object.keys( current.value ) } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
-					<Menu.Item key="add">
-						<PlusOutlined />Add
-					</Menu.Item>
-					<Menu.Item key="analytics">
-						<DotChartOutlined />Analytics
-					</Menu.Item>
-					{ authState && <Menu.Item key="logout">Log out
-					</Menu.Item> }
-					{ !authState && <Menu.Item key="login">Log in
-					</Menu.Item> }
-				</Menu>
+				<Col>
+					<Menu selectedKeys={ Object.keys( current.value ) } mode="horizontal" onClick={ ({ key }) => onNavClick( key )}>
+						<Menu.Item key="add">
+							<PlusOutlined />Add
+						</Menu.Item>
+						<Menu.Item key="analytics">
+							<DotChartOutlined />Analytics
+						</Menu.Item>
+						{ authState && <Menu.Item key="logout">Log out
+						</Menu.Item> }
+						{ !authState && <Menu.Item key="login">Log in
+						</Menu.Item> }
+					</Menu>
+				</Col>
 			</Row>
             
-			<Row style={{ padding: "2em", flexGrow: "1", display: "flex", flexDirection: "column" }}>	
-				{ current.matches( "add" ) && <Add authState={ authState } /> }
-				{ current.matches( "analytics" ) && <Analytics authState={ authState } /> }
+			<Row justify="center">
+				<Col span={ 20 }>
+					{ current.matches( "add" ) && <Add authState={ authState } /> }
+					{ current.matches( "analytics" ) && <Analytics authState={ authState } /> }
+				</Col>
 			</Row>
-		</Row>
+		</Space>
 	);
 };
 

@@ -1,8 +1,8 @@
 
 // Packages
 import React, { useState } from "react";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Row, Col, Button, Typography } from "antd";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { Space, Row, Col, Button, Typography } from "antd";
 import { useQuery } from "@apollo/react-hooks";
 import { useService } from "@xstate/react";
 import { Select } from "antd";
@@ -43,35 +43,43 @@ const Analytics = ({ authState }) => {
 	const { meals: mealsData } = data;
 
 	return (
-        <Row>
+		<Row>
 			<Col>
-				<Row justify="space-between" type="flex" style={{ marginBottom: "1.5em", width: "85%", marginLeft: "auto", marginRight: "auto" }}>
-					<Button icon={<LeftOutlined />} onClick={ () => send( "PREVIOUS" ) } />
-					<Title level={ 4 }>{ titleMap[ current.value.analytics ] }</Title>
-					<Button icon={<RightOutlined />} onClick={ () => send( "NEXT" ) } />
-				</Row>
-				<Row>
-					<Col sm={{ offset: 3 }}>
-						<Select defaultValue={ who } onChange={ value => setWho( value ) } size="small" >
-							<Select.Option value='both'>Both</Select.Option>
-							<Select.Option value='Katie'>Katie</Select.Option>
-							<Select.Option value='Chris'>Chris</Select.Option>
-						</Select>
-					</Col>
-				</Row>
-				<Row>
-					<Col>
-						{ current.matches({ analytics: "summary" }) && <Summary mealsData={ mealsData } who={ who }/> }
-						{ current.matches({ analytics: "history" }) && <History mealsData={ mealsData } who={ who }/> }
-						{ current.matches({ analytics: "split" }) && <Split mealsData={ mealsData } who={ who }/> }
-						{ current.matches({ analytics: "weekdays" }) && <Weekdays mealsData={ mealsData } who={ who }/> }
-						{ current.matches({ analytics: "meals" }) && <Meals mealsData={ mealsData } who={ who } authState={ authState } /> }
-						{ current.matches({ analytics: "menu" }) && <Menu mealsData={ mealsData } who={ who } /> }
-					</Col>
-				</Row>
+				<Space direction="vertical" size="small">
+					<Row justify="space-between">
+						<Col span={ 4 }>
+							<Button icon={<LeftOutlined />} onClick={ () => send( "PREVIOUS" ) } />
+						</Col>
+						<Col span={ 16 }>
+							<Title level={ 4 }>{ titleMap[ current.value.analytics ] }</Title>
+						</Col>
+						<Col span={ 4 }>
+							<Button icon={<RightOutlined />} onClick={ () => send( "NEXT" ) } />
+						</Col>
+					</Row>
+					<Row>
+						<Col sm={{ offset: 3 }}>
+							<Select defaultValue={ who } onChange={ value => setWho( value ) } size="small" >
+								<Select.Option value='both'>Both</Select.Option>
+								<Select.Option value='Katie'>Katie</Select.Option>
+								<Select.Option value='Chris'>Chris</Select.Option>
+							</Select>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							{ current.matches({ analytics: "summary" }) && <Summary mealsData={ mealsData } who={ who }/> }
+							{ current.matches({ analytics: "history" }) && <History mealsData={ mealsData } who={ who }/> }
+							{ current.matches({ analytics: "split" }) && <Split mealsData={ mealsData } who={ who }/> }
+							{ current.matches({ analytics: "weekdays" }) && <Weekdays mealsData={ mealsData } who={ who }/> }
+							{ current.matches({ analytics: "meals" }) && <Meals mealsData={ mealsData } who={ who } authState={ authState } /> }
+							{ current.matches({ analytics: "menu" }) && <Menu mealsData={ mealsData } who={ who } /> }
+						</Col>
+					</Row>
+				</Space>
 			</Col>
 		</Row>
-    );
+	);
 };
 
 export default Analytics;

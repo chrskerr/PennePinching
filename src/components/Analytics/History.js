@@ -15,7 +15,7 @@ const History = ({ mealsData, who }) => {
 	const formattedData = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
 	return (
 		<Row>
-			<Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
+			<Row justify="center">
 				<ResponsiveContainer width='100%' height={ 300 }>
 					<ComposedChart data={ formattedData } margin={{ top: 0, right: -20, bottom: 0, left: -20 }}>
 						<Tooltip />

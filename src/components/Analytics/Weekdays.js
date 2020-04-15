@@ -14,19 +14,17 @@ import { blue, gold } from "@ant-design/colors";
 const Weekdays = ({ mealsData, who }) => {
 	const formattedData = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
 	return (
-		<Row>
-			<Row justify="center" type="flex" style={{ width: "100%", paddingTop: "2.5em" }} >
-				<ResponsiveContainer width='100%' height={ 300 }>
-					<BarChart data={ formattedData } >
-						<Tooltip />
-						<Legend verticalAlign="top" wrapperStyle={{ top: "-1em" }} />
-						<XAxis dataKey="day" />
-						<YAxis />
-						<Bar stackId="a" units='meals' fill={ blue[ 5 ] } dataKey='dinner' barSize={ 20 } name="Number of dinners" />
-						<Bar stackId="a" units='meals' fill={ gold[ 5 ] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
-					</BarChart>
-				</ResponsiveContainer>
-			</Row>
+		<Row justify="center">
+			<ResponsiveContainer width='100%' height={ 300 }>
+				<BarChart data={ formattedData } >
+					<Tooltip />
+					<Legend verticalAlign="top" wrapperStyle={{ top: "-1em" }} />
+					<XAxis dataKey="day" />
+					<YAxis />
+					<Bar stackId="a" units='meals' fill={ blue[ 5 ] } dataKey='dinner' barSize={ 20 } name="Number of dinners" />
+					<Bar stackId="a" units='meals' fill={ gold[ 5 ] } dataKey='lunch' barSize={ 20 } name="Number of lunches" />
+				</BarChart>
+			</ResponsiveContainer>
 		</Row>
 	);
 };
