@@ -44,12 +44,11 @@ const PageOne = ({ confirmSave, authState }) => {
 		incidentals: null,
 	});
 
-	const handleSubmit = async e => {
-		e.preventDefault();
+	const handleSubmit = async () => {
 		setError( false );
 
 		const { date, shared, katie, chris, testing, isDinner, incidentals } = formData;
-        
+		
 		const updatedShared = ( katie.menu_id && !chris.menu_id ) || ( !katie.menu_id && chris.menu_id ) ? false : shared;
 		const splitIncidentals = !incidentals ? 0 : 
 			katie.menu_id && chris.menu_id ? incidentals / 2 : incidentals;
@@ -92,9 +91,7 @@ const PageOne = ({ confirmSave, authState }) => {
 		}
 	};
 
-	const handleAddMenu = async e => {
-		e.preventDefault();
-
+	const handleAddMenu = async () => {
 		const { category, cost, name } = modalData;
 		setModalError( false );
 
@@ -125,24 +122,24 @@ const PageOne = ({ confirmSave, authState }) => {
 
 	return (
 		<Row>
-			<Col>
+			<Col span={ 24 }>
 				<Row justify='space-between'>
 					<Col span={ 18 }>
 						<Row  type="flex" justify="start">
-                		    <Title level={ 4 }>Add a New Meal</Title>
+							<Title level={ 4 }>Add a New Meal</Title>
 						</Row>
 					</Col>
 					<Col span={ 6 }>
 						<Row  type="flex" justify="end">
-						    <Button icon={<PlusOutlined />} onClick={ () => setAddMenuModal( true ) }>Menu</Button>
+							<Button icon={<PlusOutlined />} onClick={ () => setAddMenuModal( true ) }>Menu</Button>
 						</Row>
 					</Col>
 				</Row>
-                
+				
 				{ error && <Text type="danger" >Something went wrong...</Text>}
 				{ !authState && <Text type="warning" >Please log in to make any changes</Text>}
-                
-				<Form onSubmit={ handleSubmit } labelAlign="left">
+				
+				<Form onFinish={ handleSubmit } labelAlign="left">
 					<Form.Item label="Date" >
 						<DatePicker 
 							format="DD-MM-YYYY" 
@@ -195,7 +192,7 @@ const PageOne = ({ confirmSave, authState }) => {
 				onCancel={ () => setAddMenuModal( false ) }
 				footer={ null }
 			>
-				<Form onSubmit={ e => handleAddMenu( e ) }>
+				<Form onFinish={ handleAddMenu }>
 					<Form.Item label="Category">
 						<AutoComplete
 							dataSource={ menuCategories }
@@ -222,7 +219,7 @@ const PageOne = ({ confirmSave, authState }) => {
 
 					{ modalError && <Row><Text type="danger">{ modalError.message }</Text></Row> }
 				</Form>
-        	</Modal>
+			</Modal>
 
 
 		</Row>
@@ -252,7 +249,7 @@ function MenuItemSelecter({ who, formData, setFormData, menu, menuCategories }) 
 							{ menu.map( menuItem => {
 								return (
 									menuItem.category === category && menuItem.active &&
-                                    <Option key={ menuItem.id } value={ menuItem.id }>{ menuItem.name } - ${ menuItem.cost }</Option>
+									<Option key={ menuItem.id } value={ menuItem.id }>{ menuItem.name } - ${ menuItem.cost }</Option>
 								);
 							})}
 						</OptGroup>

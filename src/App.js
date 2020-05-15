@@ -2,102 +2,69 @@
 // Packages
 import React, { useState, useEffect } from "react";
 import { ApolloProvider } from "@apollo/react-hooks";
-import { CheckOutlined } from "@ant-design/icons";
-import { Row, Typography, Modal, Input, Button, Form } from "antd";
 import ApolloClient from "apollo-boost";
 import firebase from "firebase/app";
 import "firebase/auth";
 
 // App
 import Home from "./views/Home";
-
-const { Text } = Typography;
+import { Auth } from "./helpers/services";
 
 const App = () => {
-	const [ modal, setModal ] = useState( false );
-	const [ formData, setFormData ] = useState({});
-	const [ loginError, setLoginError ] = useState();
-	const [ loading, setLoading ] = useState( false );
-	const [ authState, setAuthState ] = useState( false );
+	const [ auth, setAuth ] = useState({
+		token: null,
+		isAuthenticating: true,
+		isAuthenticated: false,
+		updateAuth: payload => setAuth( auth => ({ ...auth, ...payload })),
+		signIn: async ( email, password ) => await firebase.auth().signInWithEmailAndPassword( email, password ),
+		signOut: () => firebase.auth().signOut(),
+	});
+	const { token, updateAuth } = auth;
 	
 	const client = new ApolloClient({
 		uri: "https://penne-pinching.herokuapp.com/v1/graphql",
-		headers: authState 
-			? { Authorization: `Bearer ${ authState.token }` } 
+		headers: token 
+			? { Authorization: `Bearer ${ token }` } 
 			: {},
 	});
 
 	useEffect(() => {
 		return firebase.auth().onAuthStateChanged( async user => {
+			updateAuth({ isAuthenticating: true });
 			if ( user ) {
 				const token = await user.getIdToken();
 				const idTokenResult = await user.getIdTokenResult();
 				const hasuraClaim = idTokenResult.claims[ "https://hasura.io/jwt/claims" ];
 				if ( hasuraClaim ) {
-					setAuthState({ user, token });
-				} 
+					updateAuth({ token });
+				} else {
+					updateAuth({ token: null });
+				}
 			} else {
-				setAuthState( false );
+				updateAuth({ token: null });
 			}
+			updateAuth({ isAuthenticating: false });
 		});
+		// eslint-disable-next-line
 	}, []);
 
-	const handleLogin = async e => {
-		e.preventDefault();
-		setLoginError( false );
-		const { email, password } = formData;
-
-		try {	
-			setLoading( true );
-			await firebase.auth().signInWithEmailAndPassword( email, password );
-			setFormData({});
-			setModal( false );
-			setAuthState( true );
-		} 
-		catch ( err ) {
-			setLoginError( err );
-			setFormData({ ...formData, password: "" });
-
-		} 
-		finally {
-			setLoading( false );
+	useEffect(() => {
+		if ( token ) {
+			updateAuth({ isAuthenticated: true });
+		} else {
+			updateAuth({ isAuthenticated: false });
 		}
-	};
-
-	const logOut = () => {
-		firebase.auth().signOut();
-		setAuthState( false );
-	};
+		// eslint-disable-next-line
+	}, [ token ]);
 
 	return (
-		<ApolloProvider client={ client }>
-			<Home setModal={ setModal } authState={ authState } logOut={ logOut } />
-			
-			<Modal
-				title="Log In"
-				visible={ modal }
-				onCancel={ () => setModal( false ) }
-				footer={ null }
-			>
-				<Form onSubmit={ e => handleLogin( e ) }>
-					<Form.Item label="Email">
-						<Input 
-							onChange={ e => setFormData({ ...formData, email: e.target.value }) }
-							value={ formData.email }
-							autoFocus
-						/>
-					</Form.Item>
-					<Form.Item label="Password">
-						<Input.Password 
-							onChange={ e => setFormData({ ...formData, password: e.target.value }) }
-							value={ formData.password }
-						/>
-					</Form.Item>
-					<Button loading={ loading } icon={<CheckOutlined />} htmlType="submit">Submit</Button>
-					{ loginError && <Row><Text type="danger">{ loginError.message }</Text></Row> }
-				</Form>
-        	</Modal>
-		</ApolloProvider>
+		<div id="app">
+			<Auth.Provider value={ auth }>
+				<ApolloProvider client={ client }>
+					<Home />
+				</ApolloProvider>
+			</Auth.Provider>
+		</div>
 	);
 };
 

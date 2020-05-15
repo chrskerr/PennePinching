@@ -34,33 +34,31 @@ const Meals = ({ mealsData, who, authState }) => {
 
 	return (
 		<Row>
-			<Row>
-				<Col sm={{ span: 18, offset: 3 }} xs={{ span: 24 }}>
-					<Row type="flex" justify="end" >
-						<Switch
-							key="switch"
-							checkedChildren="Testing"
-							unCheckedChildren="Testing"
-							checked={ showTesting }
-							onChange={ e => setShowTesting( e ) }
-						/>
-					</Row>
-					<List
-						itemLayout="horizontal"
-						dataSource={ listData }
-						renderItem={ item => (
-							<List.Item
-								actions={[ <p key={ item.id } onClick={ ( e ) => { handleDelete( item.id, e ); }}>Delete</p> ]}
-							>
-								<List.Item.Meta
-									title={ item.title }
-									description={ item.description }
-								/>
-							</List.Item>
-						)}
+			<Col sm={{ span: 18, offset: 3 }} xs={{ span: 24 }}>
+				<Row type="flex" justify="end" >
+					<Switch
+						key="switch"
+						checkedChildren="Testing"
+						unCheckedChildren="Testing"
+						checked={ showTesting }
+						onChange={ e => setShowTesting( e ) }
 					/>
-				</Col>
-			</Row>
+				</Row>
+				<List
+					itemLayout="horizontal"
+					dataSource={ listData }
+					renderItem={ item => (
+						<List.Item
+							actions={[ <p key={ item.id } onClick={ ( e ) => { handleDelete( item.id, e ); }}>Delete</p> ]}
+						>
+							<List.Item.Meta
+								title={ item.title }
+								description={ item.description }
+							/>
+						</List.Item>
+					)}
+				/>
+			</Col>
 		</Row>
 	);
 };

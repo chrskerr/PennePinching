@@ -15,7 +15,7 @@ const Split = ({ mealsData, who }) => {
 
 	return (
 		<Row>
-			<Col>
+			<Col span={ 24 }>
 				<Row justify="center">
 					<ResponsiveContainer width='100%' height={ 300 }>
 						<PieChart margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>

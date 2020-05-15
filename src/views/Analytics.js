@@ -44,16 +44,16 @@ const Analytics = ({ authState }) => {
 
 	return (
 		<Row>
-			<Col>
-				<Space direction="vertical" size="small">
+			<Col span={ 24 }>
+				<Space direction="vertical" size="small" style={{ width: "100%" }}>
 					<Row justify="space-between">
-						<Col span={ 4 }>
+						<Col span={ 4 } style={{ textAlign: "center" }}>
 							<Button icon={<LeftOutlined />} onClick={ () => send( "PREVIOUS" ) } />
 						</Col>
-						<Col span={ 16 }>
+						<Col span={ 16 } style={{ textAlign: "center" }}>
 							<Title level={ 4 }>{ titleMap[ current.value.analytics ] }</Title>
 						</Col>
-						<Col span={ 4 }>
+						<Col span={ 4 } style={{ textAlign: "center" }}>
 							<Button icon={<RightOutlined />} onClick={ () => send( "NEXT" ) } />
 						</Col>
 					</Row>
@@ -67,7 +67,7 @@ const Analytics = ({ authState }) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col>
+						<Col span={ 24 }>
 							{ current.matches({ analytics: "summary" }) && <Summary mealsData={ mealsData } who={ who }/> }
 							{ current.matches({ analytics: "history" }) && <History mealsData={ mealsData } who={ who }/> }
 							{ current.matches({ analytics: "split" }) && <Split mealsData={ mealsData } who={ who }/> }
