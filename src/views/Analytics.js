@@ -57,7 +57,7 @@ const Analytics = ({ authState }) => {
 							<Button icon={<RightOutlined />} onClick={ () => send( "NEXT" ) } />
 						</Col>
 					</Row>
-					<Row>
+					<Row style={{ marginTop: 8, marginBottom: 8 }}>
 						<Col sm={{ offset: 3 }}>
 							<Select defaultValue={ who } onChange={ value => setWho( value ) } size="small" >
 								<Select.Option value='both'>Both</Select.Option>

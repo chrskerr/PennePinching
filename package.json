@@ -18,7 +18,7 @@
     "react-countup": "^4.3.2",
     "react-dom": "^16.12.0",
     "react-scripts": "^3.4.0",
-    "recharts": "^2.0.0-beta.1",
+    "recharts": "^1.8.5",
     "xstate": "^4.7.6"
   },
   "scripts": {

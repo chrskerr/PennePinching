@@ -14,21 +14,19 @@ import { blue, gold } from "@ant-design/colors";
 const History = ({ mealsData, who }) => {
 	const formattedData = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
 	return (
-		<Row>
-			<Row justify="center">
-				<ResponsiveContainer width='100%' height={ 300 }>
-					<ComposedChart data={ formattedData } margin={{ top: 0, right: -20, bottom: 0, left: -20 }}>
-						<Tooltip />
-						<Legend verticalAlign="top" wrapperStyle={{ top: "-1em" }} />
-						<XAxis dataKey="week" padding={{ left: 15, right: 15 }} />
-						<XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } padding={{ left: 15, right: 15 }} label="Week #" />
-						<YAxis yAxisId="left" dataKey="quantity" />
-						<YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
-						<Bar yAxisId="left" fill={ blue[ 5 ] } dataKey='quantity' barSize={ 10 } name="# of Meals" />
-						<Line yAxisId="right" type="monotone" dataKey="netPosition" stroke={ gold[ 5 ] } name="Net $" />
-					</ComposedChart>
-				</ResponsiveContainer>
-			</Row>
+		<Row justify="center">
+			<ResponsiveContainer width='100%' height={ 300 }>
+				<ComposedChart data={ formattedData } margin={{ top: 0, right: -20, bottom: 0, left: -20 }}>
+					<Tooltip />
+					<Legend verticalAlign="top" wrapperStyle={{ top: "-1em" }} />
+					<XAxis dataKey="week" padding={{ left: 15, right: 15 }} />
+					<XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } padding={{ left: 15, right: 15 }} label="Week #" />
+					<YAxis yAxisId="left" dataKey="quantity" />
+					<YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
+					<Bar yAxisId="left" fill={ blue[ 5 ] } dataKey='quantity' barSize={ 10 } name="# of Meals" />
+					<Line yAxisId="right" type="monotone" dataKey="netPosition" stroke={ gold[ 5 ] } name="Net $" />
+				</ComposedChart>
+			</ResponsiveContainer>
 		</Row>
 	);
 };
