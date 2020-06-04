@@ -19,12 +19,11 @@ const History = ({ mealsData, who }) => {
 				<ComposedChart data={ formattedData } margin={{ top: 0, right: -20, bottom: 0, left: -20 }}>
 					<Tooltip />
 					<Legend verticalAlign="top" wrapperStyle={{ top: "-1em" }} />
-					<XAxis dataKey="week" padding={{ left: 15, right: 15 }} />
-					<XAxis dataKey="year" xAxisId="year" axisLine={ false } interval={ 12 } padding={{ left: 15, right: 15 }} label="Week #" />
-					<YAxis yAxisId="left" dataKey="quantity" />
-					<YAxis yAxisId="right" dataKey="netPosition" orientation="right" />
-					<Bar yAxisId="left" fill={ blue[ 5 ] } dataKey='quantity' barSize={ 10 } name="# of Meals" />
-					<Line yAxisId="right" type="monotone" dataKey="netPosition" stroke={ gold[ 5 ] } name="Net $" />
+					<XAxis dataKey="week" interval={ 2 } padding={{ left: 15, right: 15 }} label={{ value: "Weeks since start", position: "insideBottom", offset: 0 }}/>
+					<YAxis yAxisId="left" dataKey="quantity" label={{ value: "Meal count", angle: -90 }} />
+					<YAxis yAxisId="right" dataKey="netPosition" orientation="right" label={{ value: "Net Position", angle: 90 }} axisLine={ true }/>
+					<Bar yAxisId="left" fill={ blue[ 5 ] } dataKey='quantity' barSize={ 5 } name="# of Meals" />
+					<Line yAxisId="right" type="monotone" dataKey="netPosition" stroke={ gold[ 5 ] } name="Net $" dot={ false } />
 				</ComposedChart>
 			</ResponsiveContainer>
 		</Row>
@@ -37,35 +36,40 @@ History.propTypes = {
 export default History;
 
 function doFormatData( inputData, who ) {
+	const now = moment();
+	const dayZero = moment( "2020-01-15" );
+	const currentWeek = now.diff( dayZero, "weeks" );
+	const weekList = [];
+    
+	for ( let i = -1; i <= currentWeek; i ++ ) weekList.push( i );
 	const datedData = inputData.map( el => {
 		return {
 			...el,
-			weekId: `${ moment( el.date, "DD-MM-YYYY" ).year() }${ moment( el.date, "DD-MM-YYYY" ).format( "ww" ) }`,
+			week: moment( el.date, "DD-MM-YYYY" ).diff( dayZero, "weeks" ),
 		};
 	});
 	const filteredData = datedData.filter( el => who === "both" || who === el.who );
-	const weekList = [ ...new Set( datedData.map( el => el.weekId )) ];
-	weekList.unshift( "202001", "202002" );
+
 
 	const initialFinancialPosition = who === "both" ? -399 * 2 : -399;
 	let mutableFinancialPosition = initialFinancialPosition;
 
-	return weekList.sort().map( weekId => {
-		const thisWeeksData = filteredData.filter( el => { return weekId === el.weekId; });
+	return weekList.map( week => {
+		if ( week === -1 ) return { week, quantity: 0, netPosition: 0 };
+
+		const thisWeeksData = filteredData.filter( el => week === el.week );
 
 		const quantity = thisWeeksData.length;
 		const incrementalSave = quantity * 10;        
-		const incrementalSpend = thisWeeksData.reduce(( total, curr ) => { return total + curr.incidentals; }, 0 );        
+		const incrementalSpend = thisWeeksData.reduce(( total, curr ) => total + curr.incidentals, 0 );        
         
-		const netPosition = ( weekId === "202001" || weekId === "202002" ) ? 0 : mutableFinancialPosition - incrementalSpend + incrementalSave;
+		const netPosition = mutableFinancialPosition - incrementalSpend + incrementalSave;
         
 		// indexing variable, running total of netPosition. This should be improved later.
-		mutableFinancialPosition = ( weekId === "202001" || weekId === "202002" ) ? mutableFinancialPosition : netPosition;
+		mutableFinancialPosition = netPosition;
 
 		return {
-			weekId,
-			week: weekId.slice( 4 ),
-			year: weekId.slice( 0, 4 ),
+			week,
 			quantity,
 			netPosition,
 		};

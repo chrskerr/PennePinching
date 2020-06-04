@@ -25,7 +25,7 @@ const Summary = ({ mealsData, who }) => {
 			<Col xs={ 24 } md={ 18 } >
 				<Row { ...rowStructure } >
 					<Col span={ 24 } >
-						<Card title={ <Text strong >Net Financial Position</Text> } bordered={ false }>
+						<Card title={ <Text strong >Total Savings</Text> } bordered={ false }>
 							<Title type="secondary" level={ 2 }>
 								<CountUp start={ 0 } end={ position } duration={ 5 } prefix="$" />
 							</Title>
@@ -34,14 +34,14 @@ const Summary = ({ mealsData, who }) => {
 				</Row>
 				<Row { ...rowStructure }>
 					<Col { ...smallColProps } >
-						<Card title={ <Text strong >Saved</Text> } size="small" bordered={ false }>
+						<Card title={ <Text strong >Internal costs saved</Text> } size="small" bordered={ false }>
 							<Title type="secondary" level={ 4 }>
 								<CountUp start={ 0 } end={ savings } duration={ 3 } prefix="$" />
 							</Title>
 						</Card>
 					</Col>
 					<Col { ...smallColProps } >
-						<Card title={ <Text strong >Spent</Text> } size="small" bordered={ false }>
+						<Card title={ <Text strong >Total Actual Spend</Text> } size="small" bordered={ false }>
 							<Title type="secondary" level={ 4 } >
 								<CountUp start={ 0 } end={ spend } duration={ 3 } prefix="$" />
 							</Title>

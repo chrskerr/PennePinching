@@ -1,6 +1,7 @@
 
 // Packages
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Space, Row, Col, Button, Typography } from "antd";
 import { useQuery } from "@apollo/react-hooks";
@@ -80,6 +81,9 @@ const Analytics = ({ authState }) => {
 			</Col>
 		</Row>
 	);
+};
+Analytics.propTypes = {
+	authState: PropTypes.bool,
 };
 
 export default Analytics;
