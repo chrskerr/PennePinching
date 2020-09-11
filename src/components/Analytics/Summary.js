@@ -13,8 +13,6 @@ const Summary = ({ mealsData, who }) => {
 	const { position, spend, totalMeals, savings, totalMenuCost } = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
 
 	const daysElapsed = moment().diff( moment( "15/01/2020", "DD-MM-YYYY" ), "day" );
-	const daysRemainingToBreakEven = ( position * -1 ) / ( savings / daysElapsed );
-	const adjustedDaysRemainingToBreakEven = daysRemainingToBreakEven < 0 ? 0 : daysRemainingToBreakEven;
 	const averageWeekly = totalMeals / ( daysElapsed / 7 );
 
 	const rowStructure = { justify: "center", gutter: 10 };
@@ -51,9 +49,9 @@ const Summary = ({ mealsData, who }) => {
 
 				<Row { ...rowStructure } >
 					<Col { ...smallColProps } >
-						<Card title={ <Text strong >Breakeven</Text> } size="small" bordered={ false }>
+						<Card title={ <Text strong >ROI</Text> } size="small" bordered={ false }>
 							<Title type="secondary" level={ 4 }>
-								<CountUp start={ 0 } end={ adjustedDaysRemainingToBreakEven } duration={ 3 } suffix=" days" />
+								<CountUp start={ 0 } end={ parseInt( position / ( spend * -1 ) * 100 ) } duration={ 3 } suffix="%" />
 							</Title>
 						</Card>
 					</Col>

@@ -4,9 +4,9 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { Row, Col } from "antd";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { blue, gold, volcano, green } from "@ant-design/colors";
+import { blue, gold, volcano, green, yellow } from "@ant-design/colors";
 
-const FIRST_COLORS = [ volcano[ 5 ], gold[ 5 ], blue[ 5 ], green[ 5 ] ];
+const FIRST_COLORS = [ volcano[ 5 ], gold[ 5 ], blue[ 5 ], green[ 5 ], yellow[ 5 ] ];
 const SECOND_COLORS = [ green[ 5 ], volcano[ 5 ] ];
 
 const Split = ({ mealsData, who }) => {
@@ -77,7 +77,7 @@ function doFormatHealthData( inputData, who ) {
 		const quantities = inputData.map( el => {
 			if ( 
 				( name === "Veggies" && ( el.menu.category === "Salad" || el.menu.category === "Zoodle" )) || 
-				( name === "Non" && ( el.menu.category === "Pizza" || el.menu.category === "Pasta" ))
+				( name === "Non" && ( el.menu.category === "Pizza" || el.menu.category === "Pasta" || el.menu.category === "Other" ))
 			) { 
 				if ( who === "both" ) return 1;
 				if ( el.shared ) return 0.5;
