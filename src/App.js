@@ -5,6 +5,9 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import ApolloClient from "apollo-boost";
 import firebase from "firebase/app";
 import "firebase/auth";
+import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
+import { InMemoryCache } from "apollo-cache-inmemory";
+
 
 // App
 import Home from "./views/Home";
@@ -21,12 +24,32 @@ const App = () => {
 	});
 	const { token, updateAuth } = auth;
 	
-	const client = new ApolloClient({
-		uri: "https://penne-pinching.herokuapp.com/v1/graphql",
-		headers: token 
-			? { Authorization: `Bearer ${ token }` } 
-			: {},
-	});
+	const [ client, setClient ] = useState();
+
+	useEffect(() => {
+		async function init() {
+			const cache = new InMemoryCache();
+			const newPersistor = new CachePersistor({
+				storage: new LocalStorageWrapper( window.localStorage ),
+				debug: true,
+				trigger: "write",
+				cache,
+			});
+			await newPersistor.restore();
+			setClient(
+				new ApolloClient({
+					uri: "https://penne-pinching.herokuapp.com/v1/graphql",
+					headers: token 
+						? { Authorization: `Bearer ${ token }` } 
+						: {},
+					cache,
+				}),
+			);
+		}
+
+		init().catch( console.error );
+	}, []);
+
 
 	useEffect(() => {
 		return firebase.auth().onAuthStateChanged( async user => {
@@ -56,6 +79,8 @@ const App = () => {
 		}
 		// eslint-disable-next-line
 	}, [ token ]);
+
+	if ( !client ) return null;
 
 	return (
 		<div id="app">

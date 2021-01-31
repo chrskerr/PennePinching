@@ -16,6 +16,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp( firebaseConfig );
 
+fetch( "https://penne-pinching.herokuapp.com/" );
 
 const rootElement = document.getElementById( "root" );
 if ( rootElement.hasChildNodes()) {
