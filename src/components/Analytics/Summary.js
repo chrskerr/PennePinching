@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { Row, Col, Card, Typography } from "antd";
 import moment from "moment";
-import CountUp from "react-countup";
 
 // App
 const { Title, Text } = Typography;
@@ -24,25 +23,19 @@ const Summary = ({ mealsData, who }) => {
 				<Row { ...rowStructure } >
 					<Col span={ 24 } >
 						<Card title={ <Text strong >Total Savings</Text> } bordered={ false }>
-							<Title type="secondary" level={ 2 }>
-								<CountUp start={ 0 } end={ position } duration={ 5 } prefix="$" />
-							</Title>
+							<Title type="secondary" level={ 2 }>${ position }</Title>
 						</Card>
 					</Col>
 				</Row>
 				<Row { ...rowStructure }>
 					<Col { ...smallColProps } >
 						<Card title={ <Text strong >Internal costs saved</Text> } size="small" bordered={ false }>
-							<Title type="secondary" level={ 4 }>
-								<CountUp start={ 0 } end={ savings } duration={ 3 } prefix="$" />
-							</Title>
+							<Title type="secondary" level={ 4 }>${ savings }</Title>
 						</Card>
 					</Col>
 					<Col { ...smallColProps } >
 						<Card title={ <Text strong >Total Actual Spend</Text> } size="small" bordered={ false }>
-							<Title type="secondary" level={ 4 } >
-								<CountUp start={ 0 } end={ spend } duration={ 3 } prefix="$" />
-							</Title>
+							<Title type="secondary" level={ 4 }>${ spend }</Title>
 						</Card>
 					</Col>
 				</Row>
@@ -50,16 +43,12 @@ const Summary = ({ mealsData, who }) => {
 				<Row { ...rowStructure } >
 					<Col { ...smallColProps } >
 						<Card title={ <Text strong >ROI</Text> } size="small" bordered={ false }>
-							<Title type="secondary" level={ 4 }>
-								<CountUp start={ 0 } end={ parseInt( position / ( spend * -1 ) * 100 ) } duration={ 3 } suffix="%" />
-							</Title>
+							<Title type="secondary" level={ 4 }>{ parseInt( position / ( spend * -1 ) * 100 ) }%</Title>
 						</Card>
 					</Col>
 					<Col { ...smallColProps } >
 						<Card title={ <Text strong >Avg meals</Text> } size="small" bordered={ false }>
-							<Title type="secondary" level={ 4 }>
-								<CountUp start={ 0 } end={ averageWeekly } duration={ 3 } decimals={ 1 } suffix=" / wk" />
-							</Title>
+							<Title type="secondary" level={ 4 }>{ averageWeekly.toFixed( 1 ) } / wk</Title>
 						</Card>
 					</Col>
 				</Row>
@@ -67,16 +56,12 @@ const Summary = ({ mealsData, who }) => {
 				<Row { ...rowStructure } >
 					<Col { ...smallColProps } >
 						<Card title={ <Text strong >Cost to FF</Text> } size="small" bordered={ false }>
-							<Title type="secondary" level={ 4 }>
-								<CountUp start={ 0 } end={ totalMenuCost } duration={ 3 } prefix="$" />
-							</Title>
+							<Title type="secondary" level={ 4 }>${ totalMenuCost }</Title>
 						</Card>
 					</Col>
 					<Col { ...smallColProps } >
 						<Card title={ <Text strong >FF p/l</Text> } size="small" bordered={ false }>
-							<Title type="secondary" level={ 4 }>
-								<CountUp start={ spend * -1 } end={ ( spend * -1 ) - totalMenuCost } duration={ 3 } prefix="$" />
-							</Title>
+							<Title type="secondary" level={ 4 }>${ ( spend * -1 ) - totalMenuCost }</Title>
 						</Card>
 					</Col>
 				</Row>

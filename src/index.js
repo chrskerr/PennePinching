@@ -6,7 +6,7 @@ import "antd/dist/antd.css";
 import firebase from "firebase/app";
 
 const firebaseConfig = {
-	apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+	apiKey: "AIzaSyCQj8TxcSIRvXVOfZyWwbWe1w11cxxFiIw",
 	authDomain: "penne-pinching.firebaseapp.com",
 	databaseURL: "https://penne-pinching.firebaseio.com",
 	projectId: "penne-pinching",
@@ -30,4 +30,4 @@ if ( rootElement.hasChildNodes()) {
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();
