@@ -1,41 +1,46 @@
 
-// Packages
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useContext } from "react";
 import { CheckOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { Row, Col, DatePicker, Switch, Select, Button, Typography, Modal, Input, AutoComplete, Form } from "antd";
 import moment from "moment";
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import { useService } from "@xstate/react";
 
+import { useQuery, useMutation } from "@apollo/client";
 
-// App
-import { navMachine } from "../../helpers/machines";
-import { INSERT_MEALS, INSERT_MENU_ITEM } from "../../helpers/apolloMutations";
-import { GET_MENU, GET_ALL_MEALS } from "../../helpers/apolloQueries";
-import CenteredSpin from "../../components/Shared/CenteredSpin";
-
+import { InsertMealsDocument, InsertMenuItemDocument, GetMenuDocument, GetAllMealsDocument, GetMenuQuery } from 'types/graphql'
+import CenteredSpin from "../Shared/CenteredSpin";
+import { Auth } from "pages/_app";
 
 const { Title, Text } = Typography;
 const { Option, OptGroup } = Select;
 
-const PageOne = ({ confirmSave, authState }) => {
-	const [ , send ] = useService( navMachine );
-	const { data } = useQuery( GET_MENU );
-	const [ insert_meals, { loading }] = useMutation( INSERT_MEALS );
-	const [ insert_menu, { loading: menuInsertLoading }] = useMutation( INSERT_MENU_ITEM );
+interface FormData {
+	date: string,
+	katie: { menu_id: string },
+	chris: { menu_id: string },
+	shared: boolean,
+	testing: boolean,
+	isDinner: boolean,
+	incidentals: 0 | null,
+}
+
+export default function PageOne ({ goToSuccess }: { goToSuccess: () => void } ) {
+	const authState = useContext(Auth)
+
+	const { data } = useQuery( GetMenuDocument );
+	const [ insert_meals, { loading }] = useMutation( InsertMealsDocument );
+	const [ insert_menu, { loading: menuInsertLoading }] = useMutation( InsertMenuItemDocument );
 
 	const [ addMenuModal, setAddMenuModal ] = useState( false );
 	const [ modalData, setModalData ] = useState({
 		category: "",
 		name: "",
-		cost: null,
+		cost: 0,
 	});
-	const [ modalError, setModalError ] = useState( false );
+	const [ modalError, setModalError ] = useState<string>();
 
 	const [ error, setError ] = useState( false );
-	const [ formData, setFormData ] = useState({
-		date: moment( new Date().toLocaleDateString(), "DD-MM-YYYY" )._i ,
+	const [ formData, setFormData ] = useState<FormData>({
+		date: moment( new Date().toLocaleDateString(), "DD-MM-YYYY" ).toISOString() ,
 		katie: { menu_id: "" },
 		chris: { menu_id: "" },
 		shared: true,
@@ -82,9 +87,8 @@ const PageOne = ({ confirmSave, authState }) => {
 
 		if ( output.length ) {
 			try {
-				const res = await insert_meals({ variables: { data: output }, refetchQueries: [{ query: GET_ALL_MEALS }]});
-				confirmSave( res.data.insert_meals.returning );
-				send( "SUCCESS" );
+				await insert_meals({ variables: { data: output }, refetchQueries: [{ query: GetAllMealsDocument }]});
+				goToSuccess();
 			} catch ( err ) {
 				setError( true );
 			}
@@ -93,22 +97,23 @@ const PageOne = ({ confirmSave, authState }) => {
 
 	const handleAddMenu = async () => {
 		const { category, cost, name } = modalData;
-		setModalError( false );
+		setModalError( undefined );
 
 		if ( !category || !cost || !name ) {
 			setModalError( "Fields missing" );
 		} else {
 			try {
-				await insert_menu({ variables: { data: [ modalData ]}, refetchQueries: [{ query: GET_MENU }], awaitRefetchQueries: true });
+				await insert_menu({ variables: { data: [ modalData ]}, refetchQueries: [{ query: GetMenuDocument }], awaitRefetchQueries: true });
 				setAddMenuModal( false );
 				setModalData({
 					category: "",
 					name: "",
-					cost: "",
+					cost: 0,
 				});
 			}
-			catch ( err ) {
-				console.error( err.message );
+			catch ( e ) {
+				const err = e as { message: string }
+				console.error( err?.message );
 				// setModalError( err )
 			}
 		}
@@ -125,31 +130,31 @@ const PageOne = ({ confirmSave, authState }) => {
 			<Col span={ 24 }>
 				<Row justify='space-between'>
 					<Col span={ 18 }>
-						<Row  type="flex" justify="start">
+						<Row justify="start">
 							<Title level={ 4 }>Add a New Meal</Title>
 						</Row>
 					</Col>
 					<Col span={ 6 }>
-						<Row  type="flex" justify="end">
+						<Row justify="end">
 							<Button icon={<PlusOutlined />} onClick={ () => setAddMenuModal( true ) }>Menu</Button>
 						</Row>
 					</Col>
 				</Row>
 				
 				{ error && <Text type="danger" >Something went wrong...</Text>}
-				{ !authState && <Text type="warning" >Please log in to make any changes</Text>}
+				{ !authState.token && <Text type="warning" >Please log in to make any changes</Text>}
 				
 				<Form onFinish={ handleSubmit } labelAlign="left">
 					<Form.Item label="Date" >
 						<DatePicker 
 							format="DD-MM-YYYY" 
 							defaultValue={ moment( new Date().toLocaleDateString(), "DD-MM-YYYY" ) } 
-							onChange={ e => setFormData({ ...formData, date: e._d.toLocaleDateString() }) }
+							onChange={ e => setFormData({ ...formData, date: e?.date().toLocaleString() || "" }) }
 						/>
 					</Form.Item>
 
 					<MenuItemSelecter who="katie" setFormData={ setFormData } formData={ formData } menu={ sortedMenu } menuCategories={ menuCategories } /> 
-					<MenuItemSelecter who="chris" setFormData={ setFormData } formData={ formData }  menu={ sortedMenu } menuCategories={ menuCategories } />
+					<MenuItemSelecter who="chris" setFormData={ setFormData } formData={ formData } menu={ sortedMenu } menuCategories={ menuCategories } />
 
 					<Row gutter={ 16 }>
 						<Col xs={ 8 } sm={ 4 } md={ 4 } lg={ 4 } xl={ 4 }>
@@ -211,13 +216,13 @@ const PageOne = ({ confirmSave, authState }) => {
 						<Input 
 							type='number'
 							prefix="$"
-							onChange={ e => setModalData({ ...modalData, cost: e.target.value }) }
+							onChange={ e => setModalData({ ...modalData, cost: Number( e.target.value ) }) }
 							value={ modalData.cost }
 						/>
 					</Form.Item>
 					<Button type="primary" loading={ menuInsertLoading } icon={<CheckOutlined />} htmlType="submit" disabled={ !authState }>Submit</Button>
 
-					{ modalError && <Row><Text type="danger">{ modalError.message }</Text></Row> }
+					{ modalError && <Row><Text type="danger">{ modalError }</Text></Row> }
 				</Form>
 			</Modal>
 
@@ -225,15 +230,16 @@ const PageOne = ({ confirmSave, authState }) => {
 		</Row>
 	);
 };
-PageOne.propTypes = {
-	confirmSave: PropTypes.func,
-	authState: PropTypes.any,
-};
 
-export default PageOne;
+interface MenuItemSelectorProps {
+	who: 'katie' | 'chris',
+	formData: FormData,
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>,
+	menu: GetMenuQuery['menu'],
+	menuCategories: string[],
+}
 
-
-function MenuItemSelecter({ who, formData, setFormData, menu, menuCategories }) {
+function MenuItemSelecter({ who, formData, setFormData, menu, menuCategories }: MenuItemSelectorProps ) {
 	return <>
 		<Form.Item label={ `What did ${ who.replace( /^(.)/, v => v.toUpperCase()) } order?` } colon={ false }>
 			<Select 

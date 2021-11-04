@@ -1,20 +1,23 @@
 
-// Packages
 import React, { useMemo } from "react";
-import PropTypes from "prop-types";
 import { Row, Col, Card, Typography } from "antd";
 import moment from "moment";
+import type { IndexSubComponentProps } from "pages";
 
-// App
 const { Title, Text } = Typography;
 
-const Summary = ({ mealsData, who }) => {
+interface RowStructure { 
+	justify: "center" | "start" | "end" | "space-around" | "space-between" | undefined, 
+	gutter: number 
+}
+
+export default function Summary ({ mealsData, who }: IndexSubComponentProps) {
 	const { position, spend, totalMeals, savings, totalMenuCost } = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
 
 	const daysElapsed = moment().diff( moment( "15/01/2020", "DD-MM-YYYY" ), "day" );
 	const averageWeekly = totalMeals / ( daysElapsed / 7 );
 
-	const rowStructure = { justify: "center", gutter: 10 };
+	const rowStructure: RowStructure = { justify: "center", gutter: 10 };
 	const smallColProps = { span: 12 };
 
 	return (
@@ -43,7 +46,7 @@ const Summary = ({ mealsData, who }) => {
 				<Row { ...rowStructure } >
 					<Col { ...smallColProps } >
 						<Card title={ <Text strong >ROI</Text> } size="small" bordered={ false }>
-							<Title type="secondary" level={ 4 }>{ parseInt( position / ( spend * -1 ) * 100 ) }%</Title>
+							<Title type="secondary" level={ 4 }>{ Math.round( position / ( spend * -1 ) * 100 ) }%</Title>
 						</Card>
 					</Col>
 					<Col { ...smallColProps } >
@@ -69,14 +72,9 @@ const Summary = ({ mealsData, who }) => {
 		</Row>
 	);
 };
-Summary.propTypes = {
-	mealsData: PropTypes.array,
-	who: PropTypes.string,
-};
-export default Summary;
 
 
-function doFormatData( inputData, who ) {
+function doFormatData( inputData: IndexSubComponentProps['mealsData'], who: IndexSubComponentProps['who'] ) {
 	const datedData = inputData.map( el => {
 		return {
 			...el,

@@ -1,17 +1,13 @@
 
-// Packages
 import React, { useMemo } from "react";
-import PropTypes from "prop-types";
 import { Row } from "antd";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import moment from "moment";
 import { blue, gold } from "@ant-design/colors";
 
+import type { IndexSubComponentProps } from "pages";
 
-// App
-
-
-const Weekdays = ({ mealsData, who }) => {
+export default function Weekdays ({ mealsData, who }: IndexSubComponentProps) {
 	const formattedData = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
 	return (
 		<Row justify="center">
@@ -28,13 +24,8 @@ const Weekdays = ({ mealsData, who }) => {
 		</Row>
 	);
 };
-Weekdays.propTypes = {
-	mealsData: PropTypes.array,
-	who: PropTypes.string,
-};
-export default Weekdays;
 
-function doFormatData( inputData, who ) {
+function doFormatData( inputData: IndexSubComponentProps['mealsData'], who: IndexSubComponentProps['who'] ) {
 	const datedData = inputData.map( el => {
 		return {
 			...el,

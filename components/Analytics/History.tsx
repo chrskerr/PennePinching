@@ -1,17 +1,13 @@
 
-// Packages
 import React, { useMemo } from "react";
-import PropTypes from "prop-types";
 import { Row } from "antd";
 import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import moment from "moment";
 import { blue, gold } from "@ant-design/colors";
 
+import type { IndexSubComponentProps } from "pages";
 
-// App
-
-
-const History = ({ mealsData, who }) => {
+export default function History ({ mealsData, who }: IndexSubComponentProps ) {
 	const formattedData = useMemo(() => doFormatData( mealsData, who ), [ mealsData, who ]);
 	return (
 		<Row justify="center">
@@ -29,13 +25,8 @@ const History = ({ mealsData, who }) => {
 		</Row>
 	);
 };
-History.propTypes = {
-	mealsData: PropTypes.array,
-	who: PropTypes.string,
-};
-export default History;
 
-function doFormatData( inputData, who ) {
+function doFormatData( inputData: IndexSubComponentProps['mealsData'], who: IndexSubComponentProps['who'] ) {
 	const now = moment();
 	const dayZero = moment( "2020-01-15" );
 	const currentWeek = now.diff( dayZero, "weeks" );

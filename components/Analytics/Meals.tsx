@@ -1,41 +1,42 @@
 
-// Packages
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useContext, useState } from "react";
 import { Row, Col, List, Switch, Typography } from "antd";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/client";
 import moment from "moment";
 
-// App
-import { GET_TESTING_MEALS, GET_ALL_MEALS } from "../../helpers/apolloQueries";
-import { DELETE_MEAL } from "../../helpers/apolloMutations";
-import CenteredSpin from "../../components/Shared/CenteredSpin";
+import { GetTestingMealsDocument, GetAllMealsDocument, DeleteMealDocument, GetTestingMealsQuery } from "types/graphql";
+import CenteredSpin from "../Shared/CenteredSpin";
+
+import type { IndexSubComponentProps } from "pages";
+import { Auth } from "pages/_app"
 
 const { Text } = Typography;
 
 
-const Meals = ({ mealsData, who, authState }) => {
-	const [ showTesting, setShowTesting ] = useState( false );
-	const { data, loading } = useQuery( GET_TESTING_MEALS );
-	const [ deleteMeal ] = useMutation( DELETE_MEAL );
+export default function Meals ({ mealsData, who }: IndexSubComponentProps ) {
+	const authState = useContext(Auth)
 
-	const handleDelete = ( id, e ) => {
+	const [ showTesting, setShowTesting ] = useState( false );
+	const { data, loading } = useQuery( GetTestingMealsDocument );
+	const [ deleteMeal ] = useMutation( DeleteMealDocument );
+
+	const handleDelete = ( id: string, e: React.MouseEvent ) => {
 		e.preventDefault();
-		if ( !authState ) {
+		if ( !authState.token ) {
 			alert( "You must be logged in to do this" ); 
 			return;
 		}
-		if ( window.confirm( "Are you sure you want to delete ?" )) deleteMeal({ variables: { id }, refetchQueries: [{ query: GET_ALL_MEALS }, { query: GET_TESTING_MEALS }]});
+		if ( window.confirm( "Are you sure you want to delete ?" )) deleteMeal({ variables: { id }, refetchQueries: [{ query: GetAllMealsDocument }, { query: GetTestingMealsDocument }]});
 	};
 
 	if ( showTesting && loading ) return <CenteredSpin />;
 
-	const listData = showTesting ? formatData( data.meals, who ) : formatData( mealsData, who );
+	const listData = (showTesting && data ) ? formatData( data.meals, who ) : formatData( mealsData, who );
 
 	return (
 		<Row>
 			<Col sm={{ span: 18, offset: 3 }} xs={{ span: 24 }}>
-				<Row type="flex" justify="end" >
+				<Row justify="end" >
 					<Switch
 						key="switch"
 						checkedChildren="Testing"
@@ -47,7 +48,7 @@ const Meals = ({ mealsData, who, authState }) => {
 				<List
 					itemLayout="horizontal"
 					dataSource={ listData }
-					renderItem={ item => (
+					renderItem={ (item: typeof listData[0] ) => (
 						<List.Item
 							actions={[ <p key={ item.id } onClick={ ( e ) => { handleDelete( item.id, e ); }}>Delete</p> ]}
 						>
@@ -62,25 +63,18 @@ const Meals = ({ mealsData, who, authState }) => {
 		</Row>
 	);
 };
-Meals.propTypes = {
-	mealsData: PropTypes.array,
-	who: PropTypes.string,
-	authState: PropTypes.any,
-};
 
-export default Meals;
-
-function formatData( mealsData, who ) {
+function formatData( mealsData: IndexSubComponentProps['mealsData'] | GetTestingMealsQuery['meals'], who: IndexSubComponentProps['who'] ) {
 	const filteredData = mealsData.filter( meal => { return who === "both" || meal.shared || meal.who === who; });
 	const addedDate = filteredData.map( meal => { return { ...meal, date: moment( meal.date, "DD-MM-YYYY" ).toDate() };});
-	const sortedData = addedDate.sort(( a, b ) => { return b.date - a.date; });
+	const sortedData = addedDate.sort(( a, b ) => { return b.date.valueOf() - a.date.valueOf(); });
 
 	return sortedData.map( meal => {
 		const dateStr = meal.date.toDateString();
 		return {
 			title: `${ meal.shared ? "Shared" : meal.who } on ${ dateStr }`,
 			description: <Text>{ meal.menu.category }: { meal.menu.name } - ${ meal.menu.cost }{ meal.test ? <Text type="danger"> - TESTING</Text> : "" }</Text>,
-			id: meal.id,
+			id: String( meal.id ),
 		};
 	});
 }

@@ -1,21 +1,21 @@
 
-// Packages
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { Row, Col, List, Switch, Select, Form } from "antd";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import moment from "moment";
 
-// App
-import { GET_FILTERED_MENU } from "../../helpers/apolloQueries";
-import CenteredSpin from "../../components/Shared/CenteredSpin";
+import { GetFilteredMenuDocument, GetFilteredMenuQuery } from "types/graphql";
+import CenteredSpin from "../Shared/CenteredSpin";
+import type { IndexSubComponentProps } from "pages";
 
-const Menu = ({ mealsData, who }) => {
-	const [ sortBy, setSortBy ] = useState( "quantity" );
+type SortBy = 'quantity' | 'last' | 'name';
+
+export default function Menu ({ mealsData, who }: IndexSubComponentProps) {
+	const [ sortBy, setSortBy ] = useState<SortBy>( "quantity" );
 	const [ category, setCategory ] = useState( "all" );
 	
 	const updatedCategory = category === "all" ? [ "Salad", "Pasta", "Pizza","Zoodle" ] : [ category ];
-	const { data: menuQueryData } = useQuery( GET_FILTERED_MENU, { variables: { category: updatedCategory }});
+	const { data: menuQueryData } = useQuery( GetFilteredMenuDocument, { variables: { category: updatedCategory }});
 
 	if ( !menuQueryData || !mealsData ) return <CenteredSpin />;
 
@@ -50,7 +50,7 @@ const Menu = ({ mealsData, who }) => {
 					<List
 						itemLayout="horizontal"
 						dataSource={ tableData }
-						renderItem={ item => (
+						renderItem={ (item: typeof tableData[0] ) => (
 							<List.Item
 								actions={[ <Switch
 									key="switch"
@@ -74,23 +74,17 @@ const Menu = ({ mealsData, who }) => {
 		</Form>
 	);
 };
-Menu.propTypes = {
-	mealsData: PropTypes.array,
-	who: PropTypes.string,
-};
 
-export default Menu;
-
-function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
+function doFormatData ( menuInputData: GetFilteredMenuQuery['menu'], mealsInputData: IndexSubComponentProps['mealsData'], who: IndexSubComponentProps['who'], sortBy: SortBy ) {
 	const unsortedData = menuInputData.map( item => {
 		const filteredMeals = mealsInputData.filter( meal => { return meal.menu.name === item.name; });
-		const quantities = filteredMeals.map( el => {
+		const quantities: number[] = filteredMeals.map( el => {
 			if ( who === "both" ) return 1;
 			if ( el.shared ) return 0.5;
 			if ( who === el.who ) return 1;
 			return 0;
 		});
-		const quantity = quantities.length > 0 ? quantities.reduce(( total = 0, curr ) => total + curr ) : 0;
+		const quantity = quantities.length > 0 ? quantities.reduce(( total: number, curr ) => total + curr, 0 ) : 0;
         
 		const last = filteredMeals.reduce(( best, curr ) => {
 			const currDate = moment( curr.date, "DD-MM-YYYY" ).toDate();
@@ -102,19 +96,17 @@ function doFormatData ( menuInputData, mealsInputData, who, sortBy ) {
 			...item,
 			key: item.id,
 			quantity,
-			last: quantity ? last : "",
+			last: quantity ? last : new Date( 1900, 0, 1),
 			active: item.active,
 		};
 	});
 
 	switch ( sortBy ) {
 	case "last":
-		return unsortedData.sort(( a, b ) => b.last - a.last );
+		return unsortedData.sort(( a, b ) => b.last.valueOf() - a.last.valueOf() );
 	case "quantity":
 		return unsortedData.sort(( a, b ) => b.quantity - a.quantity );
 	default:
 		return unsortedData.sort(( a, b ) => a[ sortBy ].localeCompare( b[ sortBy ]));
 	}
-
-	/// ITS TIME TO SWITCH DATES TO A DATE FORMAT
 }

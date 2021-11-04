@@ -1,0 +1,13 @@
+overwrite: true
+generates:
+  types/graphql.ts:
+    documents:
+      - "types/gql/**/*"
+    schema:
+      - "https://penne-pinching.herokuapp.com/v1/graphql":
+          headers:
+            x-hasura-admin-secret: ${HASURA_SECRET}
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - typed-document-node
